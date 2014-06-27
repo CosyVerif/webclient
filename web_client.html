@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>CosiVerif Beta Client</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Styles -->
+        <link href="lua_vm_js_v2/lua.vm.js/css/bootstrap.css" rel="stylesheet">
+        <link href="lua_vm_js_v2/lua.vm.js/css/bootstrap-responsive.css" rel="stylesheet">
+        
+        <!-- Model Graph styles-->        
+        <link rel="stylesheet" type="text/css" href="css/model_gui.css">
+        <link rel="stylesheet" type="text/css" href="css/web _client.css">
+        
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="js/html5shiv.js"></script>
+        <![endif]-->
+
+        <!-- Codemirror styles -->
+        <link rel="stylesheet" href="lua_vm_js_v2/lua.vm.js/css/codemirror.css">
+        
+        
+        <!-- We include all the js we need-->
+        <script src="lua_vm_js_v2/lua.vm.js/js/codemirror.js"></script>
+        <script src="lua_vm_js_v2/lua.vm.js/js/lua.js"></script>
+        <script type="text/javascript" src="d3/d3.js"></script>
+    </head>
+    
+    <body>
+        <div class="container">
+            <div class="hero-unit">
+                <h2>CosiVerif BETA WebClient</h2>
+            </div>
+            <div class="row">
+                <div class="span7" border=1>
+                    <h4>Lua Code</h4>
+                    <input type="file" id="file_browser">
+                    <textarea id="model_code"></textarea>
+                </div>
+                <div class="span5">
+                    <h4>Lua Code Output</h4>
+                    <pre id="output"></pre>
+                </div>
+            </div>
+            <p>
+                <a href="#" class="btn btn-primary btn-large " onclick="executeLua(cm.getValue(), true); return false" id="the_button">Execute Lua Code &raquo;</a>
+            </p>
+            <div class="span7" border=1>
+                <h4>Model Graphical Representation</h4>
+                <div id="model_container" class="span7" border=1>
+                </div>
+            </div>
+        </div> <!-- /container -->
+        
+        <script type="text/javascript" languaj="Javascript" src="model_gui.js"></script>
+        
+        <script type="text/javascript" languaje="Javascript">
+                        
+            //~ var files_browser = document.getElementById('files').addEventListener('change', CopyMe, false);
+            
+            // CodeMirror
+            var cm = CodeMirror.fromTextArea(document.getElementById('model_code'),{
+                lineNumbers: true,
+                readOnly: true
+            });
+            
+            // File Reader
+            document.getElementById('file_browser').addEventListener('change', CopyMe, false);
+
+            function CopyMe(evt) {
+                var file = evt.target.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(){ cm.setValue(reader.result); }
+                    reader.readAsText(file);
+                }
+            };
+            
+            // Execution
+            var outputElement = document.getElementById('output');
+            
+            var Module = {
+                print: function(x) {
+                    outputElement.innerHTML = (outputElement.innerHTML ? outputElement.innerHTML + '<br>' : '') + x;
+                }
+            };
+
+            function executeLua(code, clear) {
+                if (clear) outputElement.innerHTML = '';
+                
+                var js_declarations = ' local keys = {}; \
+                                    for k in pairs(model) \
+                                    do \
+                                    keys[#keys+1] = k; \
+                                    end \
+                                    local window    = js.global; \
+                                    window.model    = model; \
+                                    window.keys     = keys; \
+                                    window.count    = #keys; \
+                                    window.var_type = type; \
+                                    window.type_place      = place; \
+                                    window.type_transition = transition; \
+                                    window.type_arc        = arc;';
+                                    
+                L.execute(code + js_declarations);
+                
+                var count = window.count,
+                    model = window.model,
+                    keys = window.keys,
+                    var_type = window.var_type,
+                    type_place = window.type_place
+                    type_trans = window.type_transition
+                    type_arc = window.type_arc;
+                    
+                // We get all the nodes
+                var elem = {},
+                    arc = {},
+                    nodes = [],
+                    links = [],
+                    current = {},
+                    key = "";
+                    
+                //~ We get all the elements from the model
+                for(i = 1; i <= count; i++){
+                    k = keys.get(i);
+                    current_model = model.get(k);
+                    type = current_model.get(var_type);
+                    
+                    if(type_arc.toString() == type.toString()) {
+                        arc = {};
+                        arc.source = current_model.get('source').get('name');
+                        arc.target = current_model.get('target').get('name');
+                        arc.valuation = current_model.get('validation');
+                        arc.type = typeToString(type_arc);
+                        links.push(arc);
+                    } else {
+                        elem = {}
+                        elem.type = typeToString(type);
+                        elem.name = current_model.get('name');
+                        //~ elem.marking = current.get('marking');
+                        nodes.push(elem);
+                    }   
+                }
+                updateModelLayout(nodes, links);
+                
+                function typeToString(n){
+                    var ret = null;
+                    if(type_place.toString() == n.toString())
+                        ret = 'place';
+                    else if(type_trans.toString() == n.toString())
+                        ret = 'transition';
+                    else if(type_arc.toString() == n.toString())
+                        ret = 'arc';
+                    return ret;
+                }
+            }
+            
+            function updateModelLayout(nodes, links) {
+                updateModel(nodes, links);
+            }
+        
+        </script>
+        <script type="text/javascript" languaj="Javascript" src="lua_vm_js_v2/lua.vm.js/lua.vm.js"></script>
+    </body>
+</html>
+
+`
