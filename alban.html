@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>lua.vm.js script example</title>
+  </head>
+
+  <body>
+    <script src="js/lua.vm.js"></script>
+    <script type="text/javascript">
+function get (url)
+{
+  console.log ("URL: " + url);
+  var xhr = new XMLHttpRequest ();
+  xhr.open ("GET", url, false);
+  xhr.send ();
+  console.log ("Reponse: " + xhr.responseText);
+  return xhr.responseText;
+}
+
+function update (map) {
+  console.log ("Update: " + map);
+  console.log ("#: " + count (map));
+  for (i=1; i <= count (map); i++) {
+    console.log (id (map.get (i)));
+  }
+}
+
+call_update ();
+
+var token = "abcde";
+var socket = new WebSocket("ws://127.0.0.1:8080/", "cosy");
+socket.onopen = function (event) {
+  console.log ("Sending token: " + token + "...");
+  socket.send (token);
+  console.log ("Requesting model...");
+  socket.send (JSON.stringify ({
+        "action": "get-model"
+      }));
+};
+socket.onmessage = function (event) {
+  console.log (event.data);
+  var message = JSON.parse (event.data);
+  console.log (message);
+  var action;
+  if ("action" in message)
+    action = message.action;
+  if (action == "update") {
+    for (i = 0; i < message.patches.length; i++) {
+      var patch = message.patches [i];
+      console.log ("Executing patch " + patch.id + "...");
+      L.execute (patch.data);
+      call_update ();
+    }
+  } else if (action == undefined && "data" in message) {
+    console.log ("Executing model patch...");
+    L.execute (message.data);
+    call_update ();
+  }
+};
+    </script>
+  </body>
+</html>
