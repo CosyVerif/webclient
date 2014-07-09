@@ -24,16 +24,17 @@ end
 package.path = ""
 package.cpath = ""
 table.insert(package.searchers, function (mod_name)
+  print ("Loading " .. mod_name)
   if not mod_name:match("/") then
     local full_url = "lua/" .. mod_name:gsub("%.", "/") .. ".lua"
     local func, err = load_lua_over_http(full_url)
     if func ~= nil then return func end
-
+--[[
     local full_url = "lua/" .. mod_name:gsub("%.", "/lua/") .. "/init.lua"
     local func, err2 = load_lua_over_http(full_url)
     if func ~= nil then return func end
-
-    return "\n    " .. err .. "\n    " .. err2
+--]]
+    return "\n    " .. err -- .. "\n    " .. err2
   end
 end)
 table.insert(package.searchers, function (mod_name)
@@ -44,36 +45,3 @@ table.insert(package.searchers, function (mod_name)
   end
 end)
 
-local cosy = require "cosy.lang.cosy"
-window.cosy = cosy
-
-function window:count (x)
-  return #x
-end
-
-function window:id (x)
-  if type (x) == "table" then
-    local mt = getmetatable (x)
-    setmetatable (x, nil)
-    local result = tostring (x)
-    setmetatable (x, mt)
-    return result
-  else
-    return tostring (x)
-  end
-end
-
-function window:keys (x)
-  local result = {}
-  for key, _ in pairs (x) do
-    result [#result + 1] = key
-  end
-  return result
-end
-
-function window:call_update ()
-  return window:update {
-    a = {},
-    b = {},
-  }
-end
