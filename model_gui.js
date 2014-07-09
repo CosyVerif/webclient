@@ -30,7 +30,7 @@
     /*
      * @index_* = stores the index of the element for easier access
      */
-    var index_nodes = {},
+    var nodes_index = {},
         index_links = {};
         
     var force = d3.layout.force()
@@ -69,19 +69,17 @@
         node = svg.append("svg:g").selectAll(".node"),
         circle = svg.append("svg:g").selectAll("g"),
         text = svg.append("svg:g").selectAll("g");
-     
+    
     /*
      * Update the model with the values stored in global WINDOW
      * from Lua Code
-     * 
-     * TODO: figure out how to remove a node from the graph
      */
     function updateModel(){
-        //~ First we get all the values from Lua model
+        
+        //~ First we get all the values from the Lua world
         var count = window.count,
             model = window.model,
             keys = window.keys,
-            //~ remove_keys = window.remove,
             var_type = window.var_type,
             type_place = window.type_place
             type_trans = window.type_transition
@@ -89,18 +87,15 @@
             
         // We get all the nodes
         var elem = {},
-            pos = 0,
-            arc = {},
-            nodes = [],
-            links = [],
-            current = {},
-            key = "";
+            pos,
+            arc,
+            key;
         
         var temp_links = [];
         var nodes = force.nodes(),
             links = force.links();
         
-        //~ The first cicle for every new node.
+        //~ Read node data from the model.
         for(i = 1; i <= count; i++){
             k = keys.get(i);
             current_model = model.get(k);
@@ -121,6 +116,7 @@
                 //~ Math.cos(x))
                 marking = current_model.get('marking') ? current_model.get('marking') : '';
                 highlighted = current_model.get('highlighted') ? current_model.get('highlighted') : '';
+                
                 elem = {name : current_model.get('name'),
                                 type : typeToString(type), 
                                 shape :  getShape(type, highlighted == 1),
@@ -130,11 +126,12 @@
                                 highlighted : highlighted ? true : false,
                                 fixed : true,
                                 lua_node :current_model};
-                if(undefined === index_nodes[current_model.get('name')]){
+                
+                if(undefined === nodes_index[current_model.get('name')]){
                     nodes.push(elem);
-                    index_nodes[current_model.get('name')] = nodes.length - 1;
+                    nodes_index[current_model.get('name')] = nodes.length - 1;
                 } else {
-                    pos = index_nodes[current_model.get('name')];
+                    pos = nodes_index[current_model.get('name')];
                     nodes[pos].name = elem.name;
                     nodes[pos].type = elem.type;
                     nodes[pos].shape = elem.shape;
@@ -149,14 +146,13 @@
         
         var source, target;
         
-        /* The second cicle if to assign a reference of a node
-         * to each arc.
+        /* Create a proper link array for the force layout
          */ 
         for(j = 0; j < temp_links.length; j++) {
             l = temp_links[j];
             
-            source = nodes[index_nodes[l.source]];
-            target = nodes[index_nodes[l.target]];
+            source = nodes[nodes_index[l.source]];
+            target = nodes[nodes_index[l.target]];
             if(undefined === index_links[source.name + ',' + target.name]){
                 links.push({source: source, target: target, type: "licensing"});
                 index_links[source.name + ',' + target.name] = links.length - 1;
@@ -168,6 +164,8 @@
             }
         }
         updateForceLayout();
+ 
+        testRemoveElems();
         //~ var s = "20000:isdjfads200.2234234",
             //~ ry = /[0-9]*[.][0-9]+$/,
             //~ rx = /\d+/,
@@ -263,14 +261,6 @@
         }
     }
     
-    function testUpdateElems() {
-        setTimeout(function() {
-              links.pop();
-              nodes[0].marking = false;
-              updateForceLayout();
-            }, 3000);
-    }
-    
     function getShape(type, highlighted){
         var ret;
         if(highlighted)
@@ -291,7 +281,23 @@
         return ret;
     }
     
-    function setGravity(value){
-        force.gravity(value);
-        force.start();
+    function startUpdateTimer(){
+        //~ setInterval(/*Some Function to check updates*/)
+    }
+    
+    function testUpdateElems() {
+        setTimeout(function() {
+              links.pop();  
+              nodes[0].marking = false;
+              updateForceLayout();
+            }, 3000);
+    }
+    
+    function testRemoveElems() {
+        setTimeout(function() {
+            console.log('Removed called');
+            var i = nodes_index['p_nil'];
+            force.nodes().splice(i, 1);
+            updateForceLayout();
+            }, 3000);
     }
