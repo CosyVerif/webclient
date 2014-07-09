@@ -1,62 +1,55 @@
 /*
  *  COSIVERIF JAVASCRIPT WEB CLIENT
  */
- 
-    // Node size
-    var rect_size = 30
-    var radius = rect_size / 2;
-    
+    var rect_size = 30,
+        rect_highlighted = 40,
+        radius = rect_size / 2;
+        radis_highlighted = (rect_size / 1.2);
     /* 
      * This object contains the d attribute of the path that later will come part of the force layout.
      * The shapes are defined so that the (0,0) is the center of each one. 
      */
     var shapes = {
-        rect : "M " + -rect_size + " " + (-rect_size / 2) + " h " + 2 * rect_size + " v " + rect_size + " h "+ (-2 *    rect_size) + " z",
-        vertical_rect : "M " + (-rect_size / 2) + " " + -rect_size + " h " + rect_size + " v " + 2 * rect_size + " h "      + (-rect_size) + " z",
-        circle: "M " + (-radius) + " " + (-radius) + "a "+ radius + " " + radius +" 0 1 0 0.00001 0 "
+        rect : "M " + -rect_size + " " + (-rect_size / 4) + " h " + 2 * rect_size + " v " + (rect_size / 2) + " h "+ (-2 * rect_size) + " z",
+        rect_highlighted : "M " + -rect_highlighted + " " + (-rect_highlighted / 4) + " h " + 2 * rect_highlighted + " v " + (rect_highlighted / 2) + " h "+ (-2 * rect_highlighted) + " z",
+        vertical_rect : "M " + (-rect_size / 4) + " " + -rect_size + " h " + (rect_size / 2) + " v " + 2 * rect_size + " h "      + (-rect_size / 2) + " z",
+        circle : "M 0 0 m" + (-radius) +", 0 a " + radius + "," + radius + " 0 1,0 " + (radius * 2) +",0 " 
+                        + "a " + radius + "," + radius + " 0 1,0 " + (-radius * 2) + ",0",
+        circle_highlighted : "M 0 0 m" + (-radis_highlighted) +", 0 a " + radis_highlighted + "," + radis_highlighted + " 0 1,0 " + (radis_highlighted * 2) +",0 " + "a " + radis_highlighted + "," + radis_highlighted + " 0 1,0 " + (-radis_highlighted * 2) + ",0"
         };
 
-    var nodes = [];
-    var links = [];
+    var element = {}
     
-    /*
-     * Definition of the force graph and shapes.
-     */
     var margin = {top: -5, right: -5, bottom: -5, left: -5},
         width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom,
         markerWidth = 8,
         markerHeight = 8,
-        cRadius = 20, // play with the cRadius value
-        refX = cRadius + markerWidth,
-        refY = -Math.sqrt(cRadius),
-        drSub = cRadius + refY;
+        refX = radius + markerWidth;
 
-    var zoom = d3.behavior.zoom()
-        .scaleExtent([1, 10])
-        .on("zoom", zoomed);
+    /*
+     * @index_* = stores the index of the element for easier access
+     */
+    var index_nodes = {},
+        index_links = {};
         
     var force = d3.layout.force()
-        .links(links)
-        .nodes(nodes)
         .size([width, height])
-        .linkDistance(100)
-        .charge(-1000)
+        .nodes([])
+        .links([])
+        .gravity(0)
+        .linkDistance(300)
         .on("tick", tick);
-
-    function zoomed() {
-        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    }
-    
-    var drag = force.drag().on("dragstart", dragstart);
+                
+    //~ var drag = force.drag().on("dragstart", dragstart);
     
     // We start to append elements to the original html.
+    
     var svg = d3.select("#model_container").append("svg:svg")
         .attr("width", width)
         .attr("height", height)
         .attr("fill", "none")
         .attr("stroke", "black");
-        //~ .call(zoom);
 
     // Per-type markers, as they don't inherit styles.
     svg.append("svg:defs").selectAll("marker")
@@ -65,7 +58,6 @@
         .attr("id", String)
         .attr("viewBox", "0 -5 10 10")
         .attr("refX", refX)
-        //~ .attr("refY", refY)
         .attr("markerWidth", markerWidth)
         .attr("markerHeight", markerHeight)
         .attr("orient", "auto")
@@ -73,99 +65,177 @@
         .attr("d", "M0,-5L10,0L0,5");
         
 
-    var path = svg.append("svg:g").selectAll("path");
-    
-    var node = svg.append("svg:g").selectAll(".node");
+    var path = svg.append("svg:g").selectAll("path"),
+        node = svg.append("svg:g").selectAll(".node"),
+        circle = svg.append("svg:g").selectAll("g"),
+        text = svg.append("svg:g").selectAll("g");
+     
+    /*
+     * Update the model with the values stored in global WINDOW
+     * from Lua Code
+     * 
+     * TODO: figure out how to remove a node from the graph
+     */
+    function updateModel(){
+        //~ First we get all the values from Lua model
+        var count = window.count,
+            model = window.model,
+            keys = window.keys,
+            //~ remove_keys = window.remove,
+            var_type = window.var_type,
+            type_place = window.type_place
+            type_trans = window.type_transition
+            type_arc = window.type_arc;
+            
+        // We get all the nodes
+        var elem = {},
+            pos = 0,
+            arc = {},
+            nodes = [],
+            links = [],
+            current = {},
+            key = "";
+        
+        var temp_links = [];
+        var nodes = force.nodes(),
+            links = force.links();
+        
+        //~ The first cicle for every new node.
+        for(i = 1; i <= count; i++){
+            k = keys.get(i);
+            current_model = model.get(k);
+            type = current_model.get(var_type);
+            if(!type){
+                continue;
+            }
+            //~ console.log("Printing key: " +k +" with type " + type.toString());
+            //~ console.log("2 "+type_arc.toString());
+            if(type_arc.toString() == type.toString()) {
+                arc = {source : current_model.get('source').get('name'),
+                        target : current_model.get('target').get('name'),
+                        valuation : current_model.get('validation'),
+                        type : typeToString(type_arc)};
+                        
+                temp_links.push(arc);
+            } else {
+                //~ Math.cos(x))
+                marking = current_model.get('marking') ? current_model.get('marking') : '';
+                highlighted = current_model.get('highlighted') ? current_model.get('highlighted') : '';
+                elem = {name : current_model.get('name'),
+                                type : typeToString(type), 
+                                shape :  getShape(type, highlighted == 1),
+                                marking : marking ? true : false,
+                                px : current_model.get('x'),
+                                py : current_model.get('y'),
+                                highlighted : highlighted ? true : false,
+                                fixed : true,
+                                lua_node :current_model};
+                if(undefined === index_nodes[current_model.get('name')]){
+                    nodes.push(elem);
+                    index_nodes[current_model.get('name')] = nodes.length - 1;
+                } else {
+                    pos = index_nodes[current_model.get('name')];
+                    nodes[pos].name = elem.name;
+                    nodes[pos].type = elem.type;
+                    nodes[pos].shape = elem.shape;
+                    nodes[pos].marking = elem.marking;
+                    nodes[pos].px = elem.px;
+                    nodes[pos].py = elem.py;
+                    nodes[pos].highlighted = elem.highlighted;
+                    nodes[pos].lua_node = elem.lua_node;
+                }
+            }
+        }
+        
+        var source, target;
+        
+        /* The second cicle if to assign a reference of a node
+         * to each arc.
+         */ 
+        for(j = 0; j < temp_links.length; j++) {
+            l = temp_links[j];
+            
+            source = nodes[index_nodes[l.source]];
+            target = nodes[index_nodes[l.target]];
+            if(undefined === index_links[source.name + ',' + target.name]){
+                links.push({source: source, target: target, type: "licensing"});
+                index_links[source.name + ',' + target.name] = links.length - 1;
+            } else {
+                pos = index_links[source.name + ',' + target.name];
+                links[pos].source = source;
+                links[pos].target = target;
+                links[pos].type = "licensing";
+            }
+        }
+        updateForceLayout();
+        //~ var s = "20000:isdjfads200.2234234",
+            //~ ry = /[0-9]*[.][0-9]+$/,
+            //~ rx = /\d+/,
+            //~ x_pos = rx.exec(s),
+            //~ y_pos = ry.exec(s);
+    }
     
     function updateForceLayout() {
+
+        //~ We update the force layout data. 
+        //~ force.links(links)
+            //~ .nodes(nodes);
+        path = path.data(force.links(), function(d){ return d.source.name +','+ d.target.name});
         
-        force = d3.layout.force()
-            .links(links)
-            .nodes(nodes)
-            .size([width, height])
-            .linkDistance(200)
-            .charge(-300)
-            .on("tick", tick)
-            
-        path = path.data(force.links());
         path.enter().insert("svg:path", ".node");
-        
         path.attr("class", function (d) {return "link " + d.type;})
             .attr("marker-end", function (d) {return "url(#" + d.type + ")";});
-        
         path.exit().remove();
         
-        node = node.data(force.nodes(), function (d) {return d.id;});
+        node = node.data(force.nodes(), function (d) {return d.name;});
         node.enter().append("path");
         node.attr("class", "node")
             .attr("d", function(d){ return d.shape;})
+            .attr("fill", function(d){ return d.highlighted ? "gold" : "#ccc"})
             .on("dblclick", dblclick)
-            .call(drag);
-            
+            .on("click", click)
+            .call(force.drag);
+        
         node.exit().remove();
+        
+        circle = circle.data(force.nodes(), function (d) {return d.name;});
+        circle.enter().append("circle")
+                .attr("class", "token")
+                .attr("r", radius/6)
+                .attr("fill", "black")
+                .call(force.drag);
+                                
+        circle.attr("visibility", function(d) {return d.marking ? "visible" : "hidden" })
+        
+        circle.exit().remove();
+
+        text = text.data(force.nodes(), function (d) {return d.name;});
+        text.enter().append("text")
+            .attr("x", function(d){ return d.type == 'transition' ? 45 : 30})
+            .attr("y", ".45em")
+            .attr("size", 10);
+        text.text(function(d) { return d.name; });
+        text.exit().remove();
         
         force.start();
         
         return true;
     }
     
-    //~ updateForceLayout();
-    
-    function updateModel(input_nodes, input_links){
-        indexs = {};
-        
-        //~ We empty the previous nodes and links of the force layout
-        nodes = [];
-        links = [];
-        for(i = 0; i < input_nodes.length; i++) {
-            n = input_nodes[i];
-            indexs[n.name] = i;
-            node_shape = n.type == 'transition' ? shapes.rect : shapes.circle;
-            nodes.push({id: n.name, shape: node_shape});
-        }
-        
-        var source, target;
-        
-        for(j = 0; j < input_links.length; j++) {
-            l = input_links[j];
-            
-            source = nodes[indexs[l.source]];
-            target = nodes[indexs[l.target]];
-            
-            links.push({source: source, target: target, type: "licensing"});
-        }
-        updateForceLayout();    
-    }
-
-/******************************************************************************************************/
-    //~ var text = svg.append("svg:g").selectAll("g")
-        //~ .data(force.nodes())
-        //~ .enter().append("svg:g");
-
-    // A copy of the text with a thick white stroke for legibility.
-    //~ text.append("svg:text")
-        //~ .attr("x", 0)
-        //~ .attr("y", ".51em")
-        //~ .attr("class", "shadow")
-        //~ .text(function (d) {
-        //~ return d.name;
-    //~ });
-
-    //~ text.append("svg:text")
-        //~ .attr("x", 0)
-        //~ .attr("y", ".51em")
-        //~ .text(function (d) {
-        //~ return d.name;
-    //~ });
-
     function dblclick(d) {
+        //~ d.lua_node.set("selected", true);
+        //~ show();
         d3.select(this).classed("fixed", d.fixed = false);
     }
-
-    function dragstart(d) {
+    
+    function click(d){
         d3.select(this).classed("fixed", d.fixed = true);
-        force.start();
     }
+    
+    //~ function dragstart(d) {
+        //~ d3.select(this).classed("fixed", d.fixed = true);
+        //~ force.start();
+    //~ }
 
     function tick() {
         path.attr("d", function (d) {
@@ -173,8 +243,7 @@
                 dy = (d.target.y - d.source.y),
                 dr = Math.sqrt(dx * dx + dy * dy);
             /* 
-             * TODO: Change this harcoded array into a a function or other 
-             * functionality
+             * TODO: Change this harcoded array
              */
             
             var link_shapes = {
@@ -185,11 +254,44 @@
             return link_shapes[d.type];
         });
 
-        node.attr("transform", function (d) {
+        node.attr("transform", transform);
+        circle.attr("transform", transform);
+        text.attr("transform", transform);
+        
+        function transform(d) {
             return "translate(" + d.x + "," + d.y + ")";
-        });
+        }
+    }
+    
+    function testUpdateElems() {
+        setTimeout(function() {
+              links.pop();
+              nodes[0].marking = false;
+              updateForceLayout();
+            }, 3000);
+    }
+    
+    function getShape(type, highlighted){
+        var ret;
+        if(highlighted)
+            ret = typeToString(type) == 'transition' ? shapes.rect_highlighted : shapes.circle_highlighted;
+        else
+             ret = typeToString(type) == 'transition' ? shapes.rect : shapes.circle;
+        return ret;
+    }
 
-        //~ text.attr("transform", function (d) {
-            //~ return "translate(" + d.x + "," + d.y + ")";
-        //~ });
+    function typeToString(n){
+        var ret = null;
+        if(type_place.toString() == n.toString())
+            ret = 'place';
+        else if(type_trans.toString() == n.toString())
+            ret = 'transition';
+        else if(type_arc.toString() == n.toString())
+            ret = 'arc';
+        return ret;
+    }
+    
+    function setGravity(value){
+        force.gravity(value);
+        force.start();
     }
