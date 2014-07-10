@@ -51,7 +51,11 @@
         .attr("height", height)
         .attr("fill", "none")
         .attr("stroke", "black");
-
+    
+    d3.select("#model_container").append("div")
+        .attr("id", "forms_group")
+        .attr("class", "span5");
+        
     // Per-type markers, as they don't inherit styles.
     svg.append("svg:defs").selectAll("marker")
         .data(["suit", "licensing", "resolved"])
@@ -87,10 +91,10 @@
             force.links().push({source: source, target: target, type: "licensing"});
             links_index[source.name + ',' + target.name] = links.length - 1;
             
-        } else {
+        } else if("place" == current_model.get("type") || "transition" == current_model.get("type")){
             marking = node.get('marking') ? node.get('marking') : '';
             highlighted = node.get('highlighted') ? node.get('highlighted') : '';
-            
+            selected = node.get('selected') ? node.get('selected') : '';
             // We get the shape
             isTransition = node.get("type") == "transition";
             if(highlighted)
@@ -114,10 +118,51 @@
                     px : x_pos,
                     py : y_pos,
                     highlighted : highlighted,
+                    selected : selected,
                     fixed : true,
                     lua_node :node};
             force.nodes().push(elem);
             nodes_index[current_model.get('name')] = nodes.length - 1;
+        } else if("form" == current_model.get("type")){
+                var unsorted_forms = elements(current_model);
+                var form_elems = [];
+                for(j = 1; j <= count(unsorted_forms); j++){
+                    form_elems.push(unsorted_forms.get(j));
+                }
+                form_elems.sort(function sortForms(x, y) {
+                    if("text" == x.get("type"))
+                        return -1;
+                    if(y_value = "text" == y.get("type"))
+                        return 1;
+                    return 0;
+                });
+                var form_id = "form"+i;
+                
+                d3.select("#forms_group").append("div")
+                        .attr("id", form_id)
+                        .attr("class", "lua_form");
+                                        
+                var selection = d3.select("#"+form_id);
+                
+                for(j = 0; j < count(form_elems); j++){
+                    form = form_elems[j];
+                    if("text" == form.get("type")){
+                        selection.append("h4")
+                            .text(form.get("name"));
+                        selection.append("input")
+                            .attr("type", "text")
+                            .attr("size", 9)
+                            .attr("value", form.get("value"));                        
+                    } else if("button" == form.get("type")) {
+                        btn = selection.append("a");
+                        btn.attr("href", "#")
+                            .attr("class", "btn btn-success")
+                            .text(form.get("name"));
+                        if(!form.get("is_active"))
+                            btn.attr("disabled", "true")
+                    }
+                }
+            }
         }
         updateForceLayout();
     }
@@ -154,10 +199,10 @@
             //~ 
             //~ force.links()[i]({source: source, target: target, type: "licensing"});
             //~ 
-        } else {
+        } else if("place" == current_model.get("type") || "transition" == current_model.get("type")){
             marking = node.get('marking') ? node.get('marking') : '';
             highlighted = node.get('highlighted') ? node.get('highlighted') : '';
-            
+            selected = node.get('selected') ? node.get('selected') : '';
             // We get the shape
             isTransition = node.get("type") == "transition";
             if(highlighted)
@@ -175,7 +220,8 @@
             var y_pos = origin.y + Math.sin(angle) * h;
 
             elem = {name : node.get('name'),
-                    type : node.get("type"), 
+                    type : node.get("type"),
+                    selected : selected,
                     shape : shape,
                     marking : marking ? true : false,
                     px : x_pos,
@@ -186,7 +232,7 @@
             i = nodes_index[current_model.get('name')];
             force.nodes()[i] = elem;
         }
-        updateForceLayout();e
+        updateForceLayout();
     }
     
     function websocket (url) {
@@ -217,6 +263,7 @@
             } else if("place" == current_model.get("type") || "transition" == current_model.get("type")){
                 marking = current_model.get('marking') ? current_model.get('marking') : '';
                 highlighted = current_model.get('highlighted') ? current_model.get('highlighted') : '';
+                selected = current_model.get('selected') ? node.get('selected') : '';
                 
                 // We get the shape
                 isTransition = current_model.get("type") == "transition";
@@ -248,20 +295,47 @@
                         px : x_pos,
                         py : y_pos,
                         highlighted : highlighted,
+                        selected : selected,
                         fixed : true,
                         lua_node :current_model};            
                 nodes.push(elem);
                 nodes_index[current_model.get('name')] = nodes.length - 1;
             } else if("form" == current_model.get("type")){
                 
-                var form_elems = elements(current_model);
-                for(j = 1; j <=count(form_elems); j++){
-                    form = form_elems.get(j);
+                var unsorted_forms = elements(current_model);
+                var form_elems = [];
+                
+                for(j = 1; j <= count(unsorted_forms); j++){
+                    form_elems.push(unsorted_forms.get(j));
+                }
+                
+                form_elems.sort(function sortForms(x, y) {
+                    if("text" == x.get("type"))
+                        return -1;
+                    if(y_value = "text" == y.get("type"))
+                        return 1;
+                    
+                    return 0;
+                });
+                var form_id = "form"+i;
+                
+                d3.select("#forms_group").append("div")
+                        .attr("id", form_id)
+                        .attr("class", "lua_form");
+                                        
+                var selection = d3.select("#"+form_id);
+                
+                for(j = 0; j < count(form_elems); j++){
+                    form = form_elems[j];
                     if("text" == form.get("type")){
-                        d3.select("#model_container").append("h4")
-                        .text(form.get("name"));
+                        selection.append("h4")
+                            .text(form.get("name"));
+                        selection.append("input")
+                            .attr("type", "text")
+                            .attr("size", 9)
+                            .attr("value", form.get("value"));                        
                     } else if("button" == form.get("type")) {
-                        btn = d3.select("#model_container").append("a");
+                        btn = selection.append("a");
                         btn.attr("href", "#")
                             .attr("class", "btn btn-success")
                             .text(form.get("name"));
