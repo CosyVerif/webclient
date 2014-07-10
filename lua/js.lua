@@ -1,6 +1,18 @@
 -- Make window object a global
 window = js.global;
 
+http = {}
+function http.get (url)
+  local xhr = js.new(window.XMLHttpRequest)
+  xhr:open("GET", url, false) -- Synchronous
+  xhr:send()
+  if xhr.status == 0 or xhr.status == 200 then
+    return xhr.responseText
+  else
+    return nil, "HTTP GET " .. xhr.statusText .. ": " .. url
+  end
+end
+
 -- Iterates from 0 to collection.length-1
 local function js_inext (collection, i)
   i = i + 1
@@ -12,15 +24,14 @@ function js.ipairs (collection)
 end
 
 local function load_lua_over_http(url)
-  local xhr = js.new(window.XMLHttpRequest)
-  xhr:open("GET", url, false) -- Synchronous
-  xhr:send()
-  if xhr.status == 0 or xhr.status == 200 then
-    return load(xhr.responseText, url)
+  local code, err = http.get (url)
+  if code then
+    return load(code, url)
   else
-    return nil, "HTTP GET " .. xhr.statusText .. ": " .. url
+    return nil, err
   end
 end
+
 package.path = ""
 package.cpath = ""
 table.insert(package.searchers, function (mod_name)
@@ -44,4 +55,3 @@ table.insert(package.searchers, function (mod_name)
     return func
   end
 end)
-
