@@ -24,8 +24,6 @@
         
         <!-- We include all the js we need-->
         <script src="lua_vm/js/codemirror.js"></script>
-        <script src="lua/js.lua" type="text/lua"></script>
-        <script src="lua_vm/js/lua.js"></script>
         <script type="text/javascript" src="d3/d3.js"></script>
     </head>
     
@@ -57,21 +55,20 @@
             </ul>
             <div class="tabContent" id="model_gui">
                 <h4>Lua Model</h4>
-                <div id="model_container" class="span7">
-                </div>
+                <div id="model_container" class="span7"></div>
             </div>
             <div class="tabContent" id="model_patches">
                 <h3>Server Patches</h3>
                 <textarea id="server_patches" width="200" height="150"></textarea>
             </div>
         </div> <!-- /container -->
-        
-        <script type="text/javascript" languaj="Javascript" src="model_gui.js"></script>
+        <script type="text/javascript" src="model_gui.js"></script>
         
         <script type="text/javascript" languaje="Javascript">
             // CodeMirror
             var lua_code = CodeMirror.fromTextArea(document.getElementById('model_code'),{
                 lineNumbers: true,
+                readOnly: true
             });
             
             var server_patches = CodeMirror.fromTextArea(document.getElementById('server_patches'),{
@@ -148,7 +145,7 @@
             var outputElement = document.getElementById('output');
             var Module = {
                 print: function(x) {
-                    console.log(""+x);
+                    //~ console.log(""+x);
                     outputElement.innerHTML = (outputElement.innerHTML ? outputElement.innerHTML + '<br>' : '') + x;
                 }
             };
@@ -192,9 +189,16 @@
                 
                 updateModel();
             }
-            
         </script>
+        <script src="lua_vm/js/lua.js"></script>
         <script type="text/javascript" lang="Javascript" src="lua_vm/lua.vm.js"></script>
+        <script>
+            Lua.executeScript("lua/js.lua");
+            Lua.executeScript("lua/cosy.lua");
+            var model = connect ("ws://127.0.0.1:8080", "token", "resource");
+            do_something (model);
+            updateModel(model);
+        </script>
     </body>
 </html>
 

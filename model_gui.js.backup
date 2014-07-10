@@ -25,14 +25,13 @@
         height = 500 - margin.top - margin.bottom,
         markerWidth = 8,
         markerHeight = 8,
-        refX = radius + markerWidth,
-        origin = {x: width/2, y: height/2};
+        refX = radius + markerWidth;
 
     /*
      * @index_* = stores the index of the element for easier access
      */
     var nodes_index = {},
-        links_index = {};
+        index_links = {};
         
     var force = d3.layout.force()
         .size([width, height])
@@ -51,6 +50,10 @@
         .attr("height", height)
         .attr("fill", "none")
         .attr("stroke", "black");
+    
+    //~ d3.select("#model_gui").append("input")
+        //~ .attr("type", "button")
+        //~ .attr("value", "Some Text");
 
     // Per-type markers, as they don't inherit styles.
     svg.append("svg:defs").selectAll("marker")
@@ -71,12 +74,17 @@
         circle = svg.append("svg:g").selectAll("g"),
         text = svg.append("svg:g").selectAll("g");
 
+    var type_place,
+        type_arc,
+        type_trans;
+
 /*
  * Function definitions
  */
     function add_node (node) {
         console.log ("Adding node or arc: " + node.get("name"));
-        if(node.get("type") == "arc"){
+        if(isA(node, type_arc)){
+            console.log("Case arc");
             var source = node.get('source').get('name'),
                 target = node.get('target').get('name'),
                 valuation = node.get('validation');
@@ -85,108 +93,42 @@
             target = force.nodes()[nodes_index[target]];
             
             force.links().push({source: source, target: target, type: "licensing"});
-            links_index[source.name + ',' + target.name] = links.length - 1;
+            index_links[source.name + ',' + target.name] = links.length - 1;
             
         } else {
+            console.log("Case place/trans");
             marking = node.get('marking') ? node.get('marking') : '';
             highlighted = node.get('highlighted') ? node.get('highlighted') : '';
             
             // We get the shape
-            isTransition = node.get("type") == "transition";
             if(highlighted)
-                shape = isTransition? shapes.rect_highlighted : shapes.circle_highlighted;
+                shape = isA(node, type_trans) ? shapes.rect_highlighted : shapes.circle_highlighted;
             else
-                shape = isTransition? shapes.rect : shapes.circle;
-            
-            var s = current_model.get("position"),
-                p = s.indexOf(":");
-            
-            var h = s.substring(0, p),
-                angle = s.substring(p+1);
-            
-            var x_pos = origin.x + Math.cos(angle) * h;
-            var y_pos = origin.y + Math.sin(angle) * h;
-
+                shape = isA(node, type_trans) ? shapes.rect : shapes.circle;
+                   
             elem = {name : node.get('name'),
-                    type : node.get("type"), 
+                    type : isA(node, type_trans) ? type_trans : type_place, 
                     shape : shape,
                     marking : marking ? true : false,
-                    px : x_pos,
-                    py : y_pos,
+                    px : node.get('x'),
+                    py : node.get('y'),
                     highlighted : highlighted,
                     fixed : true,
-                    lua_node :node};
+                    lua_node :node};            
             force.nodes().push(elem);
             nodes_index[current_model.get('name')] = nodes.length - 1;
         }
+        console.log("NODES: "+ force.nodes());
+        console.log("LINKS: "+ force.links());
         updateForceLayout();
     }
 
     function remove_node (node) {
-        console.log ("Removing node or arc: " + node.get("name"));
-        var i, j;
-        if(node.get("type") == "arc"){
-            var source = node.get('source').get('name'),
-                target = node.get('target').get('name');
-                
-            i = links_index[source + ',' + target];
-            force.links().splice(i, 1);
-            
-            delete links_index[source + ',' + target];
-            
-        } else {
-            i = nodes_index[current_model.get('name')];
-            force.nodes().splice(i, 1);
-            
-            delete nodes_index[current_model.get('name')];
-        }
-        updateForceLayout();
+        //~ console.log ("Removing node or arc: " + node.get("name"));
     }
 
     function update_node (node) {
-        console.log ("Updating node or arc: " + node.get("name"));
-        var i ,j;
-        if(node.get("type") == "arc"){
-            //~ var source = node.get('source').get('name'),
-                //~ target = node.get('target').get('name'),
-                //~ valuation = node.get('validation');
-            //~ i = links_index[source.name + ',' + target.name];
-            //~ 
-            //~ force.links()[i]({source: source, target: target, type: "licensing"});
-            //~ 
-        } else {
-            marking = node.get('marking') ? node.get('marking') : '';
-            highlighted = node.get('highlighted') ? node.get('highlighted') : '';
-            
-            // We get the shape
-            isTransition = node.get("type") == "transition";
-            if(highlighted)
-                shape = isTransition? shapes.rect_highlighted : shapes.circle_highlighted;
-            else
-                shape = isTransition? shapes.rect : shapes.circle;
-            
-            var s = current_model.get("position"),
-                p = s.indexOf(":");
-            
-            var h = s.substring(0, p),
-                angle = s.substring(p+1);
-            
-            var x_pos = origin.x + Math.cos(angle) * h;
-            var y_pos = origin.y + Math.sin(angle) * h;
-
-            elem = {name : node.get('name'),
-                    type : node.get("type"), 
-                    shape : shape,
-                    marking : marking ? true : false,
-                    px : x_pos,
-                    py : y_pos,
-                    highlighted : highlighted,
-                    fixed : true,
-                    lua_node :node};
-            i = nodes_index[current_model.get('name')];
-            force.nodes()[i] = elem;
-        }
-        updateForceLayout();e
+        //~ console.log ("Updating node or arc: " + node);
     }
     
     function websocket (url) {
@@ -204,74 +146,48 @@
         var nodes = force.nodes(),
             links = force.links();
         
+        
         var elems = elements(input_model);
+        if(count(elems) != 0){
+            type_place = input_model.get("types").get("place"),
+            type_arc = input_model.get("types").get("arc"),
+            type_trans = input_model.get("types").get("transition");
+        }
         for(i = 1; i <= count(elems); i++){
             current_model = elems.get(i);
-            //~ console.log("Element Type: " + current_model.get("type"));
-            if("arc" == current_model.get("type")){
+            
+            if(isA(current_model, type_arc)){
                 arc = { source : current_model.get('source').get('name'),
                         target : current_model.get('target').get('name'),
                         valuation : current_model.get('validation'),
-                        type : current_model.get("type")};
+                        type : type_arc};
+                        
                 temp_links.push(arc);
-            } else if("place" == current_model.get("type") || "transition" == current_model.get("type")){
+            } else {
                 marking = current_model.get('marking') ? current_model.get('marking') : '';
                 highlighted = current_model.get('highlighted') ? current_model.get('highlighted') : '';
                 
                 // We get the shape
-                isTransition = current_model.get("type") == "transition";
                 if(highlighted)
-                    shape = isTransition? shapes.rect_highlighted : shapes.circle_highlighted;
+                    shape = isA(current_model, type_trans) ? shapes.rect_highlighted : shapes.circle_highlighted;
                 else
-                    shape = isTransition? shapes.rect : shapes.circle;
-                
-                //~ var rx = /\d+/,
-                    //~ ry = /[0-9]*[.][0-9]+$/;
-                    
-                var s = current_model.get("position"),
-                    p = s.indexOf(":");
-                
-                var h = s.substring(0, p),
-                    angle = s.substring(p+1);
-                
-                //~ console.log("H :" + h + " ANGLE : " + angle);
-                var x_pos = origin.x + Math.cos(angle) * h;
-                var y_pos = origin.y + Math.sin(angle) * h;
-                
-                //~ console.log("Offset X :" + Math.cos(angle) * h + " Offset Y : " + Math.sin(angle) * h);
-                //~ console.log("Coordinates X :" + x_pos + " Y : " + y_pos);
-                
+                    shape = isA(current_model, type_trans) ? shapes.rect : shapes.circle;
+                       
                 elem = {name : current_model.get('name'),
-                        type : current_model.get("type"), 
+                        type : isA(current_model, type_trans) ? type_trans : type_place, 
                         shape : shape,
                         marking : marking ? true : false,
-                        px : x_pos,
-                        py : y_pos,
+                        px : current_model.get('x'),
+                        py : current_model.get('y'),
                         highlighted : highlighted,
                         fixed : true,
                         lua_node :current_model};            
                 nodes.push(elem);
                 nodes_index[current_model.get('name')] = nodes.length - 1;
-            } else if("form" == current_model.get("type")){
-                
-                var form_elems = elements(current_model);
-                for(j = 1; j <=count(form_elems); j++){
-                    form = form_elems.get(j);
-                    if("text" == form.get("type")){
-                        d3.select("#model_container").append("h4")
-                        .text(form.get("name"));
-                    } else if("button" == form.get("type")) {
-                        btn = d3.select("#model_container").append("a");
-                        btn.attr("href", "#")
-                            .attr("class", "btn btn-success")
-                            .text(form.get("name"));
-                        if(!form.get("is_active")){
-                            btn.attr("disabled", "true")
-                        }
-                    }
-                }
             }
         }
+        //~ console.log("NODES: " + nodes); 
+        //~ console.log("LINKS: " + temp_links);
         
         var source, target;
         
@@ -282,17 +198,23 @@
             
             source = nodes[nodes_index[l.source]];
             target = nodes[nodes_index[l.target]];
-            if(undefined === links_index[source.name + ',' + target.name]){
+            if(undefined === index_links[source.name + ',' + target.name]){
                 links.push({source: source, target: target, type: "licensing"});
-                links_index[source.name + ',' + target.name] = links.length - 1;
+                index_links[source.name + ',' + target.name] = links.length - 1;
             } else {
-                pos = links_index[source.name + ',' + target.name];
+                pos = index_links[source.name + ',' + target.name];
                 links[pos].source = source;
                 links[pos].target = target;
                 links[pos].type = "licensing";
             }
         }
         updateForceLayout();
+ 
+        //~ var s = "20000:isdjfads200.2234234",
+            //~ ry = /[0-9]*[.][0-9]+$/,
+            //~ rx = /\d+/,
+            //~ x_pos = rx.exec(s),
+            //~ y_pos = ry.exec(s);
     }
     
     function updateForceLayout() {
