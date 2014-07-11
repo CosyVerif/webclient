@@ -22,7 +22,7 @@
     
     var margin = {top: -5, right: -5, bottom: -5, left: -5},
         width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom,
+        height = 600 - margin.top - margin.bottom,
         markerWidth = 8,
         markerHeight = 8,
         refX = radius + markerWidth,
@@ -81,21 +81,23 @@
  */
     function add_node (node) {
         if(node.get("type") == "arc"){
-            console.log ("Adding " + node.get("name") + " " + node.get("type"));
+            //~ console.log ("Adding " + node.get("name") + " " + node.get("type"));
             var source = node.get('source').get('name'),
                 target = node.get('target').get('name'),
                 valuation = node.get('validation');
+            
+            //~ console.log("SOURCE " + nodes_index[source]=='undefined' + " TARGET " + nodes_index[target]=='undefined');
                                     
             source = force.nodes()[nodes_index[source]];
             target = force.nodes()[nodes_index[target]];
-            
             force.links().push({source: source, target: target, type: "licensing"});
             links_index[source.name + ',' + target.name] = force.links().length - 1;
         } else if("place" == node.get("type") || "transition" == node.get("type")){
-            console.log ("Adding " + node.get("name") + " " + node.get("type"));
+            //~ console.log ("Adding " + node.get("name") + " " + node.get("type"));
             marking = node.get('marking') ? node.get('marking') : '';
             highlighted = node.get('highlighted') ? node.get('highlighted') : '';
             selected = node.get('selected') ? node.get('selected') : '';
+
             // We get the shape
             isTransition = node.get("type") == "transition";
             if(highlighted)
@@ -124,55 +126,54 @@
             force.nodes().push(elem);
             //~ console.log("add_node " + force.nodes())
             nodes_index[node.get('name')] = force.nodes().length - 1;
-        } else if("form" == node.get("type")){
-            var unsorted_forms = elements(node);
-            var form_elems = [];
-            for(j = 1; j <= count(unsorted_forms); j++){
-                form_elems.push(unsorted_forms.get(j));
-            }
-            form_elems.sort(function sortForms(x, y) {
-                if("text" == x.get("type"))
-                    return -1;
-                if(y_value = "text" == y.get("type"))
-                    return 1;
-                return 0;
-            });
-            
-            var form_id = "form" + node.get("name");
-            
-            d3.select("#forms_group").append("div")
-                    .attr("id", form_id)
-                    .attr("class", "lua_form");
-                                    
-            var selection = d3.select("#"+form_id);
-            
-            for(j = 0; j < count(form_elems); j++){
-                form = form_elems[j];
-                if("text" == form.get("type")){
-                    selection.append("h4")
-                        .text(form.get("name"));
-                    selection.append("input").data([form])
-                        .attr("type", "text")
-                        .attr("size", 9)
-                        .on("change", formTextChange)
-                        .attr("value", form.get("value"));                        
-                } else if("button" == form.get("type")) {
-                    btn = selection.append("button").data([form]);
-                    btn.attr("type", "button")
-                        .attr("class", "btn btn-success")
-                        .on("click", formBtnClick)
-                        .text(form.get("name"));
-                    if(!form.get("is_active")){
-                        btn.attr("disabled", "true")
-                    }
-                }
-            }
-        }
+        } 
+        //~ else if("form" == node.get("type")){
+            //~ var unsorted_forms = elements(node);
+            //~ var form_elems = [];
+            //~ for(j = 1; j <= count(unsorted_forms); j++){
+                //~ form_elems.push(unsorted_forms.get(j));
+            //~ }
+            //~ form_elems.sort(function sortForms(x, y) {
+                //~ if("text" == x.get("type"))
+                    //~ return -1;
+                //~ if(y_value = "text" == y.get("type"))
+                    //~ return 1;
+                //~ return 0;
+            //~ });
+            //~ 
+            //~ var form_id = "form_" + node.get("name");
+            //~ 
+            //~ d3.select("#forms_group").append("div")
+                    //~ .attr("id", form_id)
+                    //~ .attr("class", "lua_form");
+            //~ var selection = d3.select("#"+form_id);
+            //~ for(j = 0; j < count(form_elems); j++){
+                //~ form = form_elems[j];
+                //~ if("text" == form.get("type")){
+                    //~ selection.append("h4")
+                        //~ .text(form.get("name"));
+                    //~ selection.append("input").data([form])
+                        //~ .attr("type", "text")
+                        //~ .attr("size", 9)
+                        //~ .on("change", formTextChange)
+                        //~ .attr("value", form.get("value"));
+                //~ } else if("button" == form.get("type")) {
+                    //~ btn = selection.append("button").data([form]);
+                    //~ btn.attr("type", "button")
+                        //~ .attr("class", "btn btn-success")
+                        //~ .on("click", formBtnClick)
+                        //~ .text(form.get("name"));
+                    //~ if(!form.get("is_active")){
+                        //~ btn.attr("disabled", "true")
+                    //~ }
+                //~ }
+            //~ }
+        //~ }
         updateForceLayout();
     }
 
     function remove_node (node) {
-        console.log ("Removing node or arc: " + node.get("name"));
+        //~ console.log ("Removing node or arc: " + node.get("name"));
         var i, j;
         if(node.get("type") == "arc"){
             var source = node.get('source').get('name'),
@@ -195,15 +196,20 @@
     function update_node (node) {
         var i ,j;
         if(node.get("type") == "arc"){
-            //~ var source = node.get('source').get('name'),
-                //~ target = node.get('target').get('name'),
-                //~ valuation = node.get('validation');
-            //~ i = links_index[source.name + ',' + target.name];
-            //~ 
-            //~ force.links()[i]({source: source, target: target, type: "licensing"});
-            //~ 
+            var source = node.get('source').get('name'),
+                target = node.get('target').get('name'),
+                valuation = node.get('validation');
+ 
+            i = links_index[source.name + ',' + target.name];
+            
+            source = force.nodes()[nodes_index[source]];
+            target = force.nodes()[nodes_index[target]];
+            
+            force.links()[i].source = source;            
+            force.links()[i].target = target;
+                        
         } else if("place" == node.get("type") || "transition" == node.get("type")){
-            console.log ("Updating  " + node.get("name") + " " + node.get("type"));
+            //~ console.log ("Updating  " + node.get("name") + " " + node.get("type"));
             marking = node.get('marking') ? node.get('marking') : '';
             highlighted = node.get('highlighted') ? node.get('highlighted') : '';
             selected = node.get('selected') ? node.get('selected') : '';
@@ -236,50 +242,51 @@
                     lua_node :node};
             
             i = nodes_index[node.get('name')];
-            force.nodes()[i] = elem;
-        } else if("form" == node.get("type")){
-            var unsorted_forms = elements(node);
-            var form_elems = [];
-            for(j = 1; j <= count(unsorted_forms); j++){
-                form_elems.push(unsorted_forms.get(j));
-            }
-            form_elems.sort(function sortForms(x, y) {
-                if("text" == x.get("type"))
-                    return -1;
-                if(y_value = "text" == y.get("type"))
-                    return 1;
-                return 0;
-            });
-            
-            var form_id = "form_"+node.get("name");
-            d3.select("#forms_group").append("div")
-                    .attr("id", form_id)
-                    .attr("class", "lua_form");
-                                    
-            var selection = d3.select("#"+form_id);
-            
-            for(j = 0; j < count(form_elems); j++){
-                form = form_elems[j];
-                if("text" == form.get("type")){
-                    selection.append("h4")
-                        .text(form.get("name"));
-                    selection.append("input").data([form])
-                        .attr("type", "text")
-                        .attr("size", 9)
-                        .on("change", formTextChange)
-                        .attr("value", form.get("value"));                        
-                } else if("button" == form.get("type")) {
-                    btn = selection.append("button").data([form]);
-                    btn.attr("type", "button")
-                        .attr("class", "btn btn-success")
-                        .on("click", formBtnClick)
-                        .text(form.get("name"));
-                    if(!form.get("is_active")){
-                        btn.attr("disabled", "true")
-                    }
-                }
-            }
-        }
+            force.nodes()[i].name = elem.name;
+            force.nodes()[i].type = elem.type;
+            force.nodes()[i].selected = elem.selected;
+            force.nodes()[i].shape = elem.shape;
+            force.nodes()[i].marking = elem.marking;
+            force.nodes()[i].px = elem.px;
+            force.nodes()[i].py = elem.py;
+            force.nodes()[i].highlighted = elem.highlighted;
+            force.nodes()[i].fixed = elem.fixed;
+            force.nodes()[i].lua_node = elem.lua_node;
+        } 
+        //~ else if("form" == node.get("type")){
+            //~ var unsorted_forms = elements(node);
+            //~ var form_elems = [];
+            //~ for(j = 1; j <= count(unsorted_forms); j++){
+                //~ form_elems.push(unsorted_forms.get(j));
+            //~ }
+            //~ form_elems.sort(function sortForms(x, y) {
+                //~ if("text" == x.get("type"))
+                    //~ return -1;
+                //~ if(y_value = "text" == y.get("type"))
+                    //~ return 1;
+                //~ return 0;
+            //~ });
+            //~ 
+            //~ var form_id = "form_"+node.get("name");
+            //~ var selection = d3.select("#"+form_id);
+            //~ 
+            //~ for(j = 0; j < count(form_elems); j++){
+                //~ form = form_elems[j];
+                //~ sub_form_id = id(form);
+                //~ if("text" == form.get("type")){
+                    //~ selection.select("h4")
+                        //~ .text(form.get("name"));
+                    //~ selection.select("#"+sub_form_id)
+                        //~ .attr("value", form.get("value"));                        
+                //~ } else if("button" == form.get("type")) {
+                    //~ btn = selection.select("#"+sub_form_id);
+                    //~ btn.text(form.get("name"));
+                    //~ if(!form.get("is_active")){
+                        //~ btn.attr("disabled", "true")
+                    //~ }
+                //~ }
+            //~ }
+        //~ }
         updateForceLayout();
     }
     
@@ -367,7 +374,7 @@
                     
                     return 0;
                 });
-                var form_id = "form"+i;
+                var form_id = "form_"+i;
                 
                 d3.select("#forms_group").append("div")
                         .attr("id", form_id)
@@ -423,7 +430,7 @@
     }
     
     function updateForceLayout() {
-        console.log("Updateforcelayout = " + force.nodes())
+        //~ console.log("Updateforcelayout = " + force.nodes())
         //~ We update the force layout data. 
         path = path.data(force.links(), function(d){ return d.source.name +','+ d.target.name});
         
@@ -432,7 +439,7 @@
             .attr("marker-end", function (d) {return "url(#" + d.type + ")";});
         path.exit().remove();
         
-        node = node.data(force.nodes(), function (d) {console.log(d.name);return d.name;});
+        node = node.data(force.nodes(), function (d) {return d.name;});
         node.enter().append("path");
         node.attr("class", "node")
             .attr("d", function(d){ return d.shape;})
