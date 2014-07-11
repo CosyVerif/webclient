@@ -287,6 +287,8 @@
         console.log ("new websocket: " + url);
         return new WebSocket (url, "cosy");
     }
+    function add_patch (str) {
+    }
     /*
      * Update the model with the values stored in global WINDOW
      * from Lua Code
