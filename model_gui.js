@@ -90,8 +90,7 @@
             target = force.nodes()[nodes_index[target]];
             
             force.links().push({source: source, target: target, type: "licensing"});
-            links_index[source.name + ',' + target.name] = links.length - 1;
-            updateForceLayout();
+            links_index[source.name + ',' + target.name] = force.links().length - 1;
         } else if("place" == node.get("type") || "transition" == node.get("type")){
             console.log ("Adding " + node.get("name") + " " + node.get("type"));
             marking = node.get('marking') ? node.get('marking') : '';
@@ -112,7 +111,6 @@
             
             var x_pos = origin.x + Math.cos(angle) * h;
             var y_pos = origin.y + Math.sin(angle) * h;
-
             elem = {name : node.get('name'),
                     type : node.get("type"), 
                     shape : shape,
@@ -124,54 +122,53 @@
                     fixed : true,
                     lua_node :node};
             force.nodes().push(elem);
-            console.log("add_node " + force.nodes())
-            nodes_index[node.get('name')] = nodes.length - 1;
-            updateForceLayout();
+            //~ console.log("add_node " + force.nodes())
+            nodes_index[node.get('name')] = force.nodes().length - 1;
+        } else if("form" == node.get("type")){
+            var unsorted_forms = elements(node);
+            var form_elems = [];
+            for(j = 1; j <= count(unsorted_forms); j++){
+                form_elems.push(unsorted_forms.get(j));
+            }
+            form_elems.sort(function sortForms(x, y) {
+                if("text" == x.get("type"))
+                    return -1;
+                if(y_value = "text" == y.get("type"))
+                    return 1;
+                return 0;
+            });
+            
+            var form_id = "form" + node.get("name");
+            
+            d3.select("#forms_group").append("div")
+                    .attr("id", form_id)
+                    .attr("class", "lua_form");
+                                    
+            var selection = d3.select("#"+form_id);
+            
+            for(j = 0; j < count(form_elems); j++){
+                form = form_elems[j];
+                if("text" == form.get("type")){
+                    selection.append("h4")
+                        .text(form.get("name"));
+                    selection.append("input").data([form])
+                        .attr("type", "text")
+                        .attr("size", 9)
+                        .on("change", formTextChange)
+                        .attr("value", form.get("value"));                        
+                } else if("button" == form.get("type")) {
+                    btn = selection.append("button").data([form]);
+                    btn.attr("type", "button")
+                        .attr("class", "btn btn-success")
+                        .on("click", formBtnClick)
+                        .text(form.get("name"));
+                    if(!form.get("is_active")){
+                        btn.attr("disabled", "true")
+                    }
+                }
+            }
         }
-        //else if("form" == node.get("type")){
-            //~ var unsorted_forms = elements(node);
-            //~ var form_elems = [];
-            //~ for(j = 1; j <= count(unsorted_forms); j++){
-                //~ form_elems.push(unsorted_forms.get(j));
-            //~ }
-            //~ form_elems.sort(function sortForms(x, y) {
-                //~ if("text" == x.get("type"))
-                    //~ return -1;
-                //~ if(y_value = "text" == y.get("type"))
-                    //~ return 1;
-                //~ return 0;
-            //~ });
-            //~ 
-            //~ var form_id = "form" + node.get("name");
-            //~ 
-            //~ d3.select("#forms_group").append("div")
-                    //~ .attr("id", form_id)
-                    //~ .attr("class", "lua_form");
-                                    //~ 
-            //~ var selection = d3.select("#"+form_id);
-            //~ 
-            //~ for(j = 0; j < count(form_elems); j++){
-                //~ form = form_elems[j];
-                //~ if("text" == form.get("type")){
-                    //~ selection.append("h4")
-                        //~ .text(form.get("name"));
-                    //~ selection.append("input").data([form])
-                        //~ .attr("type", "text")
-                        //~ .attr("size", 9)
-                        //~ .on("change", formTextChange)
-                        //~ .attr("value", form.get("value"));                        
-                //~ } else if("button" == form.get("type")) {
-                    //~ btn = selection.append("button").data([form]);
-                    //~ btn.attr("type", "button")
-                        //~ .attr("class", "btn btn-success")
-                        //~ .on("click", formBtnClick)
-                        //~ .text(form.get("name"));
-                    //~ if(!form.get("is_active")){
-                        //~ btn.attr("disabled", "true")
-                    //~ }
-                //~ }
-            //~ }
-        //~ }
+        updateForceLayout();
     }
 
     function remove_node (node) {
@@ -195,7 +192,7 @@
         updateForceLayout();
     }
 
-    function dummy_update_node (node) {
+    function update_node (node) {
         var i ,j;
         if(node.get("type") == "arc"){
             //~ var source = node.get('source').get('name'),
@@ -240,49 +237,49 @@
             
             i = nodes_index[node.get('name')];
             force.nodes()[i] = elem;
-        } //else if("form" == node.get("type")){
-            //~ var unsorted_forms = elements(node);
-            //~ var form_elems = [];
-            //~ for(j = 1; j <= count(unsorted_forms); j++){
-                //~ form_elems.push(unsorted_forms.get(j));
-            //~ }
-            //~ form_elems.sort(function sortForms(x, y) {
-                //~ if("text" == x.get("type"))
-                    //~ return -1;
-                //~ if(y_value = "text" == y.get("type"))
-                    //~ return 1;
-                //~ return 0;
-            //~ });
-            //~ 
-            //~ var form_id = "form_"+node.get("name");
-            //~ d3.select("#forms_group").append("div")
-                    //~ .attr("id", form_id)
-                    //~ .attr("class", "lua_form");
-                                    //~ 
-            //~ var selection = d3.select("#"+form_id);
-            //~ 
-            //~ for(j = 0; j < count(form_elems); j++){
-                //~ form = form_elems[j];
-                //~ if("text" == form.get("type")){
-                    //~ selection.append("h4")
-                        //~ .text(form.get("name"));
-                    //~ selection.append("input").data([form])
-                        //~ .attr("type", "text")
-                        //~ .attr("size", 9)
-                        //~ .on("change", formTextChange)
-                        //~ .attr("value", form.get("value"));                        
-                //~ } else if("button" == form.get("type")) {
-                    //~ btn = selection.append("button").data([form]);
-                    //~ btn.attr("type", "button")
-                        //~ .attr("class", "btn btn-success")
-                        //~ .on("click", formBtnClick)
-                        //~ .text(form.get("name"));
-                    //~ if(!form.get("is_active")){
-                        //~ btn.attr("disabled", "true")
-                    //~ }
-                //~ }
-            //~ }
-        //~ }
+        } else if("form" == node.get("type")){
+            var unsorted_forms = elements(node);
+            var form_elems = [];
+            for(j = 1; j <= count(unsorted_forms); j++){
+                form_elems.push(unsorted_forms.get(j));
+            }
+            form_elems.sort(function sortForms(x, y) {
+                if("text" == x.get("type"))
+                    return -1;
+                if(y_value = "text" == y.get("type"))
+                    return 1;
+                return 0;
+            });
+            
+            var form_id = "form_"+node.get("name");
+            d3.select("#forms_group").append("div")
+                    .attr("id", form_id)
+                    .attr("class", "lua_form");
+                                    
+            var selection = d3.select("#"+form_id);
+            
+            for(j = 0; j < count(form_elems); j++){
+                form = form_elems[j];
+                if("text" == form.get("type")){
+                    selection.append("h4")
+                        .text(form.get("name"));
+                    selection.append("input").data([form])
+                        .attr("type", "text")
+                        .attr("size", 9)
+                        .on("change", formTextChange)
+                        .attr("value", form.get("value"));                        
+                } else if("button" == form.get("type")) {
+                    btn = selection.append("button").data([form]);
+                    btn.attr("type", "button")
+                        .attr("class", "btn btn-success")
+                        .on("click", formBtnClick)
+                        .text(form.get("name"));
+                    if(!form.get("is_active")){
+                        btn.attr("disabled", "true")
+                    }
+                }
+            }
+        }
         updateForceLayout();
     }
     

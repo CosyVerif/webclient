@@ -195,9 +195,9 @@
         <script>
             Lua.executeScript("lua/js.lua");
             Lua.executeScript("lua/cosy.lua");
-            var model = connect ("ws://127.0.0.1:8080", "token", "resource");
+            var model = connect ("ws://127.0.0.1:8080", "resource", "token");
             do_something (model);
-            updateModel(model);
+            //updateModel(model);
         </script>
     </body>
 </html>
