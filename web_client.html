@@ -216,12 +216,11 @@ cosy.resource.nodes[1] = nil
                         
             function executeLua(code, clear) {
                 try {
-                    lua_code.setValue(lua_code.getValue() + code + "\n");
-                    L.execute(code);
                     if(!model) {
                         model = connect ("ws://127.0.0.1:8080", "resource", "token");
-                        do_something (model);
                     }
+                    lua_code.setValue(lua_code.getValue() + code + "\n");
+                    execute(code);
                 } catch(err) {
                         Module.print('ERROR: ' + err);
                         throw(err);
@@ -232,6 +231,7 @@ cosy.resource.nodes[1] = nil
         <script type="text/javascript" lang="Javascript" src="lua_vm/lua.vm.js"></script>
         <script>
             Lua.executeScript("lua/js.lua");
+            Lua.executeScript("lua/cosy/interface/js.lua");
         </script>
     </body>
 </html>
