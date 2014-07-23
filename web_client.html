@@ -34,16 +34,33 @@
             </div>
             <div class="row">
                 <div class="span7" border=1>
-                    <h4>Lua Code</h4>
+                    <h4>Lua Model</h4>
                     <input type="file" id="file_browser">
                     <textarea id="model_code"></textarea>
+                    <h4>Lua Model Input</h4>
+                    <textarea id="lua_input">
+cosy.resource.nodes[2].highlighted = true
+cosy.resource.nodes[2].position = [[80:180]]
+cosy.resource.nodes[2].highlighted = false
+cosy.resource.nodes[2].position = [[80:90]]
+cosy.resource.nodes[5] = {}
+cosy.resource.nodes[5].marking = true
+cosy.resource.nodes[5].name = [[Node 5]]
+cosy.resource.nodes[5].position = [[100:167]]
+cosy.resource.nodes[5].type = [[place]]
+cosy.resource.arcs[1].arc_4_5 = {}
+cosy.resource.arcs[1].arc_4_5.source = cosy.resource.nodes[4]
+cosy.resource.arcs[1].arc_4_5.target = cosy.resource.nodes[5]
+cosy.resource.arcs[1].arc_4_5.type = [[arc]]
+cosy.resource.nodes[1] = nil
+                    </textarea>
                 </div>
                 <div class="span5">
                     <h4>Lua Code Output</h4>
-                    <pre id="output">In here we can watch any output of the lua code. Also, any exception during execution time will be posted here</pre>
+                    <pre id="output"></pre>
                 </div>
             </div>
-            <a href="#" class="btn btn-primary" onclick="executeLua(lua_code.getValue(), true); return false" id="the_button">Execute Lua Code &raquo;</a>
+            <a href="#" class="btn btn-primary" onclick="executeNextLine(); return false" id="the_button">Execute Lua Code &raquo;</a>
             <a href="#" class="btn btn-danger" onclick="" id="simulation_btn">Run Simulation &raquo;</a>
             
             <div class="row voffset4">
@@ -65,17 +82,42 @@
         <script type="text/javascript" src="model_gui.js"></script>
         
         <script type="text/javascript" languaje="Javascript">
+            
             // CodeMirror
             var lua_code = CodeMirror.fromTextArea(document.getElementById('model_code'),{
                 lineNumbers: true,
                 readOnly: true
             });
             
+            // Input lines for lua code
+            var lua_input = CodeMirror.fromTextArea(document.getElementById('lua_input'),{
+                lineNumbers: true,
+                gutters: ["CodeMirror-linenumbers", "breakpoints"]
+            });
+            
+            
+            lua_input.setSize(null,160);
+
             var server_patches = CodeMirror.fromTextArea(document.getElementById('server_patches'),{
                 lineNumbers: true,
                 readOnly: true
             });
             server_patches.setValue("local p = { a = {b = 21}, c = {}};");
+            
+            // File Reader
+            document.getElementById('file_browser').addEventListener('change', CopyMe, false);
+            
+            function CopyMe(evt) {
+                var file = evt.target.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(){ 
+                        lua_code.setValue(reader.result);
+                        executeLua(lua_code.getValue(), false);
+                    }
+                    reader.readAsText(file);
+                }
+            };
             
             // Tabs                    
             var tabLinks = new Array();
@@ -149,55 +191,47 @@
                     outputElement.innerHTML = (outputElement.innerHTML ? outputElement.innerHTML + '<br>' : '') + x;
                 }
             };
-
-            // File Reader
-            document.getElementById('file_browser').addEventListener('change', CopyMe, false);
             
-            function CopyMe(evt) {
-                var file = evt.target.files[0];
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function(){ lua_code.setValue(reader.result); }
-                    reader.readAsText(file);
+            var model,
+                line_number = 0;
+            
+            function executeNextLine(){
+                // We get the code
+                var code = lua_input.getLine(line_number);
+                if(code){
+                    // Info for the line
+                    var info = lua_input.lineInfo(line_number);
+                    lua_input.setGutterMarker(line_number, "breakpoints", info.gutterMarkers ? null : makeCodeMirrorMarker());
+                    executeLua(code, false);
+                    line_number++;
                 }
-            };
-            
+            }
+
+            function makeCodeMirrorMarker() {
+                var marker = document.createElement("div");
+                marker.style.color = "#822";
+                marker.innerHTML = "●";
+                return marker;
+            }
+                        
             function executeLua(code, clear) {
-                if (clear) outputElement.innerHTML = '';
-                
-                var js_declarations = ' local keys = {}; \
-                                    for k in pairs(model) \
-                                    do \
-                                    keys[#keys+1] = k; \
-                                    end \
-                                    local window    = js.global; \
-                                    window.model    = model; \
-                                    window.keys     = keys; \
-                                    window.count    = #keys; \
-                                    window.var_type = type; \
-                                    window.type_place      = place; \
-                                    window.type_transition = transition; \
-                                    window.type_arc        = arc;';
-                
                 try {
-                    L.execute(code + js_declarations);
-                    //~ L.execute(code);
+                    lua_code.setValue(lua_code.getValue() + code + "\n");
+                    L.execute(code);
+                    if(!model) {
+                        model = connect ("ws://127.0.0.1:8080", "resource", "token");
+                        do_something (model);
+                    }
                 } catch(err) {
                         Module.print('ERROR: ' + err);
                         throw(err);
                 }
-                
-                updateModel();
             }
         </script>
         <script src="lua_vm/js/lua.js"></script>
         <script type="text/javascript" lang="Javascript" src="lua_vm/lua.vm.js"></script>
         <script>
             Lua.executeScript("lua/js.lua");
-            Lua.executeScript("lua/cosy.lua");
-            var model = connect ("ws://127.0.0.1:8080", "resource", "token");
-            do_something (model);
-            //updateModel(model);
         </script>
     </body>
 </html>
