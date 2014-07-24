@@ -39,20 +39,18 @@
                     <textarea id="model_code"></textarea>
                     <h4>Lua Model Input</h4>
                     <textarea id="lua_input">
-cosy.resource.nodes[2].highlighted = true
-cosy.resource.nodes[2].position = [[80:180]]
-cosy.resource.nodes[2].highlighted = false
-cosy.resource.nodes[2].position = [[80:90]]
-cosy.resource.nodes[5] = {}
-cosy.resource.nodes[5].marking = true
-cosy.resource.nodes[5].name = [[Node 5]]
-cosy.resource.nodes[5].position = [[100:167]]
-cosy.resource.nodes[5].type = [[place]]
-cosy.resource.arcs[1].arc_4_5 = {}
-cosy.resource.arcs[1].arc_4_5.source = cosy.resource.nodes[4]
-cosy.resource.arcs[1].arc_4_5.target = cosy.resource.nodes[5]
-cosy.resource.arcs[1].arc_4_5.type = [[arc]]
-cosy.resource.nodes[1] = nil
+cosy.resource.wait[2].highlighted = true
+cosy.resource.wait[2].position = [[300:90]]
+cosy.resource.wait[2].highlighted = false
+cosy.resource.wait[3] = {}
+cosy.resource.wait[3].position = [[200:90]]
+cosy.resource.wait[3].type = [[place]]
+cosy.resource.wait[3].marking = true
+cosy.resource.wait[3].name = [[Turing is Waiting]]
+cosy.resource.arcs[1].test_arc_1 = {}
+cosy.resource.arcs[1].test_arc_1.source = cosy.resource.wait[2]
+cosy.resource.arcs[1].test_arc_1.target = cosy.resource.wait[3]
+cosy.resource.arcs[1].test_arc_1.type = [[arc]]
                     </textarea>
                 </div>
                 <div class="span5">

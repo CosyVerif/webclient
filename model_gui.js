@@ -37,6 +37,9 @@
         .gravity(0)
         .linkDistance(200)
         .on("tick", tick);
+        
+    var drag = force.drag()
+        .on("dragend", dragEnd);
                     
     // We start to append elements to the original html.
     var svg = d3.select("#model_container").append("svg:svg")
@@ -123,6 +126,7 @@
                 
             var x_pos = origin.x + Math.cos(angle*(180/Math.PI)) * h;
             var y_pos = origin.y + Math.sin(angle*(180/Math.PI)) * h;
+
             elem = {id : id(node),
                     name : name,
                     type : node.get("type"), 
@@ -173,7 +177,7 @@
             selection.enter().append("div")
                     .attr("id", id(node))
                     .attr("class", "lua_form");
-                        
+            
             for(j = 0; j < count(form_elems); j++){
                 form = form_elems[j];
                 sub_id = id(form);
@@ -251,7 +255,7 @@
             .attr("fill", function(d){ return d.highlighted ? "gold" : "#ccc"})
             .on("dblclick", dblclick)
             .on("click", click)
-            .call(force.drag);
+            .call(drag);
         
         node.exit().remove();
         
@@ -281,6 +285,9 @@
     }
     
     // Event handling methods
+    function dragEnd(d) {        
+    }
+    
     function dblclick(d) {
         d.lua_node.set("selected", false);
         d3.select(this).classed("selected", d.selected = false);
