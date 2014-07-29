@@ -1,8 +1,0 @@
-#! /bin/bash
-
-npm install component
-npm install component-minify
-
-component install --dev
-component build --use component-minify
-

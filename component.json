@@ -1,7 +1,0 @@
-{
-  "name": "CosyVerif WebClient",
-  "dependencies": {
-    "components/jquery": "*",
-    "mbostock/d3": "*"
-  }
-}
