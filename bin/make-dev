@@ -8,7 +8,7 @@ cd ${dir}
 curl https://raw.githubusercontent.com/mbostock/d3/master/d3.min.js \
   -o ${current}/js/d3.min.js
 
-git clone https://github.com/daurnimator/lua.vm.js.git
+git clone https://github.com/CosyVerif/lua.vm.js.git
 mv lua.vm.js/dist/lua.vm.js ${current}/js/
 mv lua.vm.js/dist/js/*      ${current}/js/
 mv lua.vm.js/dist/css/*     ${current}/css/

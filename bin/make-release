@@ -8,7 +8,7 @@ cd ${dir}
 curl https://raw.githubusercontent.com/mbostock/d3/master/d3.min.js \
   -o ${current}/js/d3.min.js
 
-curl https://raw.githubusercontent.com/daurnimator/lua.vm.js/master/dist/lua.vm.js \
+curl https://raw.githubusercontent.com/CosyVerif/lua.vm.js/master/dist/lua.vm.js \
   -o ${current}/js/lua.vm.js
 
 rm -rf ${current}/lua/cosy
