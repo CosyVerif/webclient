@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>model_gui.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>model_gui.js</h1>
+        
+
+        
+      </div>
+
+      
+        
+        
+        
+      
+        
+        <p>Size definitions for the shapes</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">var</span> rect_size = <span class="hljs-number">30</span>,
+        rect_highlighted = <span class="hljs-number">40</span>,
+        radius = rect_size / <span class="hljs-number">2</span>;
+        radis_highlighted = (rect_size / <span class="hljs-number">1.2</span>);</pre></div>
+        
+      
+        
+        <p>Definitions of each of the shapes represented in the force layout.
+Each new shape must be defined here</p>
+
+        
+          <div class='highlight'><pre>
+    <span class="hljs-keyword">var</span> shapes = {
+        rect : {
+            d: <span class="hljs-string">"M "</span> + -rect_size + <span class="hljs-string">" "</span> + (-rect_size / <span class="hljs-number">4</span>) + <span class="hljs-string">" h "</span> + <span class="hljs-number">2</span> * rect_size + <span class="hljs-string">" v "</span> + (rect_size / <span class="hljs-number">2</span>) + <span class="hljs-string">" h "</span>+ (-<span class="hljs-number">2</span> * rect_size) + <span class="hljs-string">" z"</span>,
+            
+            anchors:{<span class="hljs-string">"north"</span> : {x:<span class="hljs-number">0</span>, y:(-rect_size/<span class="hljs-number">4</span>)},
+                     <span class="hljs-string">"east"</span> : {x:rect_size, y:<span class="hljs-number">0</span>},
+                     <span class="hljs-string">"south"</span> : {x:<span class="hljs-number">0</span>, y:(rect_size/<span class="hljs-number">4</span>)},
+                     <span class="hljs-string">"west"</span> : {x:-rect_size, y:<span class="hljs-number">0</span>},
+                     <span class="hljs-string">"northeast"</span> : {x:rect_size, y:-rect_size/<span class="hljs-number">4</span>},
+                     <span class="hljs-string">"southeast"</span> : {x:rect_size, y:rect_size/<span class="hljs-number">4</span>},
+                     <span class="hljs-string">"southwest"</span> : {x:-rect_size, y:rect_size/<span class="hljs-number">4</span>},
+                     <span class="hljs-string">"northwest"</span> : {x:-rect_size, y:-rect_size/<span class="hljs-number">4</span>}}
+        },
+        
+        rect_highlighted : {
+            d: <span class="hljs-string">"M "</span> + -rect_highlighted + <span class="hljs-string">" "</span> + (-rect_highlighted / <span class="hljs-number">4</span>) + <span class="hljs-string">" h "</span> + <span class="hljs-number">2</span> * rect_highlighted + <span class="hljs-string">" v "</span> + (rect_highlighted / <span class="hljs-number">2</span>) + <span class="hljs-string">" h "</span>+ (-<span class="hljs-number">2</span> * rect_highlighted) + <span class="hljs-string">" z"</span>,
+            anchors : {}
+        },
+        
+        vertical_rect : {
+            d: <span class="hljs-string">"M "</span> + (-rect_size / <span class="hljs-number">4</span>) + <span class="hljs-string">" "</span> + -rect_size + <span class="hljs-string">" h "</span> + (rect_size / <span class="hljs-number">2</span>) + <span class="hljs-string">" v "</span> + <span class="hljs-number">2</span> * rect_size + <span class="hljs-string">" h "</span>      + (-rect_size / <span class="hljs-number">2</span>) + <span class="hljs-string">" z"</span>,
+            anchors : {}
+        },
+        
+        circle : {
+            d: <span class="hljs-string">"M 0 0 m"</span> + (-radius) +<span class="hljs-string">", 0 a "</span> + radius + <span class="hljs-string">","</span> + radius + <span class="hljs-string">" 0 1,0 "</span> + (radius * <span class="hljs-number">2</span>) +<span class="hljs-string">",0 "</span> 
+                        + <span class="hljs-string">"a "</span> + radius + <span class="hljs-string">","</span> + radius + <span class="hljs-string">" 0 1,0 "</span> + (-radius * <span class="hljs-number">2</span>) + <span class="hljs-string">",0"</span>,
+            anchors : {<span class="hljs-string">"north"</span> :    {x:<span class="hljs-built_in">Math</span>.cos(<span class="hljs-built_in">Math</span>.PI/<span class="hljs-number">2</span>)*radius,      y:-<span class="hljs-built_in">Math</span>.sin(<span class="hljs-built_in">Math</span>.PI/<span class="hljs-number">2</span>)*radius},
+                     <span class="hljs-string">"east"</span> :       {x:<span class="hljs-built_in">Math</span>.cos(<span class="hljs-number">0</span>)*radius,              y:<span class="hljs-built_in">Math</span>.sin(<span class="hljs-number">0</span>)*radius},
+                     <span class="hljs-string">"south"</span> :      {x:<span class="hljs-built_in">Math</span>.cos(<span class="hljs-number">3</span>/<span class="hljs-number">2</span>*<span class="hljs-built_in">Math</span>.PI)*radius,    y:-<span class="hljs-built_in">Math</span>.sin(<span class="hljs-number">3</span>/<span class="hljs-number">2</span>*<span class="hljs-built_in">Math</span>.PI)*radius},
+                     <span class="hljs-string">"west"</span> :       {x:<span class="hljs-built_in">Math</span>.cos(<span class="hljs-built_in">Math</span>.PI)*radius,        y:<span class="hljs-built_in">Math</span>.sin(<span class="hljs-built_in">Math</span>.PI)*radius},
+                     <span class="hljs-string">"northeast"</span> :  {x:<span class="hljs-built_in">Math</span>.cos(<span class="hljs-built_in">Math</span>.PI/<span class="hljs-number">4</span>)*radius,      y:-<span class="hljs-built_in">Math</span>.sin(<span class="hljs-built_in">Math</span>.PI/<span class="hljs-number">4</span>)*radius},
+                     <span class="hljs-string">"southeast"</span> :  {x:<span class="hljs-built_in">Math</span>.cos(<span class="hljs-number">7</span>/<span class="hljs-number">4</span>*<span class="hljs-built_in">Math</span>.PI)*radius,    y:-<span class="hljs-built_in">Math</span>.sin(<span class="hljs-number">7</span>/<span class="hljs-number">4</span>*<span class="hljs-built_in">Math</span>.PI)*radius},
+                     <span class="hljs-string">"southwest"</span> :  {x:<span class="hljs-built_in">Math</span>.cos(<span class="hljs-number">5</span>/<span class="hljs-number">4</span>*<span class="hljs-built_in">Math</span>.PI)*radius,    y:-<span class="hljs-built_in">Math</span>.sin(<span class="hljs-number">5</span>/<span class="hljs-number">4</span>*<span class="hljs-built_in">Math</span>.PI)*radius},
+                     <span class="hljs-string">"northwest"</span> :  {x:<span class="hljs-built_in">Math</span>.cos(<span class="hljs-number">3</span>/<span class="hljs-number">4</span>*<span class="hljs-built_in">Math</span>.PI)*radius,    y:-<span class="hljs-built_in">Math</span>.sin(<span class="hljs-number">3</span>/<span class="hljs-number">4</span>*<span class="hljs-built_in">Math</span>.PI)*radius}}
+        },
+        
+        circle_highlighted : {
+            d: <span class="hljs-string">"M 0 0 m"</span> + (-radis_highlighted) +<span class="hljs-string">", 0 a "</span> + radis_highlighted + <span class="hljs-string">","</span> + radis_highlighted + <span class="hljs-string">" 0 1,0 "</span> + (radis_highlighted * <span class="hljs-number">2</span>) +<span class="hljs-string">",0 "</span> + <span class="hljs-string">"a "</span> + radis_highlighted + <span class="hljs-string">","</span> + radis_highlighted + <span class="hljs-string">" 0 1,0 "</span> + (-radis_highlighted * <span class="hljs-number">2</span>) + <span class="hljs-string">",0"</span>
+            
+        },
+    };</pre></div>
+        
+      
+        
+        <p>Position definitions and points of reference for the markers</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">var</span> margin = {top: -<span class="hljs-number">5</span>, right: -<span class="hljs-number">5</span>, bottom: -<span class="hljs-number">5</span>, left: -<span class="hljs-number">5</span>},
+        width = <span class="hljs-number">960</span> - margin.left - margin.right,
+        height = <span class="hljs-number">600</span> - margin.top - margin.bottom,
+        markerWidth = <span class="hljs-number">8</span>,
+        markerHeight = <span class="hljs-number">8</span>,
+        origin = {x: width/<span class="hljs-number">2</span>, y: height/<span class="hljs-number">2</span>};</pre></div>
+        
+      
+        
+        <p>The force layout from D3 is the graphical representation of the
+model. Set gravity in 0 so that the nodes dont move in the graph and linkDistance 
+in 300 to adjust any node without inicial position</p>
+
+        
+          <div class='highlight'><pre>    
+    <span class="hljs-keyword">var</span> force = d3.layout.force()
+        .size([width, height])
+        .nodes([])
+        .links([])
+        .gravity(<span class="hljs-number">0</span>)
+        .linkDistance(<span class="hljs-number">200</span>)
+        .on(<span class="hljs-string">"tick"</span>, tick);
+        
+    <span class="hljs-keyword">var</span> drag = force.drag()
+        .on(<span class="hljs-string">"dragend"</span>, dragEnd);</pre></div>
+        
+      
+        
+        <p>We start to append elements to the original html.</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">var</span> svg = d3.select(<span class="hljs-string">"#model_container"</span>).append(<span class="hljs-string">"svg:svg"</span>)
+        .attr(<span class="hljs-string">"width"</span>, width)
+        .attr(<span class="hljs-string">"height"</span>, height)
+        .attr(<span class="hljs-string">"fill"</span>, <span class="hljs-string">"none"</span>)
+        .attr(<span class="hljs-string">"stroke"</span>, <span class="hljs-string">"black"</span>);
+    
+    d3.select(<span class="hljs-string">"#model_container"</span>).append(<span class="hljs-string">"div"</span>)
+        .attr(<span class="hljs-string">"id"</span>, <span class="hljs-string">"forms_group"</span>)
+        .attr(<span class="hljs-string">"class"</span>, <span class="hljs-string">"span5"</span>);</pre></div>
+        
+      
+        
+        <p>Per-type markers, as they don’t inherit styles.</p>
+
+        
+          <div class='highlight'><pre>    svg.append(<span class="hljs-string">"svg:defs"</span>).selectAll(<span class="hljs-string">"marker"</span>)
+        .data([<span class="hljs-string">"suit"</span>, <span class="hljs-string">"licensing"</span>, <span class="hljs-string">"resolved"</span>])
+        .enter().append(<span class="hljs-string">"svg:marker"</span>)
+        .attr(<span class="hljs-string">"id"</span>, <span class="hljs-built_in">String</span>)
+        .attr(<span class="hljs-string">"viewBox"</span>, <span class="hljs-string">"0 -5 10 10"</span>)
+        .attr(<span class="hljs-string">"refX"</span>, markerWidth +<span class="hljs-number">2</span>)
+        .attr(<span class="hljs-string">"markerWidth"</span>, markerWidth)
+        .attr(<span class="hljs-string">"markerHeight"</span>, markerHeight)
+        .attr(<span class="hljs-string">"orient"</span>, <span class="hljs-string">"auto"</span>)
+        .append(<span class="hljs-string">"svg:path"</span>)
+        .attr(<span class="hljs-string">"d"</span>, <span class="hljs-string">"M0,-5L10,0L0,5"</span>);</pre></div>
+        
+      
+        
+        <p>Definitions of all the elements from the force layot.
+the circle represents a token for each node. </p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">var</span> path = svg.append(<span class="hljs-string">"svg:g"</span>).selectAll(<span class="hljs-string">"path"</span>),
+        node = svg.append(<span class="hljs-string">"svg:g"</span>).selectAll(<span class="hljs-string">".node"</span>),
+        circle = svg.append(<span class="hljs-string">"svg:g"</span>).selectAll(<span class="hljs-string">"g"</span>),
+        text = svg.append(<span class="hljs-string">"svg:g"</span>).selectAll(<span class="hljs-string">"g"</span>);
+        
+    <span class="hljs-keyword">var</span> nodes_index = {},
+        links_index = {}.
+        forms_index = {};</pre></div>
+        
+      
+        
+        <p>Add new node from the model </p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add_node</span><span class="hljs-params">(node)</span></span>{
+        updateModelNode(node);
+    }</pre></div>
+        
+      
+        
+        <p>Update a previous existing node in the model</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">update_node</span> <span class="hljs-params">(node)</span> </span>{
+        updateModelNode(node);
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateModelNode</span> <span class="hljs-params">(node)</span> </span>{
+        <span class="hljs-keyword">if</span>(node.get(<span class="hljs-string">"type"</span>) == <span class="hljs-string">"arc"</span>){
+            <span class="hljs-keyword">var</span> source = node.get(<span class="hljs-string">'source'</span>),
+                target = node.get(<span class="hljs-string">'target'</span>),
+                valuation = node.get(<span class="hljs-string">'validation'</span>),
+                anchor = node.get(<span class="hljs-string">"anchor"</span>) ?  node.get(<span class="hljs-string">"anchor"</span>) : <span class="hljs-string">''</span>,
+                lock_pos = node.get(<span class="hljs-string">"lock_pos"</span>) ?  node.get(<span class="hljs-string">"lock_pos"</span>) : <span class="hljs-literal">false</span>;
+            
+            source = force.nodes()[nodes_index[id(source)]];
+            target = force.nodes()[nodes_index[id(target)]];
+            
+            <span class="hljs-keyword">if</span>(!source || !target) <span class="hljs-keyword">return</span>;
+            
+            <span class="hljs-keyword">if</span>(<span class="hljs-literal">undefined</span> == links_index[id(node)]){
+                force.links().push({id : id(node), 
+                                    anchor:anchor,
+                                    source: source,
+                                    target: target,
+                                    type: <span class="hljs-string">"licensing"</span>,
+                                    lock_pos : lock_pos});
+                                    
+                links_index[id(node)] = force.links().length - <span class="hljs-number">1</span>;
+            } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">var</span> i = links_index[id(node)];
+                force.links()[i].source = source;            
+                force.links()[i].target = target;
+                force.links()[i].anchor = anchor;
+                force.links()[i].lock_pos = lock_pos;
+            }
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-string">"place"</span> == node.get(<span class="hljs-string">"type"</span>) || <span class="hljs-string">"transition"</span> == node.get(<span class="hljs-string">"type"</span>)){
+            
+            <span class="hljs-keyword">if</span>(node.get(<span class="hljs-string">'name'</span>) == <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">return</span>;
+            
+            marking = node.get(<span class="hljs-string">'marking'</span>) ? node.get(<span class="hljs-string">'marking'</span>) : <span class="hljs-string">''</span>;
+            highlighted = node.get(<span class="hljs-string">'highlighted'</span>) ? node.get(<span class="hljs-string">'highlighted'</span>) : <span class="hljs-string">''</span>;
+            selected = node.get(<span class="hljs-string">'selected'</span>) ? node.get(<span class="hljs-string">'selected'</span>) : <span class="hljs-string">''</span>;
+            name = node.get(<span class="hljs-string">'name'</span>);
+            isTransition = node.get(<span class="hljs-string">"type"</span>) == <span class="hljs-string">"transition"</span>;
+            
+            <span class="hljs-keyword">if</span>(highlighted)
+                shape = isTransition? shapes.rect_highlighted : shapes.circle_highlighted;
+            <span class="hljs-keyword">else</span>
+                shape = isTransition? shapes.rect : shapes.circle;
+            
+            <span class="hljs-keyword">var</span> s = node.get(<span class="hljs-string">"position"</span>),
+                is_polar = s.indexOf(<span class="hljs-string">","</span>) == -<span class="hljs-number">1</span>,
+                x_pos, y_pos, p;
+                
+            <span class="hljs-keyword">if</span>(is_polar)
+                p = s.indexOf(<span class="hljs-string">":"</span>)
+            <span class="hljs-keyword">else</span>
+                p = s.indexOf(<span class="hljs-string">","</span>)
+            
+            
+            <span class="hljs-keyword">var</span> offset_x = is_polar ? <span class="hljs-built_in">Math</span>.cos(s.substring(<span class="hljs-number">0</span>, p)*(<span class="hljs-number">180</span>/<span class="hljs-built_in">Math</span>.PI)) * s.substring(p+<span class="hljs-number">1</span>) : s.substring(<span class="hljs-number">0</span>, p)
+            <span class="hljs-keyword">var</span> offset_y = is_polar ? <span class="hljs-built_in">Math</span>.sin(s.substring(<span class="hljs-number">0</span>, p)*(<span class="hljs-number">180</span>/<span class="hljs-built_in">Math</span>.PI)) * s.substring(p+<span class="hljs-number">1</span>) : s.substring(p+<span class="hljs-number">1</span>)
+            
+            <span class="hljs-keyword">var</span> x_pos = <span class="hljs-built_in">parseFloat</span>(origin.x) + <span class="hljs-built_in">parseFloat</span>(offset_x);
+            <span class="hljs-keyword">var</span> y_pos = <span class="hljs-built_in">parseFloat</span>(origin.y) - <span class="hljs-built_in">parseFloat</span>(offset_y);
+            elem = {id : id(node),
+                    name : name,
+                    type : node.get(<span class="hljs-string">"type"</span>), 
+                    shape : shape,
+                    marking : marking ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
+                    px : x_pos,
+                    py : y_pos,
+                    highlighted : highlighted,
+                    selected : selected,
+                    fixed : <span class="hljs-literal">true</span>,
+                    lua_node :node};
+            <span class="hljs-keyword">if</span>(<span class="hljs-literal">undefined</span> == nodes_index[id(node)]){
+                force.nodes().push(elem);
+                nodes_index[id(node)] = force.nodes().length - <span class="hljs-number">1</span>;
+            } <span class="hljs-keyword">else</span> {
+                i = nodes_index[id(node)];
+                force.nodes()[i].id = elem.id;
+                force.nodes()[i].name = elem.name;
+                force.nodes()[i].type = elem.type;
+                force.nodes()[i].shape = elem.shape;
+                force.nodes()[i].marking = elem.marking;
+                force.nodes()[i].px = elem.px;
+                force.nodes()[i].py = elem.py;
+                force.nodes()[i].highlighted = elem.highlighted;
+                force.nodes()[i].fixed = elem.fixed;
+                force.nodes()[i].selected = elem.selected;
+                force.nodes()[i].lua_node = elem.lua_node;
+            }
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-string">"form"</span> == node.get(<span class="hljs-string">"type"</span>)){
+            <span class="hljs-keyword">var</span> unsorted_forms = elements(node);
+            <span class="hljs-keyword">var</span> form_elems = [];
+            <span class="hljs-keyword">for</span>(j = <span class="hljs-number">1</span>; j &lt;= count(unsorted_forms); j++){
+                form_elems.push(unsorted_forms.get(j));
+            }
+            form_elems.sort(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sortForms</span><span class="hljs-params">(x, y)</span> </span>{
+                <span class="hljs-keyword">if</span>(<span class="hljs-string">"text"</span> == x.get(<span class="hljs-string">"type"</span>))
+                    <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+                <span class="hljs-keyword">if</span>(y_value = <span class="hljs-string">"text"</span> == y.get(<span class="hljs-string">"type"</span>))
+                    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+                <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+            });
+            
+            <span class="hljs-keyword">var</span> selection = d3.select(<span class="hljs-string">"#forms_group"</span>);
+            <span class="hljs-keyword">var</span> data = selection.data();
+            data[id(node)] = node;
+            selection = selection.data(data, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> id(node)});
+            
+            selection.enter().append(<span class="hljs-string">"div"</span>)
+                    .attr(<span class="hljs-string">"id"</span>, id(node))
+                    .attr(<span class="hljs-string">"class"</span>, <span class="hljs-string">"lua_form"</span>);
+            
+            <span class="hljs-keyword">for</span>(j = <span class="hljs-number">0</span>; j &lt; count(form_elems); j++){
+                form = form_elems[j];
+                sub_id = id(form);
+                <span class="hljs-keyword">if</span>(<span class="hljs-string">"text"</span> == form.get(<span class="hljs-string">"type"</span>)){
+                    selection.append(<span class="hljs-string">"h4"</span>)
+                        .attr(<span class="hljs-string">"id"</span>, sub_id+<span class="hljs-string">"_h4"</span>)
+                        .text(form.get(<span class="hljs-string">"name"</span>));
+                    selection.append(<span class="hljs-string">"input"</span>).data([form])
+                        .attr(<span class="hljs-string">"id"</span>, sub_id+<span class="hljs-string">"_text"</span>)
+                        .attr(<span class="hljs-string">"type"</span>, <span class="hljs-string">"text"</span>)
+                        .attr(<span class="hljs-string">"size"</span>, <span class="hljs-number">9</span>)
+                        .on(<span class="hljs-string">"change"</span>, formTextChange)
+                        .attr(<span class="hljs-string">"value"</span>, form.get(<span class="hljs-string">"value"</span>));
+                } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-string">"button"</span> == form.get(<span class="hljs-string">"type"</span>)) {
+                    btn = selection.append(<span class="hljs-string">"button"</span>).data([form]);
+                    btn.attr(<span class="hljs-string">"type"</span>, <span class="hljs-string">"button"</span>)
+                        .attr(<span class="hljs-string">"id"</span>, sub_id)
+                        .attr(<span class="hljs-string">"class"</span>, <span class="hljs-string">"btn btn-success"</span>)
+                        .attr(<span class="hljs-string">"data-toggle"</span>, <span class="hljs-string">"button"</span>)
+                        .on(<span class="hljs-string">"click"</span>, formBtnClick)
+                        .text(form.get(<span class="hljs-string">"name"</span>));
+                    <span class="hljs-keyword">if</span>(!form.get(<span class="hljs-string">"is_active"</span>)){
+                        btn.attr(<span class="hljs-string">"disabled"</span>, <span class="hljs-string">"true"</span>)
+                    }
+                }
+            }
+        }
+        updateForceLayout();
+    }</pre></div>
+        
+      
+        
+        <p>A node has been removed from the model, so it needs to be deleted
+in the layout</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">remove_node</span> <span class="hljs-params">(node)</span> </span>{
+        <span class="hljs-keyword">var</span> index_object, list;
+        
+        <span class="hljs-keyword">if</span>(node.get(<span class="hljs-string">"type"</span>) == <span class="hljs-string">"arc"</span>){
+            index_object = links_index;
+            list = force.links();
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(node.get(<span class="hljs-string">"type"</span>) == <span class="hljs-string">"place"</span> || node.get(<span class="hljs-string">"type"</span>) == <span class="hljs-string">"transition"</span>){
+            index_object = nodes_index;
+            list = force.nodes();
+        }
+
+        list.splice(index_object[id(node)], <span class="hljs-number">1</span>)
+        
+        <span class="hljs-keyword">delete</span> index_object[id(node)];
+        updateForceLayout();
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">websocket</span> <span class="hljs-params">(url)</span> </span>{
+        <span class="hljs-built_in">console</span>.log (<span class="hljs-string">"new websocket: "</span> + url);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> WebSocket (url, <span class="hljs-string">"cosy"</span>);
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add_patch</span> <span class="hljs-params">(str)</span> </span>{
+    }</pre></div>
+        
+      
+        
+        <p>GUI update</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateForceLayout</span><span class="hljs-params">()</span> </span>{
+        path = path.data(force.links(), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{<span class="hljs-keyword">return</span> d.id});
+        
+        path.enter().insert(<span class="hljs-string">"svg:path"</span>, <span class="hljs-string">".node"</span>);
+        path.attr(<span class="hljs-string">"class"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{<span class="hljs-keyword">return</span> <span class="hljs-string">"link "</span> + d.type;})
+            .attr(<span class="hljs-string">"marker-end"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{<span class="hljs-keyword">return</span> <span class="hljs-string">"url(#"</span> + d.type + <span class="hljs-string">")"</span>;});
+        path.exit().remove();
+        
+        node = node.data(force.nodes(), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{<span class="hljs-keyword">return</span> d.id});
+        node.enter().append(<span class="hljs-string">"path"</span>);
+        node.attr(<span class="hljs-string">"class"</span>, <span class="hljs-string">"node"</span>)
+            .attr(<span class="hljs-string">"d"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> d.shape.d;})
+            .attr(<span class="hljs-string">"fill"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> d.highlighted ? <span class="hljs-string">"gold"</span> : <span class="hljs-string">"#ccc"</span>})
+            .on(<span class="hljs-string">"dblclick"</span>, dblclick)
+            .on(<span class="hljs-string">"click"</span>, click)
+            .call(drag);
+        
+        node.exit().remove();
+        
+        circle = circle.data(force.nodes(), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{<span class="hljs-keyword">return</span> d.id;});
+        circle.enter().append(<span class="hljs-string">"circle"</span>)
+                .attr(<span class="hljs-string">"class"</span>, <span class="hljs-string">"token"</span>)
+                .attr(<span class="hljs-string">"r"</span>, radius/<span class="hljs-number">6</span>)
+                .attr(<span class="hljs-string">"fill"</span>, <span class="hljs-string">"black"</span>)
+                .call(force.drag);
+                                
+        circle.attr(<span class="hljs-string">"visibility"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{<span class="hljs-keyword">return</span> d.marking ? <span class="hljs-string">"visible"</span> : <span class="hljs-string">"hidden"</span> })
+        
+        circle.exit().remove();
+
+        text = text.data(force.nodes(), <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{<span class="hljs-keyword">return</span> d.id;});
+        text.enter().append(<span class="hljs-string">"text"</span>)
+            .attr(<span class="hljs-string">"x"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> d.type == <span class="hljs-string">'transition'</span> ? <span class="hljs-number">45</span> : <span class="hljs-number">30</span>})
+            .attr(<span class="hljs-string">"y"</span>, <span class="hljs-string">".45em"</span>)
+            .attr(<span class="hljs-string">"size"</span>, <span class="hljs-number">10</span>);
+            
+        text.text(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.name; });
+        text.exit().remove();
+        
+        force.start();
+        
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    }</pre></div>
+        
+      
+        
+        <p>Event handling methods</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dragEnd</span><span class="hljs-params">(d)</span> </span>{
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dblclick</span><span class="hljs-params">(d)</span> </span>{
+        d.lua_node.set(<span class="hljs-string">"selected"</span>, <span class="hljs-literal">false</span>);
+        d3.select(<span class="hljs-keyword">this</span>).classed(<span class="hljs-string">"selected"</span>, d.selected = <span class="hljs-literal">false</span>);
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">click</span><span class="hljs-params">(d)</span></span>{
+        d.lua_node.set(<span class="hljs-string">"selected"</span>, <span class="hljs-literal">true</span>);
+        d3.select(<span class="hljs-keyword">this</span>).classed(<span class="hljs-string">"selected"</span>, d.selected = <span class="hljs-literal">true</span>);
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formBtnClick</span><span class="hljs-params">(d)</span></span>{
+        d.set(<span class="hljs-string">"clicked"</span>, <span class="hljs-literal">true</span>);
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formTextChange</span><span class="hljs-params">(d)</span></span>{
+        d.set(<span class="hljs-string">"value"</span>, <span class="hljs-keyword">this</span>.value);
+    }
+        
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tick</span><span class="hljs-params">()</span> </span>{
+        path.attr(<span class="hljs-string">"d"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
+            <span class="hljs-keyword">var</span> offset = {x:<span class="hljs-number">0</span>, y:<span class="hljs-number">0</span>};
+            
+            <span class="hljs-keyword">if</span>(d.target.type == <span class="hljs-string">"transition"</span>){
+                offset = shapes.rect.anchors[d.anchor];
+            }
+            <span class="hljs-keyword">if</span>(d.target.type == <span class="hljs-string">"place"</span>){
+                offset = shapes.circle.anchors[d.anchor];
+            }
+                           
+            <span class="hljs-keyword">var</span> anchor_list = d.target.type == <span class="hljs-string">"place"</span> ? shapes.circle.anchors : shapes.rect.anchors,
+                min = <span class="hljs-built_in">Number</span>.MAX_VALUE, dist;
+            
+            <span class="hljs-keyword">if</span>(!d.lock_pos) {
+                <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> anchor_list){
+                    x_2 = <span class="hljs-built_in">Math</span>.pow(d.source.x - (d.target.x + anchor_list[key].x), <span class="hljs-number">2</span>);
+                    y_2 = <span class="hljs-built_in">Math</span>.pow(d.source.y - (d.target.y + anchor_list[key].y), <span class="hljs-number">2</span>);
+                    
+                    dist = <span class="hljs-built_in">Math</span>.sqrt(x_2 + y_2)
+                    
+                    <span class="hljs-keyword">if</span>(dist &lt; min){
+                        min = dist;
+                        d.anchor = key;
+                        offset = anchor_list[key];
+                    }
+                }
+            }
+            
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"M"</span> + d.source.x + <span class="hljs-string">","</span> + d.source.y + <span class="hljs-string">"L"</span> + (d.target.x+ offset.x) + <span class="hljs-string">","</span> + (d.target.y+offset.y);
+        });
+
+        node.attr(<span class="hljs-string">"transform"</span>, transform);
+        circle.attr(<span class="hljs-string">"transform"</span>, transform);
+        text.attr(<span class="hljs-string">"transform"</span>, transform);
+        
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(d)</span> </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"translate("</span> + d.x + <span class="hljs-string">","</span> + d.y + <span class="hljs-string">")"</span>;
+        }
+    }</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

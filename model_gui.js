@@ -9,13 +9,47 @@
     // Each new shape must be defined here
 
     var shapes = {
-        rect : "M " + -rect_size + " " + (-rect_size / 4) + " h " + 2 * rect_size + " v " + (rect_size / 2) + " h "+ (-2 * rect_size) + " z",
-        rect_highlighted : "M " + -rect_highlighted + " " + (-rect_highlighted / 4) + " h " + 2 * rect_highlighted + " v " + (rect_highlighted / 2) + " h "+ (-2 * rect_highlighted) + " z",
-        vertical_rect : "M " + (-rect_size / 4) + " " + -rect_size + " h " + (rect_size / 2) + " v " + 2 * rect_size + " h "      + (-rect_size / 2) + " z",
-        circle : "M 0 0 m" + (-radius) +", 0 a " + radius + "," + radius + " 0 1,0 " + (radius * 2) +",0 " 
+        rect : {
+            d: "M " + -rect_size + " " + (-rect_size / 4) + " h " + 2 * rect_size + " v " + (rect_size / 2) + " h "+ (-2 * rect_size) + " z",
+            
+            anchors:{"north" : {x:0, y:(-rect_size/4)},
+                     "east" : {x:rect_size, y:0},
+                     "south" : {x:0, y:(rect_size/4)},
+                     "west" : {x:-rect_size, y:0},
+                     "northeast" : {x:rect_size, y:-rect_size/4},
+                     "southeast" : {x:rect_size, y:rect_size/4},
+                     "southwest" : {x:-rect_size, y:rect_size/4},
+                     "northwest" : {x:-rect_size, y:-rect_size/4}}
+        },
+        
+        rect_highlighted : {
+            d: "M " + -rect_highlighted + " " + (-rect_highlighted / 4) + " h " + 2 * rect_highlighted + " v " + (rect_highlighted / 2) + " h "+ (-2 * rect_highlighted) + " z",
+            anchors : {}
+        },
+        
+        vertical_rect : {
+            d: "M " + (-rect_size / 4) + " " + -rect_size + " h " + (rect_size / 2) + " v " + 2 * rect_size + " h "      + (-rect_size / 2) + " z",
+            anchors : {}
+        },
+        
+        circle : {
+            d: "M 0 0 m" + (-radius) +", 0 a " + radius + "," + radius + " 0 1,0 " + (radius * 2) +",0 " 
                         + "a " + radius + "," + radius + " 0 1,0 " + (-radius * 2) + ",0",
-        circle_highlighted : "M 0 0 m" + (-radis_highlighted) +", 0 a " + radis_highlighted + "," + radis_highlighted + " 0 1,0 " + (radis_highlighted * 2) +",0 " + "a " + radis_highlighted + "," + radis_highlighted + " 0 1,0 " + (-radis_highlighted * 2) + ",0"
-        };
+            anchors : {"north" :    {x:Math.cos(Math.PI/2)*radius,      y:-Math.sin(Math.PI/2)*radius},
+                     "east" :       {x:Math.cos(0)*radius,              y:Math.sin(0)*radius},
+                     "south" :      {x:Math.cos(3/2*Math.PI)*radius,    y:-Math.sin(3/2*Math.PI)*radius},
+                     "west" :       {x:Math.cos(Math.PI)*radius,        y:Math.sin(Math.PI)*radius},
+                     "northeast" :  {x:Math.cos(Math.PI/4)*radius,      y:-Math.sin(Math.PI/4)*radius},
+                     "southeast" :  {x:Math.cos(7/4*Math.PI)*radius,    y:-Math.sin(7/4*Math.PI)*radius},
+                     "southwest" :  {x:Math.cos(5/4*Math.PI)*radius,    y:-Math.sin(5/4*Math.PI)*radius},
+                     "northwest" :  {x:Math.cos(3/4*Math.PI)*radius,    y:-Math.sin(3/4*Math.PI)*radius}}
+        },
+        
+        circle_highlighted : {
+            d: "M 0 0 m" + (-radis_highlighted) +", 0 a " + radis_highlighted + "," + radis_highlighted + " 0 1,0 " + (radis_highlighted * 2) +",0 " + "a " + radis_highlighted + "," + radis_highlighted + " 0 1,0 " + (-radis_highlighted * 2) + ",0"
+            
+        },
+    };
 
     // Position definitions and points of reference for the markers
     var margin = {top: -5, right: -5, bottom: -5, left: -5},
@@ -23,8 +57,8 @@
         height = 600 - margin.top - margin.bottom,
         markerWidth = 8,
         markerHeight = 8,
-        refX = radius + markerWidth,
         origin = {x: width/2, y: height/2};
+    
         
     // The force layout from D3 is the graphical representation of the
     // model. Set gravity in 0 so that the nodes dont move in the graph and linkDistance 
@@ -51,14 +85,14 @@
     d3.select("#model_container").append("div")
         .attr("id", "forms_group")
         .attr("class", "span5");
-        
+            
     // Per-type markers, as they don't inherit styles.
     svg.append("svg:defs").selectAll("marker")
         .data(["suit", "licensing", "resolved"])
         .enter().append("svg:marker")
         .attr("id", String)
         .attr("viewBox", "0 -5 10 10")
-        .attr("refX", refX)
+        .attr("refX", markerWidth +2)
         .attr("markerWidth", markerWidth)
         .attr("markerHeight", markerHeight)
         .attr("orient", "auto")
@@ -90,7 +124,9 @@
         if(node.get("type") == "arc"){
             var source = node.get('source'),
                 target = node.get('target'),
-                valuation = node.get('validation');
+                valuation = node.get('validation'),
+                anchor = node.get("anchor") ?  node.get("anchor") : '',
+                lock_pos = node.get("lock_pos") ?  node.get("lock_pos") : false;
             
             source = force.nodes()[nodes_index[id(source)]];
             target = force.nodes()[nodes_index[id(target)]];
@@ -98,35 +134,51 @@
             if(!source || !target) return;
             
             if(undefined == links_index[id(node)]){
-                force.links().push({id : id(node), source: source, target: target, type: "licensing"});
+                force.links().push({id : id(node), 
+                                    anchor:anchor,
+                                    source: source,
+                                    target: target,
+                                    type: "licensing",
+                                    lock_pos : lock_pos});
+                                    
                 links_index[id(node)] = force.links().length - 1;
-            }
-            else{
+            } else {
+                var i = links_index[id(node)];
                 force.links()[i].source = source;            
-                force.links()[i].target = target;    
+                force.links()[i].target = target;
+                force.links()[i].anchor = anchor;
+                force.links()[i].lock_pos = lock_pos;
             }
         } else if("place" == node.get("type") || "transition" == node.get("type")){
+            
+            if(node.get('name') == undefined) return;
             
             marking = node.get('marking') ? node.get('marking') : '';
             highlighted = node.get('highlighted') ? node.get('highlighted') : '';
             selected = node.get('selected') ? node.get('selected') : '';
-            name = node.get('name') ? node.get('name') : '';
-
+            name = node.get('name');
             isTransition = node.get("type") == "transition";
+            
             if(highlighted)
                 shape = isTransition? shapes.rect_highlighted : shapes.circle_highlighted;
             else
                 shape = isTransition? shapes.rect : shapes.circle;
             
             var s = node.get("position"),
-                p = s.indexOf(":");
-            
-            var h = s.substring(0, p),
-                angle = s.substring(p+1);
+                is_polar = s.indexOf(",") == -1,
+                x_pos, y_pos, p;
                 
-            var x_pos = origin.x + Math.cos(angle*(180/Math.PI)) * h;
-            var y_pos = origin.y + Math.sin(angle*(180/Math.PI)) * h;
-
+            if(is_polar)
+                p = s.indexOf(":")
+            else
+                p = s.indexOf(",")
+            
+            
+            var offset_x = is_polar ? Math.cos(s.substring(0, p)*(180/Math.PI)) * s.substring(p+1) : s.substring(0, p)
+            var offset_y = is_polar ? Math.sin(s.substring(0, p)*(180/Math.PI)) * s.substring(p+1) : s.substring(p+1)
+            
+            var x_pos = parseFloat(origin.x) + parseFloat(offset_x);
+            var y_pos = parseFloat(origin.y) - parseFloat(offset_y);
             elem = {id : id(node),
                     name : name,
                     type : node.get("type"), 
@@ -211,23 +263,19 @@
     // A node has been removed from the model, so it needs to be deleted
     // in the layout
     function remove_node (node) {
-        console.log("REMOVE");
-        var i, j;
+        var index_object, list;
+        
         if(node.get("type") == "arc"){
-            var source = node.get('source').get('name'),
-                target = node.get('target').get('name');
-                
-            i = links_index[source + ',' + target];
-            force.links().splice(i, 1);
-            
-            delete links_index[source + ',' + target];
-            
+            index_object = links_index;
+            list = force.links();
         } else if(node.get("type") == "place" || node.get("type") == "transition"){
-            i = nodes_index[current_model.get('name')];
-            force.nodes().splice(i, 1);
-            
-            delete nodes_index[current_model.get('name')];
+            index_object = nodes_index;
+            list = force.nodes();
         }
+
+        list.splice(index_object[id(node)], 1)
+        
+        delete index_object[id(node)];
         updateForceLayout();
     }
     
@@ -251,7 +299,7 @@
         node = node.data(force.nodes(), function (d) {return d.id});
         node.enter().append("path");
         node.attr("class", "node")
-            .attr("d", function(d){ return d.shape;})
+            .attr("d", function(d){ return d.shape.d;})
             .attr("fill", function(d){ return d.highlighted ? "gold" : "#ccc"})
             .on("dblclick", dblclick)
             .on("click", click)
@@ -285,7 +333,7 @@
     }
     
     // Event handling methods
-    function dragEnd(d) {        
+    function dragEnd(d) {
     }
     
     function dblclick(d) {
@@ -308,16 +356,34 @@
         
     function tick() {
         path.attr("d", function (d) {
-            var dx = d.target.x - d.source.x,
-                dy = (d.target.y - d.source.y),
-                dr = Math.sqrt(dx * dx + dy * dy);
-
-            var link_shapes = {
-                "licensing": "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y,
-                "resolved": "M" + d.source.x + "," + d.source.y + "H" + d.target.x + " V " + d.target.y, 
-                "elliptic": "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," +   d.target.y };
-        
-            return link_shapes[d.type];
+            var offset = {x:0, y:0};
+            
+            if(d.target.type == "transition"){
+                offset = shapes.rect.anchors[d.anchor];
+            }
+            if(d.target.type == "place"){
+                offset = shapes.circle.anchors[d.anchor];
+            }
+                           
+            var anchor_list = d.target.type == "place" ? shapes.circle.anchors : shapes.rect.anchors,
+                min = Number.MAX_VALUE, dist;
+            
+            if(!d.lock_pos) {
+                for(var key in anchor_list){
+                    x_2 = Math.pow(d.source.x - (d.target.x + anchor_list[key].x), 2);
+                    y_2 = Math.pow(d.source.y - (d.target.y + anchor_list[key].y), 2);
+                    
+                    dist = Math.sqrt(x_2 + y_2)
+                    
+                    if(dist < min){
+                        min = dist;
+                        d.anchor = key;
+                        offset = anchor_list[key];
+                    }
+                }
+            }
+            
+            return "M" + d.source.x + "," + d.source.y + "L" + (d.target.x+ offset.x) + "," + (d.target.y+offset.y);
         });
 
         node.attr("transform", transform);
@@ -327,22 +393,4 @@
         function transform(d) {
             return "translate(" + d.x + "," + d.y + ")";
         }
-    }
-    
-    // Some test methods. Nothing fancy
-    function testUpdateElems() {
-        setTimeout(function() {
-              links.pop();  
-              nodes[0].marking = false;
-              updateForceLayout();
-            }, 3000);
-    }
-    
-    function testRemoveElems() {
-        setTimeout(function() {
-            console.log('Removed called');
-            var i = nodes_index['p_nil'];
-            force.nodes().splice(i, 1);
-            updateForceLayout();
-            }, 3000);
     }
