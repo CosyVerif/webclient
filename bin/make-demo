@@ -1,0 +1,16 @@
+#! /bin/bash
+
+dir=$(mktemp -d --tmpdir=/tmp XXXXXX.demo)
+current=$(pwd)
+
+cd ${dir}
+git clone https://github.com/CosyVerif/demo.git
+cd demo
+cp -r ${current}/* .
+cp dev.html index.html
+git add css/* js/* lua/* examples/* index.html
+git commit -a -m "Generate demo page"
+git push
+
+cd ${current}
+rm -rf ${dir}
