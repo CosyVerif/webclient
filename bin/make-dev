@@ -19,6 +19,9 @@ mv library/src/cosy ${current}/lua/
 
 curl https://raw.githubusercontent.com/LuaDist/dkjson/master/dkjson.lua \
   -o ${current}/lua/dkjson.lua
+sed -i -e \
+  's/always_try_using_lpeg = true/always_try_using_lpeg = false/' \
+  ${current}/lua/dkjson.lua
 
 curl https://raw.githubusercontent.com/kikito/sha1.lua/master/sha1.lua \
   -o ${current}/lua/sha1.lua
