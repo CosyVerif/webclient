@@ -85,7 +85,7 @@ cosy.resource.nodes[3].position = [[240,190]]</textarea>
                 var file = evt.target.files[0];
                 if (file) {
                     var reader = new FileReader();
-                    reader.onload = function(){ 
+                    reader.onload = function(){
                         lua_code.setValue(reader.result);
                         executeLua(lua_code.getValue(), false);
                     }
@@ -143,7 +143,7 @@ cosy.resource.nodes[3].position = [[240,190]]</textarea>
             Lua.executeScript("lua/js.lua");
             Lua.executeScript("lua/cosy/interface/js.lua");
         </script>
-    </body>
+    </body> 
 </html>
 
 `
