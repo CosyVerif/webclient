@@ -1,57 +1,40 @@
--- Make window object a global
-window = js.global;
+-- Utilities to load Lua packages
+-- ==============================
 
-http = {}
-function http.get (url)
-  local xhr = js.new(window.XMLHttpRequest)
-  xhr:open("GET", url, false) -- Synchronous
-  xhr:send()
-  if xhr.status == 0 or xhr.status == 200 then
-    return xhr.responseText
-  else
-    return nil, "HTTP GET " .. xhr.statusText .. ": " .. url
-  end
-end
+js:run [[
+  global.load = function (url) {
+    var xhr = new XMLHttpRequest ();
+    xhr.open ("GET", url, false);
+    xhr.send (null);
+    if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+      return xhr.responseText;
+    } else {
+      return undefined;
+    }
+  }
+]]
 
--- Iterates from 0 to collection.length-1
-local function js_inext (collection, i)
-  i = i + 1
-  if i >= collection.length then return nil end
-  return i, collection [i]
-end
-function js.ipairs (collection)
-  return js_inext, collection, -1
-end
-
-local function load_lua_over_http(url)
-  local code, err = http.get (url)
+local function load_http (url)
+  local code = js.global:load (url)
   if code then
-    return load(code, url)
+    return loadstring (code, url)
   else
-    return nil, err
+    error ("Unable to load: " .. url)
   end
 end
 
 package.path = ""
 package.cpath = ""
-table.insert(package.searchers, function (mod_name)
-  print ("Loading " .. mod_name)
-  if not mod_name:match("/") then
-    local full_url = "lua/" .. mod_name:gsub("%.", "/") .. ".lua"
-    local func, err = load_lua_over_http(full_url)
-    if func ~= nil then return func end
---[[
-    local full_url = "lua/" .. mod_name:gsub("%.", "/lua/") .. "/init.lua"
-    local func, err2 = load_lua_over_http(full_url)
-    if func ~= nil then return func end
---]]
-    return "\n    " .. err -- .. "\n    " .. err2
+
+table.insert (package.searchers, 1, function (name)
+  if not name:match ("^https?://") then
+    local url = "lua/" .. name:gsub ("%.", "/") .. ".lua"
+    return load_http (url)
   end
 end)
-table.insert(package.searchers, function (mod_name)
-  if mod_name:match("^https?://") then
-    local func, err = load_lua_over_http(mod_name)
-    if func == nil then return "\n    " .. err end
-    return func
+
+table.insert (package.searchers, 1, function (name)
+  if name:match ("^https?://") then
+    return load_http (name)
   end
 end)
