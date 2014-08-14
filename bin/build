@@ -1,5 +1,12 @@
 #! /bin/bash
 
+if [ "$1" = "minified" ]
+then
+  suffix=".min"
+else
+  suffix=""
+fi
+
 current=$(pwd)
 dir=$(mktemp -d -t cosy.XXXXXX)
 echo "Working in ${dir}"
@@ -10,24 +17,37 @@ mkdir -p ${current}/fonts
 mkdir -p ${current}/js
 mkdir -p ${current}/lua
 
+# jQuery:
+curl --silent --location \
+  http://code.jquery.com/jquery-2.1.1${suffix}.js \
+  -o ${current}/js/jquery.js
+
 # Bootstrap:
-curl --silent --location https://github.com/twbs/bootstrap/releases/download/v3.2.0/bootstrap-3.2.0-dist.zip \
+curl --silent --location \
+  https://github.com/twbs/bootstrap/releases/download/v3.2.0/bootstrap-3.2.0-dist.zip \
   -o bootstrap.zip
 unzip -q bootstrap.zip
-mv bootstrap*/css/*.min.css   ${current}/css
-mv bootstrap*/fonts/*         ${current}/fonts
-mv bootstrap*/js/*.min.js     ${current}/js
+mv bootstrap*/css/bootstrap${suffix}.css \
+   ${current}/css/bootstrap.css
+mv bootstrap*/css/bootstrap-theme${suffix}.css \
+   ${current}/css/bootstrap-theme.css
+mv bootstrap*/fonts/* \
+   ${current}/fonts
+mv bootstrap*/js/bootstrap${suffix}.js \
+  ${current}/js/bootstrap.js
 rm -rf bootstrap*
 
 # Font Awesome:
 git clone https://github.com/FortAwesome/Font-Awesome.git
-mv Font-Awesome/css/*.min.css ${current}/css
-mv Font-Awesome/fonts/*       ${current}/fonts
+mv Font-Awesome/css/font-awesome${suffix}.css \
+   ${current}/css/font-awesome.css
+mv Font-Awesome/fonts/* \
+  ${current}/fonts
 
 # D3:
 curl --silent --location \
-  https://raw.githubusercontent.com/mbostock/d3/master/d3.min.js \
-  -o ${current}/js/d3.min.js
+  https://raw.githubusercontent.com/mbostock/d3/master/d3${suffix}.js \
+  -o ${current}/js/d3.js
 
 # Lua:
 curl --silent --location \
