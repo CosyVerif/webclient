@@ -35,13 +35,15 @@
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form">
             <div class="form-group">
-              <input placeholder="Email" class="form-control" type="text">
+              <input id="emailPlaceHolder" placeholder="Email" class="form-control" type="text">
             </div>
             <div class="form-group">
-              <input placeholder="Password" class="form-control" type="password">
+              <input id="passwordPlaceHolder" placeholder="Password" class="form-control" type="password">
             </div>
-            <button type="submit" class="btn btn-success">Log in</button>
-            <button type="submit" class="btn btn-success">Sign up</button>
+            <h4 id="usernameLabel" style="display:none; color:white"></h4>
+            <button type="submit" id="btnLogin" class="btn btn-success" onclick="loginClick()">Log in</button>
+            <button type="submit" id="btnSignUp" class="btn btn-success">Sign up</button>
+            <button type="submit" id="btnLogoff" class="btn btn-success" onclick="logoutClick()" style="display:none">Log Off</button>
           </form>
         </div><!--/.navbar-collapse -->
       </div>
@@ -132,5 +134,50 @@
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
   
-
+    <script lang="javascript">
+        
+        function loginClick(){
+            setUserLogin(0);
+            setUserName(document.getElementById("emailPlaceHolder").value);
+        }
+        
+        function logoutClick(){
+            setUserLogin(1);
+        }
+        
+        function setUserLogin(value){
+            window.sessionStorage.setItem("userLogin", value);
+        }
+        
+        function getUserLogin(value){
+            return window.sessionStorage.getItem("userLogin", value);
+        }
+        
+        function setUserName(value){
+            window.sessionStorage.setItem("userName", value);
+        }
+        
+        function getUserName(value){
+            return window.sessionStorage.getItem("userName", value);
+        }
+        
+        if(getUserLogin() == 0){
+            // User is loged in
+            document.getElementById("btnLogin").style.display = 'none';
+            document.getElementById("btnSignUp").style.display = 'none';
+            document.getElementById("emailPlaceHolder").style.display = 'none';
+            document.getElementById("passwordPlaceHolder").style.display = 'none';
+            document.getElementById("btnLogoff").style.display = 'inline';
+            document.getElementById("usernameLabel").style.display = 'inline';
+            document.getElementById("usernameLabel").innerHTML = "Welcome, " + getUserName();
+        } else {
+            // User NOT is loged in
+            document.getElementById("btnLogin").style.display = 'inline';
+            document.getElementById("btnSignUp").style.display = 'inline';
+            document.getElementById("emailPlaceHolder").style.display = 'inline';
+            document.getElementById("passwordPlaceHolder").style.display = 'inline';
+            document.getElementById("btnLogoff").style.display = 'none';
+            document.getElementById("usernameLabel").style.display = 'none';
+        }
+    </script>
 </body></html>
