@@ -2,7 +2,7 @@
 -- ==============================
 
 js.global:eval [[
-  global.load = function (url) {
+  window.load = function (url) {
     var xhr = new XMLHttpRequest ();
     xhr.open ("GET", url, false);
     xhr.send (null);
