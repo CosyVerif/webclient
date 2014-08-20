@@ -1,8 +1,8 @@
 -- Utilities to load Lua packages
 -- ==============================
 
-js:run [[
-  global.load = function (url) {
+js.global:eval [[
+  window.load = function (url) {
     var xhr = new XMLHttpRequest ();
     xhr.open ("GET", url, false);
     xhr.send (null);
