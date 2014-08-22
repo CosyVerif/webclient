@@ -37,14 +37,14 @@
             <div class="navbar-collapse collapse">
               <form class="navbar-form navbar-right" role="form">
                 <div class="form-group">
-                  <input id="emailPlaceHolder" placeholder="Email" class="form-control" type="text">
+                  <input id="emailPlaceHolder" placeholder="Username" class="form-control" type="text">
                 </div>
                 <div class="form-group">
                   <input id="passwordPlaceHolder" placeholder="Password" class="form-control" type="password">
                 </div>
                 <h4 id="usernameLabel" style="display:none; color:white"></h4>
                 <button type="submit" id="btnLogin" class="btn btn-success" onclick="loginClick()">Log in</button>
-                <button type="submit" id="btnSignUp" class="btn btn-success">Sign up</button>
+                <button type="submit" id="btnSignUp" class="btn btn-success" onclick="newUser();">Sign up</button>
                 <button type="submit" id="btnLogoff" class="btn btn-success" onclick="logoutClick()" style="display:none">Log Off</button>
               </form>
             </div><!--/.navbar-collapse -->
@@ -66,7 +66,7 @@
     <div class="container" style="margin-bottom: 5%;">
       <div class="row">
         <div class="col-md-4" style="margin-bottom:10px;">
-          <a href="#" class="fa fa-long-arrow-left" id="link-show-left-menu" rel="true" onclick="javascript:show_left_menu();">Hidden menu</a>
+          <a href="#" class="fa fa-long-arrow-left" id="link-show-left-menu" rel="true" onclick="javascript:showLeftMenu();">Hidden menu</a>
         </div>
       </div>
       <div class="row">
@@ -84,7 +84,7 @@
               </div>
             </div>
             <div class="row">
-              <a href="#" style="float:right; margin-right:15px;">clear all</a>
+              <a href="#" style="float:right; margin-right:15px;">Clear all</a>
             </div>
             <div class="row">
               <div class="navbar-brand">
@@ -96,7 +96,8 @@
               </div>
             </div>
             <div class="row">
-              <a href="#" style="float:right; margin-right:15px;">clear</a>
+              <a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage('new-project');"><i class="fa fa-plus-square"></i></a>
+              <a href="#" style="float:right; margin-right:15px;">Clear</a>
             </div>
             <div class="row">
               <div class="navbar-brand">
@@ -130,7 +131,7 @@
               </div>
             </div>
             <div class="row">
-              <a href="#" style="float:right; margin-right:15px;">clear</a>
+              <a href="#" style="float:right; margin-right:15px;">Clear</a>
             </div>
             <div class="row">
               <div class="navbar-brand">
@@ -164,22 +165,22 @@
               </div>
             </div>
             <div class="row">
-              <a href="#" style="float:right; margin-right:15px;">clear</a>
+              <a href="#" style="float:right; margin-right:15px;">Clear</a>
             </div>
           </div>
         </div>
         <div id="edit-menu" style="display:none;"  class="col-md-4">
         <div class="row">
           <div style="margin-left:10px;">
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs" role="tablist" id="edition-nav-tabs">
               <li class="active">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:show_information_menu();">Information</a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:showInformationMenu(this);">Information</a>
               </li>
               <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:show_edit_menu();">Edition</a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:showEditMenu(this);">Edition</a>
               </li>
               <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:show_search_menu();">Search</a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:showSearchMenu(this);">Search</a>
               </li>
             </ul>
           </div>
@@ -199,7 +200,7 @@
         </div>
         </div>
         <div id="resource-page" class="col-md-8">
-           
+          
         </div>
       </div>
   <!--
@@ -235,13 +236,12 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/index.js"></script>
   
     <script lang="javascript">
 
-  function show_left_menu()
+  function showLeftMenu()
   {
-    
-
     if ($("#link-show-left-menu").attr("rel") == "true")
     {
       $("#link-show-left-menu").attr("rel","false");
@@ -260,87 +260,93 @@
                      .css('visibility','visible');
       $("#resource-page").attr("class","col-md-8");
       
-      var var_width = $("#left-menu").width();
+      var varWidth = $("#left-menu").width();
       /*$("#search-page").css('width','0px')
                        .css('display', 'block')
                        .css('visibility','visible')
-                       .animate({width : var_width + 'px'}, 
-                         {duration : Math.abs( 0 - var_width) / 0.9, 
+                       .animate({width : varWidth + 'px'}, 
+                         {duration : Math.abs( 0 - varWidth) / 0.9, 
                           easing: 'linear', 
                           queue: true});*/
     }
   }
 
-  function show_resource_search()
+  function showResourceSearch()
   {
     $("#resource-page").html("");
     for (var i = 0; i < 100; i++) 
     {
       //$("#resource-page").append('<div style="display:inline-block;"><span>Title</span><span>Path</span></div>');
-      $("#resource-page").append('<a href="#" onclick="javascript:show_edit_resource(\'url '+i+'\');"><div style="width:24%; height:150px; display:inline-block; margin-left:1%; margin-bottom: 2%;color: inherit;background-color: #eee; border-radius: 6px;"><span style="display:block;">Title : ....</span><span style="display:block;">Path : CosyVerif/projects/:project/models/:model</span><p style="margin-top:5px;">sfjlsjfslfjsj fslfjsj jsjfjfjs jfsjfsj flsfjs fslfjs </p></div></a>');
+      $("#resource-page").append('<a href="#" onclick="javascript:showEditResource(\'url '+i+'\');"><div style="width:24%; height:150px; display:inline-block; margin-left:1%; margin-bottom: 2%;color: inherit;background-color: #eee; border-radius: 6px;"><span style="display:block;">Title : ....</span><span style="display:block;">Path : CosyVerif/projects/:project/models/:model</span><p style="margin-top:5px;">sfjlsjfslfjsj fslfjsj jsjfjfjs jfsjfsj flsfjs fslfjs </p></div></a>');
     }
   }
 
-  function show_resource(url)
+  function showResource(url)
   {
     $("#resource-page").html('<div class="btn-group btn-group-justified"><div class="btn-group"><button type="button" class="btn btn-default">Resource information detail</button></div></div>');
     
   }
 
-  function show_edit_resource(url)
+  function showEditResource(url)
   {
     $("#search-menu").css('display', 'none');
     $("#edit-menu").css('display', 'block');
     $("#link-show-left-menu").attr("rel","false");
-    show_left_menu();
-    show_resource(url);
-    show_information_menu();
+    showLeftMenu();
+    showResource(url);
+    showInformationMenu();
   }
 
-  function show_search_menu()
+  function showSearchMenu(element)
   {
     $("#edit-menu").css('display', 'none');
     $("#search-menu").css('display', 'block');
     $("#link-show-left-menu").attr("rel","false");
-    show_left_menu();
+    showLeftMenu();
+    $("#edition-nav-tabs").children(".active").attr("class","dropdown");
+    $(element).parent().attr("class","active");
 
     $("#menu-project-part").html("");
-    var html_code = "";
+    var htmlCode = "";
     for (var i = 0; i < 10; i++) 
     {
       for (var j = i; j < 10 && j < i + 3; j++) 
       {
-        html_code += '<div class="btn-group"><button type="button" class="btn btn-default"> Project '+ j +'</button></div>';
+        htmlCode += '<div class="btn-group"><button type="button" class="btn btn-default"> Project '+ j +'</button></div>';
       }
-      $("#menu-project-part").append('<div class="btn-group btn-group-justified">'+html_code+'</div>');
-      html_code = "";
+      $("#menu-project-part").append('<div class="btn-group btn-group-justified">'+htmlCode+'</div>');
+      htmlCode = "";
       i = j - 1;
     }
 
     $("#menu-tag-part").html("");
-    var html_code = "";
+    var htmlCode = "";
     for (var i = 0; i < 6; i++) 
     {
       for (var j = i; j < 6 && j < i + 3; j++) 
       {
-        html_code += '<div class="btn-group"><button type="button" class="btn btn-default"> Tag '+ j +'</button></div>';
+        htmlCode += '<div class="btn-group"><button type="button" class="btn btn-default"> Tag '+ j +'</button></div>';
       }
-      $("#menu-tag-part").append('<div class="btn-group btn-group-justified">'+html_code+'</div>');
-      html_code = "";
+      $("#menu-tag-part").append('<div class="btn-group btn-group-justified">'+htmlCode+'</div>');
+      htmlCode = "";
       i = j - 1;
     }
   }
-  function show_information_menu()
+  function showInformationMenu(element)
   {
     $("#edit-page").css('display', 'none');
     $("#information-page").css('display', 'block');
+    $("#edition-nav-tabs").children(".active").attr("class","dropdown");
+    $(element).parent().attr("class","active");
     $("#information-page-content").html("");
     $("#information-page-content").append('<div class="btn-group btn-group-justified"><div class="btn-group"><button type="button" class="btn btn-default">Resource information</button></div></div>');
   }
-  function show_edit_menu()
+  function showEditMenu(element)
   {
     $("#information-page").css('display', 'none');
     $("#edit-page").css('display', 'block');
+    $("#edition-nav-tabs").children(".active").attr("class","dropdown");
+    $(element).parent().attr("class","active");
     $("#edit-page-content").html("");
     $("#edit-page-content").append('<div class="btn-group btn-group-justified"><div class="btn-group"><button type="button" class="btn btn-default">User</button></div></div>');
     for (var i = 0; i < 10; i++) 
@@ -352,8 +358,13 @@
 
     $("#edit-page-content").append('<input type="text" class="form-control" placeholder="Join" style="margin-top:1%;" />');
   }
-  show_search_menu();
-  show_resource_search();
+
+  function newUser()
+  {
+    loadPage("new-user");
+  }
+  showSearchMenu();
+  showResourceSearch();
         
         function loginClick(){
             setUserLogin(0);
