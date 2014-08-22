@@ -173,7 +173,7 @@
         <div class="row">
           <div style="margin-left:10px;">
             <ul class="nav nav-tabs" role="tablist" id="edition-nav-tabs">
-              <li class="active">
+              <li class="active" id="edititon-nav-tabs-information">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:showInformationMenu(this);">Information</a>
               </li>
               <li class="dropdown">
@@ -192,9 +192,7 @@
           </div>
         </div>
         <div style="height:600px; display:none;" id="information-page">
-          <div class="row">
-            <div class="navbar-brand" id="information-page-content">
-            </div>
+          <div class="row" id="information-page-content">
           </div>
         </div>
         </div>
@@ -294,7 +292,7 @@
     $("#link-show-left-menu").attr("rel","false");
     showLeftMenu();
     showResource(url);
-    showInformationMenu();
+    showInformationMenu(null);
   }
 
   function showSearchMenu(element)
@@ -332,15 +330,74 @@
       i = j - 1;
     }
   }
+
   function showInformationMenu(element)
   {
     $("#edit-page").css('display', 'none');
     $("#information-page").css('display', 'block');
     $("#edition-nav-tabs").children(".active").attr("class","dropdown");
-    $(element).parent().attr("class","active");
+    if (element == null)
+      $("#edititon-nav-tabs-information").attr("class","active");
+    else
+      $(element).parent().attr("class","active");
     $("#information-page-content").html("");
-    $("#information-page-content").append('<div class="btn-group btn-group-justified"><div class="btn-group"><button type="button" class="btn btn-default">Resource information</button></div></div>');
+    showProjectInformation("url");
   }
+
+  function showProjectInformation(url)
+  {
+    $("#information-page-content").append('<div class="row"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><span style="float:right;">PUBLIC PROJECT</span></div></div>');
+    $("#information-page-content").append('<div class="row"><div class="col-md-12" style="padding-left:15px;padding-right:15px;"><span>Title : </span><span>..........</span></div></div>');
+    var varUserList = '<div class="row" id="menu-project-user-list"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><span>Users :</span><select multiple class="form-control" style="margin-top:3px;">';
+    for (var i = 0; i < 5; i++) {
+      varUserList += '<option>User ' + i + '</option>';
+    }
+    varUserList += '</select></div></div>';
+    $("#information-page-content").append(varUserList);
+    $("#information-page-content").append('<div class="row" id="menu-project-user-list-buttons"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><div style="float:right;"><a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage(\'new-project\');"><i class="fa fa-folder-open"></i></a><a href="#" style="float:left; margin-left:15px;" onclick="javascript:updateProjectUser();"><i class="fa fa-pencil-square-o"></i></a><a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage(\'new-project\');"><i class="fa fa-minus-square"></i></a></div></div></div>');
+    $("#information-page-content").append('<div class="row" id="menu-project-user-edit" style="display:none;"><div class="col-md-5" style="padding-left:15px;margin-top:10px;"><a href="#">Fistnam lastName</a><div class="checkbox"><label><input type="checkbox" value="">Edit project</label></div><div class="checkbox"><label><input type="checkbox" value="">Admin project</label></div></div><div class="col-md-1" style="padding-right:15px;margin-top:10px;"><br /><br /><a href="#" id="menu-project-user-edit-button"><i class="fa fa-check-square" style="height:20px;"></i></a></div></div>');
+
+    var varUserList = '<div class="row" id="menu-project-invitation-list"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><span>Invitations :</span><select multiple class="form-control" style="margin-top:3px;" onChange="updateProjectInvitation();">';
+    for (var i = 0; i < 5; i++) {
+      varUserList += '<option>User ' + i + '</option>';
+    }
+    varUserList += '</select></div></div>';
+    $("#information-page-content").append(varUserList);
+    $("#information-page-content").append('<div class="row" id="menu-project-invitation-edit" style="display:none;"><div class="col-md-12" style="padding-left:15px;margin-top:10px;"><a href="#">Fistname lastName</a><p>comment sfsfjs fsfjs fsjfsl fslfjs sljfs fslfjslfj fslfjsjfs flsjfslfj sflfjsj fskf fkshf sfkshfs fskfhsf sfhkshfs .....</p><textarea class="form-control" rows="2" placeholder="Decision comment ..."></textarea><a href="#" id="menu-project-invitation-edit-button-cancel"><i class="fa fa-minus-square" style="margin-top: 5px; float:right;"></i></a><a href="#" id="menu-project-invitation-edit-button-accept"><i class="fa fa-check-square" style="margin-top: 5px;float:right; margin-right:10px;"></i></a></div></div>');
+
+    $("#information-page-content").append('<div class="row"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:30px;"><div class="input-group"><input type="text" class="form-control" placeholder="Join"><span class="input-group-btn"><button class="btn btn-default" type="button">Submit</button></span></div></div></div>');
+    $("#information-page-content").append('<div class="row"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><textarea class="form-control" rows="2" placeholder="Join comment ..."></textarea></div></div>');
+
+    loadPage("update-project");
+  }
+
+  function updateProjectUser()
+  {
+    $("#menu-project-user-list").css("display", "none");
+    $("#menu-project-user-list-buttons").css("display", "none");
+    $("#menu-project-user-edit").css("display", "block");
+    $("#menu-project-user-edit-button").click(function(){
+      $("#menu-project-user-edit").css("display", "none");
+      $("#menu-project-user-list").css("display", "block");
+      $("#menu-project-user-list-buttons").css("display", "block");
+    });
+  }
+
+  function updateProjectInvitation()
+  {
+    $("#menu-project-invitation-list").css("display", "none");
+    $("#menu-project-invatation-list-buttons").css("display", "none");
+    $("#menu-project-invitation-edit").css("display", "block");
+    $("#menu-project-invitation-edit-button-accept").click(function(){
+      $("#menu-project-invitation-edit").css("display", "none");
+      $("#menu-project-invitation-list").css("display", "block");
+    });
+    $("#menu-project-invitation-edit-button-cancel").click(function(){
+      $("#menu-project-invitation-edit").css("display", "none");
+      $("#menu-project-invitation-list").css("display", "block");
+    });
+  }
+
   function showEditMenu(element)
   {
     $("#information-page").css('display', 'none');
