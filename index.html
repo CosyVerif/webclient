@@ -20,9 +20,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-2">
-            <div class="navbar-header">
-              <a class="navbar-brand" href="#">CosyVerif logo</a>
-            </div>
+            <img src="img/cosyverif.png" alt="Log image" class="img-thumbnail" height="90" width="100">
           </div>
           <div class="col-md-3">
             <div class="navbar-brand">
@@ -42,7 +40,7 @@
                 <div class="form-group">
                   <input id="passwordPlaceHolder" placeholder="Password" class="form-control" type="password">
                 </div>
-                <h4 id="usernameLabel" style="display:none; color:white"></h4>
+                <a href="#" onclick="loadPage('update-user');"><h4 id="usernameLabel" style="display:none; color:white"></h4></a>
                 <button type="submit" id="btnLogin" class="btn btn-success" onclick="loginClick()">Log in</button>
                 <button type="submit" id="btnSignUp" class="btn btn-success" onclick="newUser();">Sign up</button>
                 <button type="submit" id="btnLogoff" class="btn btn-success" onclick="logoutClick()" style="display:none">Log Off</button>
@@ -91,8 +89,8 @@
                 <a href="#">Projects</a>
               </div>
             </div>
-            <div class="row"  style="height:25%;">
-              <div class="navbar-brand" id="menu-project-part">
+            <div class="row">
+              <div class="navbar-brand" id="menu-project-part" style="height:150px;overflow:auto;">
               </div>
             </div>
             <div class="row">
@@ -104,8 +102,8 @@
                 <a href="#">Types</a>
               </div>
             </div>
-            <div class="row" style="height:25%;">
-              <div class="navbar-brand" id="menu-type-part">
+            <div class="row">
+              <div class="navbar-brand" id="menu-type-part" style="height:90px;">
                 <div class="btn-group btn-group-justified">
                   <div class="btn-group">
                     <button type="button" class="btn btn-default">Formalisms</button>
@@ -118,7 +116,7 @@
                   </div>
                 </div>
                 <div class="btn-group btn-group-justified">
-                <div class="btn-group">
+                  <div class="btn-group">
                     <button type="button" class="btn btn-default">Services</button>
                   </div>
                   <div class="btn-group">
@@ -138,30 +136,8 @@
                 <a href="#">Tags</a>
               </div>
             </div>
-            <div class="row" style="height:20%;">
-              <div class="navbar-brand" id="menu-tag-part">
-                <div class="btn-group btn-group-justified">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Formalisms</button>
-                  </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Models</button>
-                  </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Converters</button>
-                  </div>
-                </div>
-                <div class="btn-group btn-group-justified">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default">Services</button>
-                  </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Executions</button>
-                  </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Scenarios</button>
-                  </div>
-                </div>
+            <div class="row">
+              <div class="navbar-brand" id="menu-tag-part"  style="height:100px;overflow:auto;">
               </div>
             </div>
             <div class="row">
@@ -171,7 +147,7 @@
         </div>
         <div id="edit-menu" style="display:none;"  class="col-md-4">
         <div class="row">
-          <div style="margin-left:10px;">
+          <div style="margin-left:10px;margin-right:10px;">
             <ul class="nav nav-tabs" role="tablist" id="edition-nav-tabs">
               <li class="active" id="edititon-nav-tabs-information">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:showInformationMenu(this);">Information</a>
@@ -186,14 +162,10 @@
           </div>
         </div>
         <div style="height:600px;" id="edit-page">
-          <div class="row">
-            <div class="navbar-brand" id="edit-page-content">
-            </div>
-          </div>
+      
         </div>
         <div style="height:600px; display:none;" id="information-page">
-          <div class="row" id="information-page-content">
-          </div>
+          
         </div>
         </div>
         </div>
@@ -310,7 +282,7 @@
     {
       for (var j = i; j < 10 && j < i + 3; j++) 
       {
-        htmlCode += '<div class="btn-group"><button type="button" class="btn btn-default"> Project '+ j +'</button></div>';
+        htmlCode += '<div class="btn-group"><button type="button" class="btn btn-default" onclick="showEditResource(\'url\')"> Project '+ j +'</button></div>';
       }
       $("#menu-project-part").append('<div class="btn-group btn-group-justified">'+htmlCode+'</div>');
       htmlCode = "";
@@ -329,6 +301,7 @@
       htmlCode = "";
       i = j - 1;
     }
+    showResourceSearch();
   }
 
   function showInformationMenu(element)
@@ -340,35 +313,67 @@
       $("#edititon-nav-tabs-information").attr("class","active");
     else
       $(element).parent().attr("class","active");
-    $("#information-page-content").html("");
+    $("#information-page").html("");
     showProjectInformation("url");
   }
 
   function showProjectInformation(url)
   {
-    $("#information-page-content").append('<div class="row"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><span style="float:right;">PUBLIC PROJECT</span></div></div>');
-    $("#information-page-content").append('<div class="row"><div class="col-md-12" style="padding-left:15px;padding-right:15px;"><span>Title : </span><span>..........</span></div></div>');
-    var varUserList = '<div class="row" id="menu-project-user-list"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><span>Users :</span><select multiple class="form-control" style="margin-top:3px;">';
+    $("#information-page").append('<div class="row"><div class="col-md-12" style="margin-top:10px;"><span style="float:right;">PUBLIC PROJECT</span></div></div>');
+    $("#information-page").append('<div class="row"><div class="col-md-12"><span>Title : </span><span>..........</span></div></div>');
+    var varUserList = '<div class="row" id="menu-project-user-list"><div class="col-md-12" style="margin-top:10px;"><span>Users :</span><select multiple class="form-control" style="margin-top:3px;">';
     for (var i = 0; i < 5; i++) {
       varUserList += '<option>User ' + i + '</option>';
     }
     varUserList += '</select></div></div>';
-    $("#information-page-content").append(varUserList);
-    $("#information-page-content").append('<div class="row" id="menu-project-user-list-buttons"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><div style="float:right;"><a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage(\'new-project\');"><i class="fa fa-folder-open"></i></a><a href="#" style="float:left; margin-left:15px;" onclick="javascript:updateProjectUser();"><i class="fa fa-pencil-square-o"></i></a><a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage(\'new-project\');"><i class="fa fa-minus-square"></i></a></div></div></div>');
-    $("#information-page-content").append('<div class="row" id="menu-project-user-edit" style="display:none;"><div class="col-md-5" style="padding-left:15px;margin-top:10px;"><a href="#">Fistnam lastName</a><div class="checkbox"><label><input type="checkbox" value="">Edit project</label></div><div class="checkbox"><label><input type="checkbox" value="">Admin project</label></div></div><div class="col-md-1" style="padding-right:15px;margin-top:10px;"><br /><br /><a href="#" id="menu-project-user-edit-button"><i class="fa fa-check-square" style="height:20px;"></i></a></div></div>');
+    $("#information-page").append(varUserList);
+    $("#information-page").append('<div class="row" id="menu-project-user-list-buttons"><div class="col-md-12" style="margin-top:10px;"><div style="float:right;"><a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage(\'new-project\');"><i class="fa fa-folder-open"></i></a><a href="#" style="float:left; margin-left:15px;" onclick="javascript:updateProjectUser();"><i class="fa fa-pencil-square-o"></i></a><a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage(\'new-project\');"><i class="fa fa-minus-square"></i></a></div></div></div>');
+    $("#information-page").append('<div class="row" id="menu-project-user-edit" style="display:none;"><div class="col-md-5" style="margin-top:10px;"><a href="#">Fistnam lastName</a><div class="checkbox"><label><input type="checkbox" value="">Edit project</label></div><div class="checkbox"><label><input type="checkbox" value="">Admin project</label></div></div><div class="col-md-1" style="margin-top:10px;"><br /><br /><a href="#" id="menu-project-user-edit-button"><i class="fa fa-check-square"></i></a></div></div>');
 
-    var varUserList = '<div class="row" id="menu-project-invitation-list"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><span>Invitations :</span><select multiple class="form-control" style="margin-top:3px;" onChange="updateProjectInvitation();">';
+    var varUserList = '<div class="row" id="menu-project-invitation-list"><div class="col-md-12" style="margin-top:10px;"><span>Invitations :</span><select multiple class="form-control" style="margin-top:3px;" onChange="updateProjectInvitation();">';
     for (var i = 0; i < 5; i++) {
       varUserList += '<option>User ' + i + '</option>';
     }
     varUserList += '</select></div></div>';
-    $("#information-page-content").append(varUserList);
-    $("#information-page-content").append('<div class="row" id="menu-project-invitation-edit" style="display:none;"><div class="col-md-12" style="padding-left:15px;margin-top:10px;"><a href="#">Fistname lastName</a><p>comment sfsfjs fsfjs fsjfsl fslfjs sljfs fslfjslfj fslfjsjfs flsjfslfj sflfjsj fskf fkshf sfkshfs fskfhsf sfhkshfs .....</p><textarea class="form-control" rows="2" placeholder="Decision comment ..."></textarea><a href="#" id="menu-project-invitation-edit-button-cancel"><i class="fa fa-minus-square" style="margin-top: 5px; float:right;"></i></a><a href="#" id="menu-project-invitation-edit-button-accept"><i class="fa fa-check-square" style="margin-top: 5px;float:right; margin-right:10px;"></i></a></div></div>');
+    $("#information-page").append(varUserList);
+    $("#information-page").append('<div class="row" id="menu-project-invitation-edit" style="display:none;"><div class="col-md-12" style="margin-top:10px;"><a href="#">Fistname lastName</a><p>comment sfsfjs fsfjs fsjfsl fslfjs sljfs fslfjslfj fslfjsjfs flsjfslfj sflfjsj fskf fkshf sfkshfs fskfhsf sfhkshfs .....</p><textarea class="form-control" rows="2" placeholder="Decision comment ..."></textarea><a href="#" id="menu-project-invitation-edit-button-cancel"><i class="fa fa-minus-square" style="margin-top: 5px; float:right;"></i></a><a href="#" id="menu-project-invitation-edit-button-accept"><i class="fa fa-check-square" style="margin-top: 5px;float:right; margin-right:10px;"></i></a></div></div>');
 
-    $("#information-page-content").append('<div class="row"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:30px;"><div class="input-group"><input type="text" class="form-control" placeholder="Join"><span class="input-group-btn"><button class="btn btn-default" type="button">Submit</button></span></div></div></div>');
-    $("#information-page-content").append('<div class="row"><div class="col-md-12" style="padding-left:15px;padding-right:15px;margin-top:10px;"><textarea class="form-control" rows="2" placeholder="Join comment ..."></textarea></div></div>');
+    $("#information-page").append('<div class="row"><div class="col-md-12" style="margin-top:30px;"><div class="input-group"><input type="text" class="form-control" placeholder="Join"><span class="input-group-btn"><button class="btn btn-default" type="button">Submit</button></span></div></div></div>');
+    $("#information-page").append('<div class="row"><div class="col-md-12" style="margin-top:10px;"><textarea class="form-control" rows="2" placeholder="Join comment ..."></textarea></div></div>');
 
     loadPage("update-project");
+  }
+
+  function showProjectEdit(url)
+  {
+    $("#edit-page").html($("#information-page").html());
+    $("#information-page").html("");
+    $("#project-button-save").css("display","block");
+    $("#project-tag-buttons").css("display","block");
+    $("#project-description-textarea").text($("#project-description-p").text());
+    $("#project-description-p").css("display","none");
+    $("#project-description-textarea").css("display","block");
+    $("#project-title-input").text($("#project-title-label").text());
+    $("#project-title-label").css("display","none");
+    $("#project-title-input").css("display","block");
+    $("#project-tag-input").css("display","block");
+    $("#project-visibility-buttons").css("display","block");
+    $("#project-path").css("display","none");
+  }
+
+  function showProjectNavTabResources(element)
+  {
+    $("#project-resource-nav-tabs").children(".active").attr("class","dropdown");
+    if (element == null)
+    {
+      $("#project-resource-nav-tabs-formalism").attr("class","active");
+      //formalism list
+    }
+    else
+    {
+      $(element).parent().attr("class","active");
+      // other list
+    }
   }
 
   function updateProjectUser()
@@ -403,17 +408,12 @@
     $("#information-page").css('display', 'none');
     $("#edit-page").css('display', 'block');
     $("#edition-nav-tabs").children(".active").attr("class","dropdown");
-    $(element).parent().attr("class","active");
-    $("#edit-page-content").html("");
-    $("#edit-page-content").append('<div class="btn-group btn-group-justified"><div class="btn-group"><button type="button" class="btn btn-default">User</button></div></div>');
-    for (var i = 0; i < 10; i++) 
-    {
-      $("#edit-page-content").append('<div class="btn-group btn-group-justified" style="margin-top:1%;"><div class="btn-group"><button type="button" class="btn btn-default"> Project '+ i +'</button></div></div>');
-    }
-
-    $("#edit-page-content").append('<div class="btn-group btn-group-justified" style="margin-top:5%;"><div class="btn-group"><button type="button" class="btn btn-default"> + </button></div></div>');
-
-    $("#edit-page-content").append('<input type="text" class="form-control" placeholder="Join" style="margin-top:1%;" />');
+     if (element == null)
+      $("#edititon-nav-tabs-information").attr("class","active");
+    else
+      $(element).parent().attr("class","active");
+    $("#edit-page").html("");
+    showProjectEdit("url");
   }
 
   function newUser()
