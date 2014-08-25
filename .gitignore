@@ -6,10 +6,13 @@ css/bootstrap-responsive.min.css
 css/bootstrap-theme.css
 css/bootstrap.css
 css/bootstrap.min.css
+css/bootstrap-switch.css
 css/font-awesome.css
 css/codemirror.css
 js/bootstrap.js
 js/bootstrap.min.js
+js/bootstrap-switch.js
+js/handlebars.js
 js/codemirror.js
 js/d3.min.js
 js/lua.vm.js
