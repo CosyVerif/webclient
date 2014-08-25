@@ -37,6 +37,22 @@ mv bootstrap*/js/bootstrap${suffix}.js \
   ${current}/js/bootstrap.js
 rm -rf bootstrap*
 
+# Bootstrap-Switch:
+curl --silent --location \
+  https://github.com/nostalgiaz/bootstrap-switch/archive/master.zip \
+  -o bootstrap-switch.zip
+unzip -q bootstrap-switch.zip
+mv bootstrap-switch-master/dist/css/bootstrap3/bootstrap-switch${suffix}.css \
+   ${current}/css/bootstrap-switch.css
+mv bootstrap-switch-master/dist/js/bootstrap-switch${suffix}.js \
+   ${current}/js/bootstrap-switch.js
+rm -rf bootstrap-switch-master
+
+# Handlebars:
+curl --silent --location \
+  http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v1.3.0.js \
+  -o ${current}/js/handlebars.js
+
 # Font Awesome:
 git clone https://github.com/FortAwesome/Font-Awesome.git
 mv Font-Awesome/css/font-awesome${suffix}.css \
