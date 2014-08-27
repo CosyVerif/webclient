@@ -10,7 +10,9 @@
     <title>Jumbotron Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
+    <link href="css/index.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.css" rel="stylesheet">
     <link rel="stylesheet" href="css/font-awesome.css">
 
   </head>
@@ -20,18 +22,17 @@
       <div class="container">
         <div class="row">
           <div class="col-md-2">
-            <img src="img/cosyverif.png" alt="Log image" class="img-thumbnail" height="90" width="100">
+            <div><img src="img/cosyverif.png" alt="Log image" class="img-thumbnail" height="100" width="100"></div>
           </div>
-          <div class="col-md-3">
-            <div class="navbar-brand">
-              <ol class="breadcrumb" style="bak; background-color:#222;">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Library</a></li>
-                <li class="active">Data</li>
-              </ol>
+          <div class="col-md-4" style="padding-left:5px; padding-right:5px;">
+            <div class="input-group" style="margin-top:8px;">
+              <input type="text" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+              </span>
             </div>
           </div>
-          <div class="col-md-7">
+          <div class="col-md-6">
             <div class="navbar-collapse collapse">
               <form class="navbar-form navbar-right" role="form">
                 <div class="form-group">
@@ -61,137 +62,19 @@
         </div>
       </div>
     </div>
-    <div class="container" style="margin-bottom: 5%;">
+    <div class="container" style="margin-bottom: 1%;">
       <div class="row">
         <div class="col-md-4" style="margin-bottom:10px;">
-          <a href="#" class="fa fa-long-arrow-left" id="link-show-left-menu" rel="true" onclick="javascript:showLeftMenu();">Hidden menu</a>
+          <a href="#" class="fa fa-long-arrow-left" id="link-show-left-menu" rel="true" onclick="javascript:showLeftMenu();">Hide menu</a>
         </div>
       </div>
       <div class="row">
-        <div id="left-menu">
-        <div id="search-menu" class="col-md-4">
-          <div style="height:600px;" id="search-page">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="input-group">
-                  <input type="text" class="form-control">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Go!</button>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <a href="#" style="float:right; margin-right:15px;">Clear all</a>
-            </div>
-            <div class="row">
-              <div class="navbar-brand">
-                <a href="#">Projects</a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="navbar-brand" id="menu-project-part" style="height:150px;overflow:auto;">
-              </div>
-            </div>
-            <div class="row">
-              <a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage('new-project');"><i class="fa fa-plus-square"></i></a>
-              <a href="#" style="float:right; margin-right:15px;">Clear</a>
-            </div>
-            <div class="row">
-              <div class="navbar-brand">
-                <a href="#">Types</a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="navbar-brand" id="menu-type-part" style="height:90px;">
-                <div class="btn-group btn-group-justified">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Formalisms</button>
-                  </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Models</button>
-                  </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Converters</button>
-                  </div>
-                </div>
-                <div class="btn-group btn-group-justified">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Services</button>
-                  </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Executions</button>
-                  </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Scenarios</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <a href="#" style="float:right; margin-right:15px;">Clear</a>
-            </div>
-            <div class="row">
-              <div class="navbar-brand">
-                <a href="#">Tags</a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="navbar-brand" id="menu-tag-part"  style="height:100px;overflow:auto;">
-              </div>
-            </div>
-            <div class="row">
-              <a href="#" style="float:right; margin-right:15px;">Clear</a>
-            </div>
-          </div>
-        </div>
-        <div id="edit-menu" style="display:none;"  class="col-md-4">
-        <div class="row">
-          <div style="margin-left:10px;margin-right:10px;">
-            <ul class="nav nav-tabs" role="tablist" id="edition-nav-tabs">
-              <li class="active" id="edititon-nav-tabs-information">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:showInformationMenu(this);">Information</a>
-              </li>
-              <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:showEditMenu(this);">Edition</a>
-              </li>
-              <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="javascript:showSearchMenu(this);">Search</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div style="height:600px;" id="edit-page">
-      
-        </div>
-        <div style="height:600px; display:none;" id="information-page">
-          
-        </div>
-        </div>
+        <div id="left-menu" class="col-md-4">
         </div>
         <div id="resource-page" class="col-md-8">
           
         </div>
       </div>
-  <!--
-    <div class="row">
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-      </div>
--->
     </div>
     <div class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
       <div class="container">
@@ -206,265 +89,598 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+    <script src="js/handlebars.js"></script>
+    <!-- <script src="template/project.template" type="text/x-handlebars-template"></script> -->
     <script src="js/index.js"></script>
-  
-    <script lang="javascript">
-
-  function showLeftMenu()
-  {
-    if ($("#link-show-left-menu").attr("rel") == "true")
-    {
-      $("#link-show-left-menu").attr("rel","false");
-      $("#link-show-left-menu").text("Visible menu");
-      $("#link-show-left-menu").attr("class","fa fa-long-arrow-right");
-      $("#left-menu").css('display', 'none')
-                     .css('visibility','hidden');
-      $("#resource-page").attr("class","col-md-12");
-    }
-    else
-    {
-      $("#link-show-left-menu").attr("rel","true");
-      $("#link-show-left-menu").text("Hidden menu");
-      $("#link-show-left-menu").attr("class","fa fa-long-arrow-left");
-      $("#left-menu").css('display', 'block')
-                     .css('visibility','visible');
-      $("#resource-page").attr("class","col-md-8");
-      
-      var varWidth = $("#left-menu").width();
-      /*$("#search-page").css('width','0px')
-                       .css('display', 'block')
-                       .css('visibility','visible')
-                       .animate({width : varWidth + 'px'}, 
-                         {duration : Math.abs( 0 - varWidth) / 0.9, 
-                          easing: 'linear', 
-                          queue: true});*/
-    }
-  }
-
-  function showResourceSearch()
-  {
-    $("#resource-page").html("");
-    for (var i = 0; i < 100; i++) 
-    {
-      //$("#resource-page").append('<div style="display:inline-block;"><span>Title</span><span>Path</span></div>');
-      $("#resource-page").append('<a href="#" onclick="javascript:showEditResource(\'url '+i+'\');"><div style="width:24%; height:150px; display:inline-block; margin-left:1%; margin-bottom: 2%;color: inherit;background-color: #eee; border-radius: 6px;"><span style="display:block;">Title : ....</span><span style="display:block;">Path : CosyVerif/projects/:project/models/:model</span><p style="margin-top:5px;">sfjlsjfslfjsj fslfjsj jsjfjfjs jfsjfsj flsfjs fslfjs </p></div></a>');
-    }
-  }
-
-  function showResource(url)
-  {
-    $("#resource-page").html('<div class="btn-group btn-group-justified"><div class="btn-group"><button type="button" class="btn btn-default">Resource information detail</button></div></div>');
     
-  }
+<script id="template-search-menu" type="text/x-handlebars-template">
+<div style="height:600px;" id="search-page">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="input-group">
+        <input type="text" class="form-control">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="navbar-brand" style="float:right; margin-right:15px;">
+      <a href="#" ><i class="fa fa-eraser"></i></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="navbar-brand">
+        <a href="#">Projects</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="navbar-brand" style="float:right;">
+        <a href="#"  rel="select-project-ok"  onclick="searchResources(this)"><i class="fa fa-check-square"></i></a>
+        <a href="#"  rel="select-project-no"  onclick="searchResources(this)"><i class="fa fa-square"></i></a>
+        <a href="#" ><i class="fa fa-eraser"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" id="menu-project-part" style="height:150px;overflow:auto;">
+        {{{resource_list_projects}}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="navbar-brand" style="float:right; margin-right:15px;">
+      <a href="#" ><i class="fa fa-plus"></i></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="navbar-brand">
+        <a href="#">Types</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="navbar-brand" style="float:right;">
+        <a href="#" rel="select-type-ok"  onclick="searchResources(this)"><i class="fa fa-check-square"></i></a>
+        <a href="#"  rel="select-type-no" onclick="searchResources(this)"><i class="fa fa-square"></i></a>
+        <a href="#" ><i class="fa fa-eraser"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="navbar-brand" id="menu-type-part" style="height:90px;">
+      <div class="btn-group btn-group-justified">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" onclick="searchResources(this)">Formalisms</button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" onclick="searchResources(this)">Models</button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" onclick="searchResources(this)">Converters</button>
+        </div>
+      </div>
+      <div class="btn-group btn-group-justified">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" onclick="searchResources(this)">Services</button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" onclick="searchResources(this)">Executions</button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" onclick="searchResources(this)">Scenarios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
 
-  function showEditResource(url)
-  {
-    $("#search-menu").css('display', 'none');
-    $("#edit-menu").css('display', 'block');
-    $("#link-show-left-menu").attr("rel","false");
-    showLeftMenu();
-    showResource(url);
-    showInformationMenu(null);
-  }
+<script id="template-project-menu" type="text/x-handlebars-template">
+  <div class="row" style="margin-top:10px;">
+  <div class="col-md-12">
+      <span style="float:right;"><input type="checkbox" class="class-double-buttons" data-size="small" data-on-text="PRIVATE" data-off-text="PUBLIC" {{#unless is_public}} checked {{/unless}}></span>
+    </div>
+  </div>
+  <div class="row" style="margin-top:10px;">
+    <div class="col-md-10">
+      <span id="project-title-label" style="display:none; font-weight:bold;">{{name}}</span>
+      <input type="text" class="form-control" id="project-title-input" placeholder="Title" style="display:inline;">
+    </div>
+    <div class="col-md-2">
+      <a href="#" id="project-title-button-update" style="display:none;float:right;" rel="project-title" onclick="javascript:updateProject(this);"><i class="fa fa-pencil-square-o"></i></a>
+      <a href="#" id="project-title-button-cancel" style="display:inline;float:right;" rel="project-title" onclick="javascript:updateProject(this);"><i class="fa fa-undo"></i></a>
+      <a href="#" id="project-title-button-save" style="display:inline;float:right;" rel="project-title" onclick="javascript:updateProject(this);"><i class="fa fa-check"></i></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10">
+      <p id="project-description-label">{{description}}</p>
+      <textarea id="project-description-input" class="form-control" rows="5" placeholder="Project description ..." style="display:none;" ></textarea>
+    </div>
+    <div class="col-md-2">
+      <a href="#" id="project-description-button-update" style="display:inline;float:right;" rel="project-title" onclick="javascript:updateProject(this);"><i class="fa fa-pencil-square-o"></i></a>
+      <a href="#" id="project-description-button-cancel" style="display:none;float:right;" rel="project-title" onclick="javascript:updateProject(this);"><i class="fa fa-undo"></i></a>
+      <a href="#" id="project-description-button-save" style="display:none;float:right;" rel="project-title" onclick="javascript:updateProject(this);"><i class="fa fa-check"></i></a>
+    </div>
+  </div>
+  <div class="row" style="margin-top:30px;">
+    <div class="col-md-12">
+      <span>Users :</span>
+      <div style="height:150px;overflow:auto;">
+        <table class="table table-bordered" style="margin-top:3px;margin-right:10px;">
+          {{#each resource_list_users}}
+            <tr>
+              <td style="padding:0px;">{{this.name}}</td>
+              <td style="padding:0px 5px 0px 5px;width:10px;"><input type="checkbox" class="class-double-buttons" name="my-checkbox" data-size="small" data-on-text="ADMIN" data-off-text="?" {{#if this.is_admin_project}} checked {{/if}}></td>
+              <td style="padding:0px 5px 0px 5px;width:10px;"><input type="checkbox" class="class-double-buttons" name="my-checkbox" data-size="small" data-on-text="WRITE" data-off-text="READ" {{#if this.is_edit_project}} checked {{/if}}></td>
+              <td style="padding-top:0px;padding-bottom:5px; width:10px;"><a href="#" onclick="javascript:deleteProjectUser('"+{{this.href}}+"');"><i class="fa fa-trash-o"></i></a></td>
+            </tr>
+          {{/each}}
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:30px;">
+    <div class="col-md-8">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Invite">
+        <span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-send"></i></button></span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <textarea class="form-control" rows="2" placeholder="Invite comment ..."></textarea>
+    </div>
+  </div>
+  <div class="row" style="margin-top:30px;">
+    <div class="col-md-12">
+      <span>Requests :</span>
+      <div style="height:150px;overflow:auto;">
+        <table class="table table-bordered" style="margin-top:3px;margin-right:10px;">
+          {{#each resource_list_requests}}
+            <tr>
+              <td style="display:block;"><span style="font-weight:bold;">{{this.name}}</span><p>{{this.comment}}</p></td>
+              <td style="display:none;">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Invite">
+                  <span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-send"></i></button></span>
+                </div>
+              </td>
+              <td style="width:60px;">
+                <a href="#" id="project-description-button-update" style="display:inline;float:right;" rel="project-title" onclick="javascript:deleteProjectUser('"+{{this.href}}+"');"><i class="fa fa-comment"></i></a>
+                <a href="#" id="project-description-button-cancel" style="display:inline;float:right;" rel="project-title" onclick="javascript:deleteProjectUser('"+{{this.href}}+"');"><i class="fa fa-thumbs-down"></i></a>
+                <a href="#" id="project-description-button-save" style="display:inline;float:right;" rel="project-title" onclick="javascript:deleteProjectUser('"+{{this.href}}+"');"><i class="fa fa-thumbs-up"></i></a>
+              </td>
+            </tr>
+          {{/each}}
+        </table>
+      </div>
+    </div>
+  </div>
+</script>
 
-  function showSearchMenu(element)
-  {
-    $("#edit-menu").css('display', 'none');
-    $("#search-menu").css('display', 'block');
-    $("#link-show-left-menu").attr("rel","false");
-    showLeftMenu();
-    $("#edition-nav-tabs").children(".active").attr("class","dropdown");
-    $(element).parent().attr("class","active");
+<script id="template-project-content" type="text/x-handlebars-template">
+<div class="row" id="project-path">
+  <div class="col-md-4">
+    <div class="input-group">
+      <input type="text" class="form-control">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+      </span>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <input type="checkbox" class="class-double-buttons" data-on-text="ByDate" data-off-text="ByName" checked>
+  </div>
+  <div class="col-md-3">
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary">.</button>
+      <button type="button" class="btn btn-default">ASC</button>
+      <button type="button" class="btn btn-default">DESC</button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12" style="margin-top:30px;">
+    <ul class="nav nav-tabs" role="tablist" id="project-resource-nav-tabs">
+      <li class="active" id="project-resource-nav-tabs-formalism">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="formalism" onclick="javascript:showProjectNavTabResources(this);">Formalisms</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="model" onclick="javascript:showProjectNavTabResources(this);">Models</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="converter" onclick="javascript:showProjectNavTabResources(this);">Converters</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="service" onclick="javascript:showProjectNavTabResources(this);">Services</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="execution" onclick="javascript:showProjectNavTabResources(this);">Executions</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="scenario" onclick="javascript:showProjectNavTabResources(this);">Scenarios</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div id="project-resource-list" class="col-md-12">
 
-    $("#menu-project-part").html("");
-    var htmlCode = "";
-    for (var i = 0; i < 10; i++) 
-    {
-      for (var j = i; j < 10 && j < i + 3; j++) 
-      {
-        htmlCode += '<div class="btn-group"><button type="button" class="btn btn-default" onclick="showEditResource(\'url\')"> Project '+ j +'</button></div>';
-      }
-      $("#menu-project-part").append('<div class="btn-group btn-group-justified">'+htmlCode+'</div>');
-      htmlCode = "";
-      i = j - 1;
-    }
-
-    $("#menu-tag-part").html("");
-    var htmlCode = "";
-    for (var i = 0; i < 6; i++) 
-    {
-      for (var j = i; j < 6 && j < i + 3; j++) 
-      {
-        htmlCode += '<div class="btn-group"><button type="button" class="btn btn-default"> Tag '+ j +'</button></div>';
-      }
-      $("#menu-tag-part").append('<div class="btn-group btn-group-justified">'+htmlCode+'</div>');
-      htmlCode = "";
-      i = j - 1;
-    }
-    showResourceSearch();
-  }
-
-  function showInformationMenu(element)
-  {
-    $("#edit-page").css('display', 'none');
-    $("#information-page").css('display', 'block');
-    $("#edition-nav-tabs").children(".active").attr("class","dropdown");
-    if (element == null)
-      $("#edititon-nav-tabs-information").attr("class","active");
-    else
-      $(element).parent().attr("class","active");
-    $("#information-page").html("");
-    showProjectInformation("url");
-  }
-
-  function showProjectInformation(url)
-  {
-    $("#information-page").append('<div class="row"><div class="col-md-12" style="margin-top:10px;"><span style="float:right;">PUBLIC PROJECT</span></div></div>');
-    $("#information-page").append('<div class="row"><div class="col-md-12"><span>Title : </span><span>..........</span></div></div>');
-    var varUserList = '<div class="row" id="menu-project-user-list"><div class="col-md-12" style="margin-top:10px;"><span>Users :</span><select multiple class="form-control" style="margin-top:3px;">';
-    for (var i = 0; i < 5; i++) {
-      varUserList += '<option>User ' + i + '</option>';
-    }
-    varUserList += '</select></div></div>';
-    $("#information-page").append(varUserList);
-    $("#information-page").append('<div class="row" id="menu-project-user-list-buttons"><div class="col-md-12" style="margin-top:10px;"><div style="float:right;"><a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage(\'new-project\');"><i class="fa fa-folder-open"></i></a><a href="#" style="float:left; margin-left:15px;" onclick="javascript:updateProjectUser();"><i class="fa fa-pencil-square-o"></i></a><a href="#" style="float:left; margin-left:15px;" onclick="javascript:loadPage(\'new-project\');"><i class="fa fa-minus-square"></i></a></div></div></div>');
-    $("#information-page").append('<div class="row" id="menu-project-user-edit" style="display:none;"><div class="col-md-5" style="margin-top:10px;"><a href="#">Fistnam lastName</a><div class="checkbox"><label><input type="checkbox" value="">Edit project</label></div><div class="checkbox"><label><input type="checkbox" value="">Admin project</label></div></div><div class="col-md-1" style="margin-top:10px;"><br /><br /><a href="#" id="menu-project-user-edit-button"><i class="fa fa-check-square"></i></a></div></div>');
-
-    var varUserList = '<div class="row" id="menu-project-invitation-list"><div class="col-md-12" style="margin-top:10px;"><span>Invitations :</span><select multiple class="form-control" style="margin-top:3px;" onChange="updateProjectInvitation();">';
-    for (var i = 0; i < 5; i++) {
-      varUserList += '<option>User ' + i + '</option>';
-    }
-    varUserList += '</select></div></div>';
-    $("#information-page").append(varUserList);
-    $("#information-page").append('<div class="row" id="menu-project-invitation-edit" style="display:none;"><div class="col-md-12" style="margin-top:10px;"><a href="#">Fistname lastName</a><p>comment sfsfjs fsfjs fsjfsl fslfjs sljfs fslfjslfj fslfjsjfs flsjfslfj sflfjsj fskf fkshf sfkshfs fskfhsf sfhkshfs .....</p><textarea class="form-control" rows="2" placeholder="Decision comment ..."></textarea><a href="#" id="menu-project-invitation-edit-button-cancel"><i class="fa fa-minus-square" style="margin-top: 5px; float:right;"></i></a><a href="#" id="menu-project-invitation-edit-button-accept"><i class="fa fa-check-square" style="margin-top: 5px;float:right; margin-right:10px;"></i></a></div></div>');
-
-    $("#information-page").append('<div class="row"><div class="col-md-12" style="margin-top:30px;"><div class="input-group"><input type="text" class="form-control" placeholder="Join"><span class="input-group-btn"><button class="btn btn-default" type="button">Submit</button></span></div></div></div>');
-    $("#information-page").append('<div class="row"><div class="col-md-12" style="margin-top:10px;"><textarea class="form-control" rows="2" placeholder="Join comment ..."></textarea></div></div>');
-
-    loadPage("update-project");
-  }
-
-  function showProjectEdit(url)
-  {
-    $("#edit-page").html($("#information-page").html());
-    $("#information-page").html("");
-    $("#project-button-save").css("display","block");
-    $("#project-tag-buttons").css("display","block");
-    $("#project-description-textarea").text($("#project-description-p").text());
-    $("#project-description-p").css("display","none");
-    $("#project-description-textarea").css("display","block");
-    $("#project-title-input").text($("#project-title-label").text());
-    $("#project-title-label").css("display","none");
-    $("#project-title-input").css("display","block");
-    $("#project-tag-input").css("display","block");
-    $("#project-visibility-buttons").css("display","block");
-    $("#project-path").css("display","none");
-  }
-
+  </div>
+</div>
+<script lang="javascript">
   function showProjectNavTabResources(element)
   {
     $("#project-resource-nav-tabs").children(".active").attr("class","dropdown");
+    $("#project-resource-select").html("");
     if (element == null)
     {
       $("#project-resource-nav-tabs-formalism").attr("class","active");
-      //formalism list
     }
     else
     {
       $(element).parent().attr("class","active");
-      // other list
     }
   }
 
-  function updateProjectUser()
+  showProjectNavTabResources(null);
+
+  function updateProject(link)
   {
-    $("#menu-project-user-list").css("display", "none");
-    $("#menu-project-user-list-buttons").css("display", "none");
-    $("#menu-project-user-edit").css("display", "block");
-    $("#menu-project-user-edit-button").click(function(){
-      $("#menu-project-user-edit").css("display", "none");
-      $("#menu-project-user-list").css("display", "block");
-      $("#menu-project-user-list-buttons").css("display", "block");
-    });
+    if ($(link).attr("rel") == "project-title")
+    {
+      $("#project-title-input").val($("#project-title-label").val());
+      $("#project-title-label").css("display", "none");
+      $("#project-title-input").css("display", "block");
+      $("#project-title-button-update").css("display", "none");
+      $("#project-title-button-save").css("display", "block");
+      $("#project-title-button-cancel").css("display", "block");
+    }
   }
 
-  function updateProjectInvitation()
+  var resource_list = {"search_result": [
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-converter","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-service","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-execution","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-scenario","logo":true},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Project","color":"color-project","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-user","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true}
+                        ]
+                      };
+  var source = $("#template-search-result").html();
+  template = Handlebars.compile(source);
+  $("#project-resource-list").html(template(resource_list));
+</script>
+</script>
+
+<script id="template-search-result" type="text/x-handlebars-template">
+{{#each search_result}}
+  <div class="{{color}}" style="width:23%; max-width:200px; min-width:150px; height:150px; margin-top:10px; margin-left:10px; padding:5px 5px 0px 5px; display:inline-block; color: inherit; border-radius: 6px;">
+    <div style="float:right;">
+      <a href="#" style="display:inline;" onclick="javascript:copyResource('{{this.href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-files-o"></i></a>
+      <a href="#" style="display:inline;" onclick="javascript:moveResource('{{this.href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-scissors"></i></a>
+      <a href="#" style="display:inline;" onclick="javascript:deleteResource('{{this.href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-trash-o"></i></a>
+    </div>
+    <a href="#" rel="{{this.type}}" onclick="javascript:showResource(this,'{{this.href}}');">
+      <div style="width:100%;height:100%;">
+        <span><i {{#if logo}} class="fa fa-user" {{else}} class="fa fa-group" {{/if}}></i> <span>{{this.project}}</span></span>
+        <span style="display:block;margin-top:10px;font-weight:bold;">{{this.title}}</span>
+        <p style="margin-top:5px;">{{this.description}}</p>
+        <span style="display:block;margin-top:5px;float:right;">{{this.type}}</span>
+      </div>
+    </a>
+  </div>
+{{/each}}
+
+<script lang="javascript">
+  function copyResource(href)
   {
-    $("#menu-project-invitation-list").css("display", "none");
-    $("#menu-project-invatation-list-buttons").css("display", "none");
-    $("#menu-project-invitation-edit").css("display", "block");
-    $("#menu-project-invitation-edit-button-accept").click(function(){
-      $("#menu-project-invitation-edit").css("display", "none");
-      $("#menu-project-invitation-list").css("display", "block");
-    });
-    $("#menu-project-invitation-edit-button-cancel").click(function(){
-      $("#menu-project-invitation-edit").css("display", "none");
-      $("#menu-project-invitation-list").css("display", "block");
-    });
+    var params = {"title":"Copy",
+                  "action":"copy",
+                  "src" : href};
+    var source = $("#template-modal").html();
+    template = Handlebars.compile(source);
+    $("#search-modal").html(template(params)); 
+  } 
+
+  function moveResource(href)
+  {
+    var params = {"title":"Move",
+                  "action":"move",
+                  "src" : href};
+    var source = $("#template-modal").html();
+    template = Handlebars.compile(source);
+    $("#search-modal").html(template(params)); 
+  }
+</script>
+</script>
+
+<script id="template-modal" type="text/x-handlebars-template">
+<div class="modal fade" id="modal-copy-move" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="input-group">
+              <input type="text" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <select multiple class="form-control" size="10" style="margin-top:3px;" onclick="javascript: document.getElementById('modal-button-ok').disabled = ''">
+              <option>User en cours</option>
+              <option>Project 1</option>
+              <option>Project 2</option>
+              <option>Project 3</option>
+              <option>Project 4</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-button-ok" disabled="true" type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:actionResource('{{action}}','{{src}}')" >Ok</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
+      </div>
+    </div>
+  </div>
+</div>
+<script lang="javascript">
+  function actionResource (action, src) {
+    if (action == "copy"){
+      alert("copy " +src);
+    }
+    else if (action == "move")
+    {
+      alert("move " + src);
+    }
+  }
+</script>
+</script>
+
+  
+<script lang="javascript">
+
+function showLeftMenu()
+{
+  if ($("#link-show-left-menu").attr("rel") == "true")
+  {
+    $("#link-show-left-menu").attr("rel","false");
+    $("#link-show-left-menu").text("Show menu");
+    $("#link-show-left-menu").attr("class","fa fa-long-arrow-right");
+    $("#left-menu").css('display', 'none')
+                   .css('visibility','hidden');
+    $("#resource-page").attr("class","col-md-12");
+  }
+  else
+  {
+    $("#link-show-left-menu").attr("rel","true");
+    $("#link-show-left-menu").text("Hide menu");
+    $("#link-show-left-menu").attr("class","fa fa-long-arrow-left");
+    $("#left-menu").css('display', 'block')
+                   .css('visibility','visible');
+    $("#resource-page").attr("class","col-md-8");
+  }
+}
+
+function showSearch()
+{
+  var varProjects = {"resource_list_projects" : [{"name":"User","href":"/lien/user"},
+                                                 {"name":"Project 1","href":"/lien/projet1"},
+                                                 {"name":"Project 2","href":"/lien/projet2"},
+                                                 {"name":"Project 3","href":"/lien/projet3"},
+                                                 {"name":"Project 4","href":"/lien/projet4"},
+                                                 {"name":"Project 5","href":"/lien/projet5"},
+                                                 {"name":"Project 6","href":"/lien/projet6"},
+                                                 {"name":"Project 7","href":"/lien/projet7"},
+                                                 {"name":"Project 8","href":"/lien/projet8"},
+                                                 {"name":"Project 9","href":"/lien/projet9"},
+                                                 {"name":"Project 10","href":"/lien/projet10"},
+                                                 {"name":"Project 11","href":"/lien/projet11"},
+                                                 {"name":"Project 12","href":"/lien/projet12"}
+                      ]
+      };
+  
+  varProjectsHtml ="";
+  for (var i = 0; i < varProjects.resource_list_projects.length; i++) 
+  { 
+    var htmlCode = "";
+    for (var j = i; j < varProjects.resource_list_projects.length && j < i + 3; j++) 
+    {
+      htmlCode += '<div class="btn-group"><button type="button" class="btn btn-default" onclick="searchResources(this)">'+ varProjects.resource_list_projects[j].name +'</button></div>';
+    }
+    varProjectsHtml +='<div class="btn-group btn-group-justified">'+htmlCode+'</div>';
+    i = j - 1;
+  }
+  varProjects = {"resource_list_projects":varProjectsHtml};
+  
+  var source = $("#template-search-menu").html();
+  template = Handlebars.compile(source);
+  $("#left-menu").html(template(varProjects));
+
+
+  $("#link-show-left-menu").attr("rel","false");
+  showLeftMenu();
+
+  searchResources(null);
+}
+
+showSearch();
+
+function searchResources(element)
+{
+  if (element == null);
+  else if ($(element).attr("class") == "btn btn-primary")
+  {
+    $(element).attr("class","btn btn-default");
+  } 
+  else if ($(element).attr("class") == "btn btn-default")
+  {
+    $(element).attr("class","btn btn-primary");
+  }
+  else if ($(element).attr("rel") == "select-project-ok")
+  {
+    $("#menu-project-part").children().find("button").attr("class","btn btn-primary");
+  }
+  else if ($(element).attr("rel") == "select-project-no")
+  {
+    $("#menu-project-part").children().find("button").attr("class","btn btn-default");
+  }
+  else if ($(element).attr("rel") == "select-type-ok")
+  {
+    $("#menu-type-part").children().find("button").attr("class","btn btn-primary");
+  }
+  else if ($(element).attr("rel") == "select-type-no")
+  {
+    $("#menu-type-part").children().find("button").attr("class","btn btn-default");
   }
 
-  function showEditMenu(element)
-  {
-    $("#information-page").css('display', 'none');
-    $("#edit-page").css('display', 'block');
-    $("#edition-nav-tabs").children(".active").attr("class","dropdown");
-     if (element == null)
-      $("#edititon-nav-tabs-information").attr("class","active");
-    else
-      $(element).parent().attr("class","active");
-    $("#edit-page").html("");
-    showProjectEdit("url");
-  }
+  $("#resource-page").html("");
 
-  function newUser()
+    var resource_list = {"search_result": [
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-converter","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-service","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-execution","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-scenario","logo":true},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Project","color":"color-project","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true}
+                        ]
+                      };
+    var source = $("#template-search-result").html();
+    template = Handlebars.compile(source);
+    $("#resource-page").html(template(resource_list)); 
+
+    $("#resource-page").append('<div id="search-modal"></div>');
+}
+
+function showResource(element, url)
+{
+  if ($(element).attr("rel") == "Project")
   {
-    loadPage("new-user");
+    showProject(url);
   }
-  showSearchMenu();
-  showResourceSearch();
-        
-        function loginClick(){
-            setUserLogin(0);
-            setUserName(document.getElementById("emailPlaceHolder").value);
-        }
-        
-        function logoutClick(){
-            setUserLogin(1);
-        }
-        
-        function setUserLogin(value){
-            window.sessionStorage.setItem("userLogin", value);
-        }
-        
-        function getUserLogin(value){
-            return window.sessionStorage.getItem("userLogin", value);
-        }
-        
-        function setUserName(value){
-            window.sessionStorage.setItem("userName", value);
-        }
-        
-        function getUserName(value){
-            return window.sessionStorage.getItem("userName", value);
-        }
-        
-        if(getUserLogin() == 0){
-            // User is loged in
-            document.getElementById("btnLogin").style.display = 'none';
-            document.getElementById("btnSignUp").style.display = 'none';
-            document.getElementById("emailPlaceHolder").style.display = 'none';
-            document.getElementById("passwordPlaceHolder").style.display = 'none';
-            document.getElementById("btnLogoff").style.display = 'inline';
-            document.getElementById("usernameLabel").style.display = 'inline';
-            document.getElementById("usernameLabel").innerHTML = "Welcome, " + getUserName();
-        } else {
-            // User NOT is loged in
-            document.getElementById("btnLogin").style.display = 'inline';
-            document.getElementById("btnSignUp").style.display = 'inline';
-            document.getElementById("emailPlaceHolder").style.display = 'inline';
-            document.getElementById("passwordPlaceHolder").style.display = 'inline';
-            document.getElementById("btnLogoff").style.display = 'none';
-            document.getElementById("usernameLabel").style.display = 'none';
-        }
-    </script>
+}
+
+function showProject(url)
+{
+  var resource_list = {"name":"Projet 1",
+                       "description":"Project description ......",
+                       "is_public" : true,
+                       "resource_list_users": [
+                            {"name": "User 1","href":"/users/rokysaroi","is_admin_project" : true,"is_edit_project" : true},
+                            {"name": "User 2","href":"/users/rokysaroi","is_admin_project" : true,"is_edit_project" : false},
+                            {"name": "User 3","href":"/users/rokysaroi","is_admin_project" : false,"is_edit_project" : true},
+                            {"name": "User 4","href":"/users/rokysaroi","is_admin_project" : false,"is_edit_project" : false}
+                        ],
+                      "resource_list_requests": [
+                            {"name": "User 1","href":"/users/rokysaroi","comment" : "aaa a a aaa  aaaa  aa"},
+                            {"name": "User 2","href":"/users/rokysaroi","comment" : "aaa a a aaa  aaaa  aa"},
+                            {"name": "User 3","href":"/users/rokysaroi","comment" : "aaa a a aaa  aaaa  aa"},
+                            {"name": "User 4","href":"/users/rokysaroi","comment" : "aaa a a aaa  aaaa  aa"}
+                        ]
+                      };
+  var source = $("#template-project-menu").html();
+  var template = Handlebars.compile(source);
+  $("#left-menu").html(template(resource_list));
+
+  $("#link-show-left-menu").attr("rel","false");
+  showLeftMenu();
+
+  var source = $("#template-project-content").html();
+  var template = Handlebars.compile(source);
+  $('#resource-page').html("")
+                     .append(template(resource_list));
+
+  $("[class='class-double-buttons']").bootstrapSwitch();
+}
+      
+function loginClick(){
+    setUserLogin(0);
+    setUserName(document.getElementById("emailPlaceHolder").value);
+}
+
+function logoutClick(){
+    setUserLogin(1);
+}
+
+function setUserLogin(value){
+    window.sessionStorage.setItem("userLogin", value);
+}
+
+function getUserLogin(value){
+    return window.sessionStorage.getItem("userLogin", value);
+}
+
+function setUserName(value){
+    window.sessionStorage.setItem("userName", value);
+}
+
+function getUserName(value){
+    return window.sessionStorage.getItem("userName", value);
+}
+
+if(getUserLogin() == 0){
+    // User is loged in
+    document.getElementById("btnLogin").style.display = 'none';
+    document.getElementById("btnSignUp").style.display = 'none';
+    document.getElementById("emailPlaceHolder").style.display = 'none';
+    document.getElementById("passwordPlaceHolder").style.display = 'none';
+    document.getElementById("btnLogoff").style.display = 'inline';
+    document.getElementById("usernameLabel").style.display = 'inline';
+    document.getElementById("usernameLabel").innerHTML = "Welcome, " + getUserName();
+} else {
+    // User NOT is loged in
+    document.getElementById("btnLogin").style.display = 'inline';
+    document.getElementById("btnSignUp").style.display = 'inline';
+    document.getElementById("emailPlaceHolder").style.display = 'inline';
+    document.getElementById("passwordPlaceHolder").style.display = 'inline';
+    document.getElementById("btnLogoff").style.display = 'none';
+    document.getElementById("usernameLabel").style.display = 'none';
+}
+</script>
 </body></html>
