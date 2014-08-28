@@ -54,7 +54,7 @@
 </div>
 <div class="row">
   <div class="col-md-11" style="padding-right:3px;">
-    <select multiple class="form-control" style="margin-top:3px;" size="10">
+    <select multiple class="form-control" style="margin-top:3px;" size="10" id="project-resource-select">
       <option>Formalism 1</option>
       <option>Formalism 2</option>
       <option>Formalism 3</option>
@@ -99,4 +99,5 @@
 </div>
 <script lang="javascript">
   showProjectNavTabResources(null);
+  $("[name='my-checkbox']").bootstrapSwitch();
 </script>

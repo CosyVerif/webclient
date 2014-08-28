@@ -62,17 +62,18 @@
         </div>
       </div>
     </div>
-    <div class="container" style="margin-bottom: 1%;">
+    <div class="container" style="margin-bottom:60px;">
       <div class="row">
         <div class="col-md-4" style="margin-bottom:10px;">
           <a href="#" class="fa fa-long-arrow-left" id="link-show-left-menu" rel="true" onclick="javascript:showLeftMenu();">Hide menu</a>
         </div>
       </div>
+      <input type="hidden" id="page-show" />
+      <input type="hidden" id="page-search-color" />
       <div class="row">
         <div id="left-menu" class="col-md-4">
         </div>
         <div id="resource-page" class="col-md-8">
-          
         </div>
       </div>
     </div>
@@ -95,7 +96,7 @@
     <script src="js/index.js"></script>
     
 <script id="template-search-menu" type="text/x-handlebars-template">
-<div style="height:600px;" id="search-page">
+<div style="height:600px;">
   <div class="row">
     <div class="col-lg-12">
       <div class="input-group">
@@ -106,12 +107,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="navbar-brand" style="float:right; margin-right:15px;">
-      <a href="#" ><i class="fa fa-eraser"></i></a>
-    </div>
-  </div>
-  <div class="row">
+  <div class="row" style="margin-top:30px;">
     <div class="col-md-8">
       <div class="navbar-brand">
         <a href="#">Projects</a>
@@ -121,12 +117,11 @@
       <div class="navbar-brand" style="float:right;">
         <a href="#"  rel="select-project-ok"  onclick="searchResources(this)"><i class="fa fa-check-square"></i></a>
         <a href="#"  rel="select-project-no"  onclick="searchResources(this)"><i class="fa fa-square"></i></a>
-        <a href="#" ><i class="fa fa-eraser"></i></a>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-12" id="menu-project-part" style="height:150px;overflow:auto;">
+    <div class="col-md-12" id="menu-project-part" style="height:200px;overflow:auto;">
         {{{resource_list_projects}}}
     </div>
   </div>
@@ -135,7 +130,7 @@
       <a href="#" ><i class="fa fa-plus"></i></a>
     </div>
   </div>
-  <div class="row">
+  <div class="row" style="margin-top:30px;">
     <div class="col-md-8">
       <div class="navbar-brand">
         <a href="#">Types</a>
@@ -145,7 +140,6 @@
       <div class="navbar-brand" style="float:right;">
         <a href="#" rel="select-type-ok"  onclick="searchResources(this)"><i class="fa fa-check-square"></i></a>
         <a href="#"  rel="select-type-no" onclick="searchResources(this)"><i class="fa fa-square"></i></a>
-        <a href="#" ><i class="fa fa-eraser"></i></a>
       </div>
     </div>
   </div>
@@ -179,8 +173,9 @@
 </script>
 
 <script id="template-project-menu" type="text/x-handlebars-template">
-  <div class="row" style="margin-top:10px;">
-  <div class="col-md-12">
+<div style="height:600px;">
+  <div class="row">
+    <div class="col-md-12">
       <span style="float:right;"><input type="checkbox" class="class-double-buttons" data-size="small" data-on-text="PRIVATE" data-off-text="PUBLIC" {{#unless is_public}} checked {{/unless}}></span>
     </div>
   </div>
@@ -261,10 +256,11 @@
       </div>
     </div>
   </div>
+</div>
 </script>
 
 <script id="template-project-content" type="text/x-handlebars-template">
-<div class="row" id="project-path">
+<div class="row">
   <div class="col-md-4">
     <div class="input-group">
       <input type="text" class="form-control">
@@ -277,135 +273,362 @@
     <input type="checkbox" class="class-double-buttons" data-on-text="ByDate" data-off-text="ByName" checked>
   </div>
   <div class="col-md-3">
-    <div class="btn-group">
-      <button type="button" class="btn btn-primary">.</button>
-      <button type="button" class="btn btn-default">ASC</button>
-      <button type="button" class="btn btn-default">DESC</button>
-    </div>
+    <input type="checkbox" class="class-double-buttons" data-on-text="ASC" data-off-text="DESC" checked>
   </div>
 </div>
 <div class="row">
-  <div class="col-md-12" style="margin-top:30px;">
+  <div class="col-md-12" style="margin-top:15px;">
     <ul class="nav nav-tabs" role="tablist" id="project-resource-nav-tabs">
-      <li class="active" id="project-resource-nav-tabs-formalism">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="formalism" onclick="javascript:showProjectNavTabResources(this);">Formalisms</a>
+      <li class="dropdown" >
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="formalism" onclick="javascript:showNavTabResources(this);">Formalisms</a>
+      </li>
+      <li class="dropdown" id="project-resource-nav-tabs-default">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="model" onclick="javascript:showNavTabResources(this);">Models</a>
       </li>
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="model" onclick="javascript:showProjectNavTabResources(this);">Models</a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="converter" onclick="javascript:showNavTabResources(this);">Converters</a>
       </li>
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="converter" onclick="javascript:showProjectNavTabResources(this);">Converters</a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="service" onclick="javascript:showNavTabResources(this);">Services</a>
       </li>
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="service" onclick="javascript:showProjectNavTabResources(this);">Services</a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="execution" onclick="javascript:showNavTabResources(this);">Executions</a>
       </li>
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="execution" onclick="javascript:showProjectNavTabResources(this);">Executions</a>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="scenario" onclick="javascript:showProjectNavTabResources(this);">Scenarios</a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="scenario" onclick="javascript:showNavTabResources(this);">Scenarios</a>
       </li>
     </ul>
   </div>
 </div>
 <div class="row">
-  <div id="project-resource-list" class="col-md-12">
+  <div id="resource-list" class="col-md-12">
 
   </div>
 </div>
 <script lang="javascript">
-  function showProjectNavTabResources(element)
+
+function showNavTabResources(element)
+{
+  $("#project-resource-nav-tabs").children(".active").attr("class","dropdown");
+  var varSearchColor = "";
+  if (element == null)
   {
-    $("#project-resource-nav-tabs").children(".active").attr("class","dropdown");
-    $("#project-resource-select").html("");
-    if (element == null)
-    {
-      $("#project-resource-nav-tabs-formalism").attr("class","active");
-    }
-    else
-    {
-      $(element).parent().attr("class","active");
-    }
+    $("#project-resource-nav-tabs-default").attr("class","active");
+  }
+  else
+  {
+    $(element).parent().attr("class","active");
   }
 
-  showProjectNavTabResources(null);
+  if (element == null)
+  {
+    varSearchColor = "color-" + $("#project-resource-nav-tabs-default").children("a").attr("rel");
+  }
+  else if ($(element).attr("rel") == "formalism")
+  {
+    varSearchColor = "color-formalism";
+  }
+  else if ($(element).attr("rel") == "model")
+  {
+    varSearchColor = "color-model";
+  }
+  else if ($(element).attr("rel") == "converter")
+  {
+    varSearchColor = "color-converter";
+  }
+  else if ($(element).attr("rel") == "service")
+  {
+    varSearchColor = "color-service";
+  }
+  else if ($(element).attr("rel") == "execution")
+  {
+    varSearchColor = "color-execution";
+  }
+  else if ($(element).attr("rel") == "scenario")
+  {
+    varSearchColor = "color-scenario";
+  }
+
+  $("#page-search-color").val(varSearchColor);
+
+  varSearchResults = [
+                          {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                          {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                          {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-converter","logo":true},
+                          {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-service","logo":true},
+                          {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-execution","logo":true},
+                          {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-scenario","logo":true},
+                          {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Project","color":"color-project","logo":false},
+                          {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-user","logo":false},
+                          {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                          {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                          {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                          {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                          {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                          {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true}
+                      ];
+
+  showResultSearch(($("#left-menu").css('display') != "none"));
+}
+
+showNavTabResources(null);
+
+function updateProject(link)
+{
+  if ($(link).attr("rel") == "project-title")
+  {
+    $("#project-title-input").val($("#project-title-label").val());
+    $("#project-title-label").css("display", "none");
+    $("#project-title-input").css("display", "block");
+    $("#project-title-button-update").css("display", "none");
+    $("#project-title-button-save").css("display", "block");
+    $("#project-title-button-cancel").css("display", "block");
+  }
+}
+</script>
+</script>
+
+<script id="template-user-menu" type="text/x-handlebars-template">
+<div style="height:600px;">
+  <div class="row" style="margin-top:10px;">
+  <div class="col-md-12">
+      <span style="float:right;"><input type="checkbox" class="class-double-buttons" data-size="small" data-on-text="PRIVATE" data-off-text="PUBLIC" {{#unless is_public}} checked {{/unless}}></span>
+    </div>
+  </div>
+  <div class="row" style="margin-top:20px;">
+    <div class="col-md-10">
+      <span id="user-firstname-label" style="display:none; font-weight:bold;">{{firstname}}</span>
+      <input type="text" class="form-control" id="user-firstname-input" placeholder="Firstname" style="display:inline;">
+    </div>
+    <div class="col-md-2">
+      <a href="#" id="user-firstname-button-update" style="display:none;float:right;" rel="user-firstname" onclick="javascript:updateProject(this);"><i class="fa fa-pencil-square-o"></i></a>
+      <a href="#" id="user-firstname-button-cancel" style="display:inline;float:right;" rel="user-firstname" onclick="javascript:updateProject(this);"><i class="fa fa-undo"></i></a>
+      <a href="#" id="user-firstname-button-save" style="display:inline;float:right;" rel="user-firstname" onclick="javascript:updateProject(this);"><i class="fa fa-check"></i></a>
+    </div>
+  </div>
+  <div class="row" style="margin-top:10px;">
+    <div class="col-md-10">
+      <span id="user-lastname-label" style="display:none; font-weight:bold;">{{lastname}}</span>
+      <input type="text" class="form-control" id="user-lastname-input" placeholder="Lastname" style="display:inline;">
+    </div>
+    <div class="col-md-2">
+      <a href="#" id="user-lastname-button-update" style="display:none;float:right;" rel="user-lastname" onclick="javascript:updateProject(this);"><i class="fa fa-pencil-square-o"></i></a>
+      <a href="#" id="user-lastname-button-cancel" style="display:inline;float:right;" rel="user-lastname" onclick="javascript:updateProject(this);"><i class="fa fa-undo"></i></a>
+      <a href="#" id="user-lastname-button-save" style="display:inline;float:right;" rel="user-lastname" onclick="javascript:updateProject(this);"><i class="fa fa-check"></i></a>
+    </div>
+  </div>
+  <div class="row" style="margin-top:10px;">
+    <div class="col-md-10">
+      <span id="user-email-label" style="display:none; font-weight:bold;">{{email}}</span>
+      <input type="text" class="form-control" id="user-email-input" placeholder="Email" style="display:inline;">
+    </div>
+    <div class="col-md-2">
+      <a href="#" id="user-email-button-update" style="display:none;float:right;" rel="user-email" onclick="javascript:updateProject(this);"><i class="fa fa-pencil-square-o"></i></a>
+      <a href="#" id="user-email-button-cancel" style="display:inline;float:right;" rel="user-email" onclick="javascript:updateProject(this);"><i class="fa fa-undo"></i></a>
+      <a href="#" id="user-email-button-save" style="display:inline;float:right;" rel="user-email" onclick="javascript:updateProject(this);"><i class="fa fa-check"></i></a>
+    </div>
+  </div>
+  <div class="row" style="margin-top:10px;">
+    <div class="col-md-10">
+      <span id="user-username-label" style="display:none; font-weight:bold;">{{username}}</span>
+      <input type="text" class="form-control" id="user-username-input" placeholder="Username" style="display:inline;">
+    </div>
+    <div class="col-md-2">
+      <a href="#" id="user-username-button-update" style="display:none;float:right;" rel="user-username" onclick="javascript:updateProject(this);"><i class="fa fa-pencil-square-o"></i></a>
+      <a href="#" id="user-username-button-cancel" style="display:inline;float:right;" rel="user-username" onclick="javascript:updateProject(this);"><i class="fa fa-undo"></i></a>
+      <a href="#" id="user-username-button-save" style="display:inline;float:right;" rel="user-username" onclick="javascript:updateProject(this);"><i class="fa fa-check"></i></a>
+    </div>
+  </div>
+  <div class="row" style="margin-top:40px;">
+    <div class="col-md-12">
+      <div style="width:100%;"><span>Projects :</span><span style="float:right;"><a href="#" ><i class="fa fa-plus fa-1x"></i></a></span></div>
+      <div style="height:150px;overflow:auto;margin-top:5px;">
+        <table class="table table-bordered">
+          {{#each resource_list_projects}}
+            <tr>
+              <td style="padding:0px;">{{this.name}}</td>
+              <td style="padding:0px 5px 0px 5px;width:150px;">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Invite">
+                  <span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-send"></i></button></span>
+                </div>
+              </td>
+              <td style="padding-top:0px;padding-bottom:5px; width:10px;">
+                <a href="#" onclick="javascript:deleteProject('"+{{this.href}}+"');"><i class="fa fa-trash-o"></i></a>
+              </td>
+            </tr>
+          {{/each}}
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:30px;">
+    <div class="col-md-8">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Join">
+        <span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-send"></i></button></span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <textarea class="form-control" rows="2" placeholder="Join comment ..."></textarea>
+    </div>
+  </div>
+</div>
+</script>
+
+<script id="template-user-content" type="text/x-handlebars-template">
+<div class="row">
+  <div class="col-md-4">
+    <div class="input-group">
+      <input type="text" class="form-control">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+      </span>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <input type="checkbox" class="class-double-buttons" data-on-text="ByDate" data-off-text="ByName" checked>
+  </div>
+  <div class="col-md-3">
+    <input type="checkbox" class="class-double-buttons" data-on-text="ASC" data-off-text="DESC" checked>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12" style="margin-top:15px;">
+    <ul class="nav nav-tabs" role="tablist" id="user-resource-nav-tabs">
+      <li class="active">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="formalism" onclick="javascript:showNavTabResources(this);">Formalisms</a>
+      </li>
+      <li class="dropdown"  id="user-resource-nav-tabs-default">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="model" onclick="javascript:showNavTabResources(this);">Models</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="converter" onclick="javascript:showNavTabResources(this);">Converters</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="service" onclick="javascript:showNavTabResources(this);">Services</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="execution" onclick="javascript:showNavTabResources(this);">Executions</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="scenario" onclick="javascript:showNavTabResources(this);">Scenarios</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="project" onclick="javascript:showNavTabResources(this);">Projects</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div id="resource-list" class="col-md-12">
+
+  </div>
+</div>
+<script lang="javascript">
+function showNavTabResources(element)
+{
+  $("#user-resource-nav-tabs").children(".active").attr("class","dropdown");
+  var varSearchColor = "";
+  if (element == null)
+  {
+    $("#user-resource-nav-tabs-default").attr("class","active");
+  }
+  else
+  {
+    $(element).parent().attr("class","active");
+  }
+
+  if (element == null)
+  {
+    varSearchColor = "color-" + $("#user-resource-nav-tabs-default").children("a").attr("rel");
+  }
+  else if ($(element).attr("rel") == "project")
+  {
+    varSearchColor = "color-project";
+  }
+  else if ($(element).attr("rel") == "formalism")
+  {
+    varSearchColor = "color-formalism";
+  }
+  else if ($(element).attr("rel") == "model")
+  {
+    varSearchColor = "color-model";
+  }
+  else if ($(element).attr("rel") == "converter")
+  {
+    varSearchColor = "color-converter";
+  }
+  else if ($(element).attr("rel") == "service")
+  {
+    varSearchColor = "color-service";
+  }
+  else if ($(element).attr("rel") == "execution")
+  {
+    varSearchColor = "color-execution";
+  }
+  else if ($(element).attr("rel") == "scenario")
+  {
+    varSearchColor = "color-scenario";
+  }
+
+  $("#page-search-color").val(varSearchColor);
+
+  varSearchResults = [
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-converter","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-service","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-execution","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-scenario","logo":true},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Project","color":"color-project","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-user","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true}
+                      ];
+
+  showResultSearch(($("#left-menu").css('display') != "none"));
+}
+
+  showNavTabResources(null);
 
   function updateProject(link)
   {
-    if ($(link).attr("rel") == "project-title")
+    if ($(link).attr("rel") == "user-title")
     {
-      $("#project-title-input").val($("#project-title-label").val());
-      $("#project-title-label").css("display", "none");
-      $("#project-title-input").css("display", "block");
-      $("#project-title-button-update").css("display", "none");
-      $("#project-title-button-save").css("display", "block");
-      $("#project-title-button-cancel").css("display", "block");
+      $("#user-title-input").val($("#user-title-label").val());
+      $("#user-title-label").css("display", "none");
+      $("#user-title-input").css("display", "block");
+      $("#user-title-button-update").css("display", "none");
+      $("#user-title-button-save").css("display", "block");
+      $("#user-title-button-cancel").css("display", "block");
     }
   }
-
-  var resource_list = {"search_result": [
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-converter","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-service","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-execution","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-scenario","logo":true},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Project","color":"color-project","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-user","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true}
-                        ]
-                      };
-  var source = $("#template-search-result").html();
-  template = Handlebars.compile(source);
-  $("#project-resource-list").html(template(resource_list));
 </script>
 </script>
 
 <script id="template-search-result" type="text/x-handlebars-template">
-{{#each search_result}}
-  <div class="{{color}}" style="width:23%; max-width:200px; min-width:150px; height:150px; margin-top:10px; margin-left:10px; padding:5px 5px 0px 5px; display:inline-block; color: inherit; border-radius: 6px;">
-    <div style="float:right;">
-      <a href="#" style="display:inline;" onclick="javascript:copyResource('{{this.href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-files-o"></i></a>
-      <a href="#" style="display:inline;" onclick="javascript:moveResource('{{this.href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-scissors"></i></a>
-      <a href="#" style="display:inline;" onclick="javascript:deleteResource('{{this.href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-trash-o"></i></a>
-    </div>
-    <a href="#" rel="{{this.type}}" onclick="javascript:showResource(this,'{{this.href}}');">
-      <div style="width:100%;height:100%;">
-        <span><i {{#if logo}} class="fa fa-user" {{else}} class="fa fa-group" {{/if}}></i> <span>{{this.project}}</span></span>
-        <span style="display:block;margin-top:10px;font-weight:bold;">{{this.title}}</span>
-        <p style="margin-top:5px;">{{this.description}}</p>
-        <span style="display:block;margin-top:5px;float:right;">{{this.type}}</span>
-      </div>
-    </a>
+<div class="{{color}}" style="margin:5px;height:150px;padding:5px 5px 0px 5px;color: inherit; border-radius: 6px;">
+  <div style="float:right;">
+    <a href="#" style="display:inline;" onclick="javascript:copyResource('{{href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-files-o"></i></a>
+    <a href="#" style="display:inline;" onclick="javascript:moveResource('{{href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-scissors"></i></a>
+    <a href="#" style="display:inline;" onclick="javascript:deleteResource('{{href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-trash-o"></i></a>
   </div>
-{{/each}}
-
-<script lang="javascript">
-  function copyResource(href)
-  {
-    var params = {"title":"Copy",
-                  "action":"copy",
-                  "src" : href};
-    var source = $("#template-modal").html();
-    template = Handlebars.compile(source);
-    $("#search-modal").html(template(params)); 
-  } 
-
-  function moveResource(href)
-  {
-    var params = {"title":"Move",
-                  "action":"move",
-                  "src" : href};
-    var source = $("#template-modal").html();
-    template = Handlebars.compile(source);
-    $("#search-modal").html(template(params)); 
-  }
-</script>
+  <a href="#" rel="{{type}}" onclick="javascript:showResource(this,'{{href}}');">
+    <div style="width:100%;height:100%;">
+      <div><i {{#if logo}} class="fa fa-user" {{else}} class="fa fa-group" {{/if}}></i> <span>{{project}}</span></div>
+      <div style="display:block;margin-top:10px;font-weight:bold;">{{title}}</div>
+      <p style="margin-top:5px;">{{description}}</p>
+      <div style="margin-top:5px;float:right;">{{type}}</div>
+    </div>
+  </a>
+</div>
 </script>
 
 <script id="template-modal" type="text/x-handlebars-template">
@@ -472,6 +695,11 @@ function showLeftMenu()
     $("#left-menu").css('display', 'none')
                    .css('visibility','hidden');
     $("#resource-page").attr("class","col-md-12");
+
+    if ($("#page-show").val() == "search" || $("#page-show").val() == "project" || $("#page-show").val() == "user")
+    {
+      showResultSearch(false);
+    }
   }
   else
   {
@@ -481,11 +709,20 @@ function showLeftMenu()
     $("#left-menu").css('display', 'block')
                    .css('visibility','visible');
     $("#resource-page").attr("class","col-md-8");
+
+    if ($("#page-show").val() == "search" || $("#page-show").val() == "project" || $("#page-show").val() == "user")
+    {
+      showResultSearch(true);
+    }
   }
 }
 
 function showSearch()
 {
+  $("#page-show").val("search");
+
+  $("#resource-page").html('<div class="row"><div class="col-md-3 col-md-offset-3"><input type="checkbox" class="class-double-buttons" data-on-text="ByDate" data-off-text="ByName" checked></div><div class="col-md-3 col-md-offset-1"><input type="checkbox" class="class-double-buttons" data-on-text="ASC" data-off-text="DESC" checked></div></div>');
+
   var varProjects = {"resource_list_projects" : [{"name":"User","href":"/lien/user"},
                                                  {"name":"Project 1","href":"/lien/projet1"},
                                                  {"name":"Project 2","href":"/lien/projet2"},
@@ -519,11 +756,12 @@ function showSearch()
   template = Handlebars.compile(source);
   $("#left-menu").html(template(varProjects));
 
+  searchResources(null);
 
   $("#link-show-left-menu").attr("rel","false");
   showLeftMenu();
 
-  searchResources(null);
+  $("[class='class-double-buttons']").bootstrapSwitch();
 }
 
 showSearch();
@@ -556,46 +794,80 @@ function searchResources(element)
     $("#menu-type-part").children().find("button").attr("class","btn btn-default");
   }
 
-  $("#resource-page").html("");
+  $("#resource-page").append('<div class="row"><div id="resource-list" class="col-md-12"></div></div>');
 
-    var resource_list = {"search_result": [
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-converter","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-service","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-execution","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-scenario","logo":true},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Project","color":"color-project","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
-                              {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true}
-                        ]
-                      };
+  varSearchResults = [
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-converter","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-service","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-execution","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-scenario","logo":true},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Project","color":"color-project","logo":false},
+                      {"title": "User","description":"User description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "User","color":"color-user","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "model 1","description":"Model description .... ... ... ... ...","href":"/users/rokysaroi","project" : "Projet 1","type" : "Model","color":"color-model","logo":false},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true},
+                      {"title": "Formalism 1","description":"Formalism description .... ... ... ... ...","href":"/users/rokysaroi","project" : "User 1","type" : "Formalism","color":"color-formalism","logo":true}
+                    ]
+
+    showResultSearch(true);
+}
+
+function showResultSearch(isMenuShow)
+{
+  var length = (isMenuShow)? 4 : 6;
+
+  var htmlCode = "";
+
+  if ($("#page-show").val() != "search")
+  {
+    htmlCode += '<div class="row"><div class="col-md-'+((isMenuShow)? 3 : 2)+'" style="padding:2px;"><a href="#" click="javascript:showResource(this);" style=""><div class="'+$("#page-search-color").val()+'" style="margin:5px;height:150px;padding-top:24%; padding-left:30%;color: inherit; border-radius: 6px;"><i class="fa fa-plus-circle fa-5x"></i></div></a></div>';
+    var j = 2;
+  }
+  else
+    var j = 1;
+  for (var i = 0; i < varSearchResults.length; i++) 
+  {
+    if (j == 1)
+      htmlCode += '<div class="row">';
+
+    htmlCode +='<div class="col-md-'+((isMenuShow)? 3 : 2)+'" style="padding:2px;">';
     var source = $("#template-search-result").html();
     template = Handlebars.compile(source);
-    $("#resource-page").html(template(resource_list)); 
+    htmlCode += template(varSearchResults[i]);
+    htmlCode += '</div>';
 
-    $("#resource-page").append('<div id="search-modal"></div>');
+    if (j == length)
+    {
+      htmlCode += '</div>';
+      j = 1;
+    } 
+    else
+      j++; 
+  }
+  if (j < length)
+    htmlCode += '</div>';
+  $("#resource-list").html(htmlCode);
+  $("#resource-list").append('<div id="search-modal"></div>');
 }
 
 function showResource(element, url)
@@ -604,10 +876,16 @@ function showResource(element, url)
   {
     showProject(url);
   }
+  else if ($(element).attr("rel") == "User")
+  {
+    showUser(url);
+  }
 }
 
 function showProject(url)
 {
+  $("#page-show").val("project");
+
   var resource_list = {"name":"Projet 1",
                        "description":"Project description ......",
                        "is_public" : true,
@@ -637,6 +915,55 @@ function showProject(url)
                      .append(template(resource_list));
 
   $("[class='class-double-buttons']").bootstrapSwitch();
+}
+
+function showUser(url)
+{
+  $("#page-show").val("user");
+
+  var resource_list = {"name":"Projet 1",
+                       "description":"Project description ......",
+                       "is_public" : true,
+                       "resource_list_projects": [
+                            {"name": "User 1","href":"/users/rokysaroi","is_admin_project" : true,"is_edit_project" : true},
+                            {"name": "User 2","href":"/users/rokysaroi","is_admin_project" : true,"is_edit_project" : false},
+                            {"name": "User 3","href":"/users/rokysaroi","is_admin_project" : false,"is_edit_project" : true},
+                            {"name": "User 4","href":"/users/rokysaroi","is_admin_project" : false,"is_edit_project" : false}
+                        ]
+                      };
+  var source = $("#template-user-menu").html();
+  var template = Handlebars.compile(source);
+  $("#left-menu").html(template(resource_list));
+
+  $("#link-show-left-menu").attr("rel","false");
+  showLeftMenu();
+
+  var source = $("#template-user-content").html();
+  var template = Handlebars.compile(source);
+  $('#resource-page').html("")
+                     .append(template(resource_list));
+
+  $("[class='class-double-buttons']").bootstrapSwitch();
+}
+
+function copyResource(href)
+{
+  var params = {"title":"Copy",
+                "action":"copy",
+                "src" : href};
+  var source = $("#template-modal").html();
+  template = Handlebars.compile(source);
+  $("#search-modal").html(template(params)); 
+} 
+
+function moveResource(href)
+{
+  var params = {"title":"Move",
+                "action":"move",
+                "src" : href};
+  var source = $("#template-modal").html();
+  template = Handlebars.compile(source);
+  $("#search-modal").html(template(params)); 
 }
       
 function loginClick(){
@@ -683,4 +1010,5 @@ if(getUserLogin() == 0){
     document.getElementById("usernameLabel").style.display = 'none';
 }
 </script>
+
 </body></html>
