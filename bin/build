@@ -79,7 +79,7 @@ curl --silent --location \
 # Cosy:
 rm -rf ${current}/lua/cosy
 git clone https://github.com/CosyVerif/library.git
-mv library/src/cosy ${current}/lua/
+mv library/src/cosy* ${current}/lua/
 
 # Lua dependencies:
 curl --silent --location \
