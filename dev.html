@@ -100,6 +100,9 @@
             
             var model,
                 line_number = 0;
+
+            // Server configuration:
+            //L.execute ("meta [''] = { username = , password =  }");
             
             function executeNextLine(){
                 // We get the code
@@ -119,14 +122,10 @@
                 marker.innerHTML = "●";
                 return marker;
             }
-                        
             function executeLua(code, clear) {
                 try {
-                    if(!model) {
-                        model = connect ("ws://127.0.0.1:8080", "resource", "token");
-                    }
                     lua_code.setValue(lua_code.getValue() + code + "\n");
-                    execute(code);
+                    L.execute(code);
                 } catch(err) {
                         Module.print('ERROR: ' + err);
                         throw(err);
@@ -137,7 +136,7 @@
         <script type="text/javascript" lang="Javascript" src="js/lua.vm.js"></script>
         <script>
             Lua.executeScript("lua/js.lua");
-            Lua.executeScript("lua/cosy/interface/js.lua");
+            Lua.executeScript("lua/cosy.lua");
         </script>
     </body> 
 </html>
