@@ -1,0 +1,90 @@
+<div class="row">
+  <div class="col-md-7">
+    <label id="user-firstname-label">Firstname</label>
+    <div class="form-group has-success">
+      <label class="control-label" for="inputSuccess1"></label>
+      <input type="text" class="form-control" id="user-firstname-input" placeholder="Firstname" style="display:none;">
+    </div>
+  </div>
+  <div class="col-md-1 col-md-offset-3">
+    <div class="radio">
+      <label>
+        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+        PRIVATE
+      </label>
+    </div>
+    <div class="radio" id="user-visibility-public" style="display:none;">
+      <label>
+        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+        PUBLIC
+      </label>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-7">
+    <label id="user-lastname-label">Lastname</label>
+    <div class="form-group has-success"> 
+      <input type="text" class="form-control" id="user-lastname-input" placeholder="Lastname" style="display:none;">
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <label id="user-username-label">Username</label>
+    <div class="form-group has-success"> 
+      <input type="text" class="form-control" id="user-username-input" placeholder="Username" style="display:none;">
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="form-group">
+      <label class="sr-only" for="exampleInputPassword2">Password</label>
+      <input type="password" class="form-control" id="user-password" placeholder="Password" style="display:none;">
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <label id="user-email-label">email@yahoo.fr</label>
+    <div class="form-group" id="user-email-group" style="display:none;">
+      <div class="input-group">
+        <div class="input-group-addon">@</div>
+        <input class="form-control" type="email" placeholder="Email" id="user-email-input">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1 col-md-offset-5">
+    <a href="#" id="user-button-update" onclick="updateUser();"><i class="fa fa-pencil-square-o"></i></a>
+    <a href="#" id="user-button-save" style="display:none;"><i class="fa fa-check-square"></i></a>
+  </div>
+</div>
+
+<script lang="javascript">
+
+$("#new-username").val($("#emailPlaceHolder").val());
+$("#new-password").val($("#passwordPlaceHolder").val());
+
+function updateUser()
+{
+  $("#user-button-update").css("display", "none");
+  $("#user-button-save").css("display", "block");
+  $("#user-lastname-input").val($("#user-lastname-label").val());
+  $("#user-lastname-label").css("display", "none");
+  $("#user-lastname-input").css("display", "block");
+  $("#user-firstname-input").val($("#user-firstname-label").val());
+  $("#user-firstname-label").css("display", "none");
+  $("#user-firstname-input").css("display", "block");
+  $("#user-username-input").val($("#user-username-label").val());
+  $("#user-username-label").css("display", "none");
+  $("#user-username-input").css("display", "block");
+  $("#user-password").css("display", "block");
+  $("#user-email-input").val($("#user-email-label").val());
+  $("#user-email-label").css("display", "none");
+  $("#user-email-group").css("display", "block");
+  $("#user-visibility-public").css("display", "block");
+}
+</script>

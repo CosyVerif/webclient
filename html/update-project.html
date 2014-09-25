@@ -1,0 +1,103 @@
+<div class="row" id="project-path">
+  <div class="col-md-12">
+    <label class="control-label" for="inputSuccess1" style="float:right;">CosyVerif/.../.../...</label>
+  </div>
+</div>
+<div class="row" id="project-visibility-buttons" style="display:none;">
+  <div class="col-md-12">
+    <div  style="float:right;">
+      <label class="radio-inline">
+        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> PRIVATE
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> PUBLIC
+      </label>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <label class="control-label" for="inputSuccess1">Title : </label> 
+    <span id="project-title-label"> ......</span>
+    <input type="text" class="form-control" id="project-title-input" placeholder="Project title" style="display:none;" >
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12" style="margin-top:20px;">
+    <p id="project-description-p">Description .......... ........... .............  .......... </p>
+    <textarea class="form-control" rows="5" placeholder="Project description ..." style="display:none;" id="project-description-textarea"></textarea>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12" style="margin-top:30px;">
+    <ul class="nav nav-tabs" role="tablist" id="project-resource-nav-tabs">
+      <li class="active" id="project-resource-nav-tabs-formalism">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="formalism" onclick="javascript:showProjectNavTabResources(this);">Formalisms</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="model" onclick="javascript:showProjectNavTabResources(this);">Models</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="converter" onclick="javascript:showProjectNavTabResources(this);">Converters</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="service" onclick="javascript:showProjectNavTabResources(this);">Services</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="execution" onclick="javascript:showProjectNavTabResources(this);">Executions</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="scenario" onclick="javascript:showProjectNavTabResources(this);">Scenarios</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-11" style="padding-right:3px;">
+    <select multiple class="form-control" style="margin-top:3px;" size="10" id="project-resource-select">
+      <option>Formalism 1</option>
+      <option>Formalism 2</option>
+      <option>Formalism 3</option>
+      <option>Formalism 5</option>
+      <option>Formalism 6</option>
+    </select>
+  </div>
+  <div class="col-md-1" id="project-resource-buttons" style="padding-left:0px;">
+      <a href="#"><i class="fa fa-plus-square"></i></a>
+      <br />
+      <a href="#"><i class="fa fa-pencil-square-o"></i></a>
+      <br />
+      <a href="#"><i class="fa fa-minus-square"></i></a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 col-md-offset-5" style="padding-right:3px; margin-top:20px;">
+    <label class="control-label" for="inputSuccess1" style="margin-top:3%;">Tags :</label>
+    <input type="text" class="form-control" style="display:none;" id="project-tag-input">
+    <select multiple class="form-control" style="margin-top:3px;">
+      <option>Tag 1</option>
+      <option>Tag 2</option>
+      <option>Tag 3</option>
+      <option>Tag 5</option>
+      <option>Tag 6</option>
+    </select>
+  </div>
+  <div class="col-md-1" id="project-tag-buttons" style="padding-left:0px; margin-top:20px;display:none;">
+      <br />
+      <br />
+      <a href="#"><i class="fa fa-plus-square"></i></a>
+      <br />
+      <a href="#"><i class="fa fa-pencil-square-o"></i></a>
+      <br />
+      <a href="#"><i class="fa fa-minus-square"></i></a>
+  </div>
+</div>
+<div class="row" style="display:none;" id="project-button-save">
+  <div class="col-md-1 col-md-offset-4">
+    <a href="#"><i class="fa fa-check-square"></i></a>
+  </div>
+</div>
+<script lang="javascript">
+  showProjectNavTabResources(null);
+  $("[name='my-checkbox']").bootstrapSwitch();
+</script>
