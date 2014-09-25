@@ -3,12 +3,16 @@
 
 js.global:eval [[
   window.load = function (url) {
-    var xhr = new XMLHttpRequest ();
-    xhr.open ("GET", url, false);
-    xhr.send (null);
-    if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
-      return xhr.responseText;
-    } else {
+    try {
+      var xhr = new XMLHttpRequest ();
+      xhr.open ("GET", url, false);
+      xhr.send (null);
+      if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+        return xhr.responseText;
+      } else {
+        return undefined;
+      }
+    } catch (err) {
       return undefined;
     }
   }
@@ -23,7 +27,7 @@ local function load_http (url)
   end
 end
 
-package.path = ""
+package.path  = ""
 package.cpath = ""
 
 table.insert (package.searchers, 1, function (name)
