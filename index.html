@@ -15,6 +15,36 @@
     <link href="css/bootstrap-switch.css" rel="stylesheet">
     <link rel="stylesheet" href="css/font-awesome.css">
 
+    <!-- Model Graph styles-->      
+    <link rel="stylesheet" type="text/css" href="css/editor.css">
+    <link rel="stylesheet" type="text/css" href="css/dev.css">
+    <link rel="stylesheet" href="css/codemirror.css">
+
+
+    <!-- We include all the js we need-->
+    <script src="js/codemirror.js"></script>
+    <script type="text/javascript" src="js/d3.js"></script>
+    <script type="text/javascript" src="js/editor.js"></script>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+    <script src="js/handlebars.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+    <!-- <script src="template/project.template" type="text/x-handlebars-template"></script> -->
+    <script src="js/index.js"></script>
+
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <script src="js/jquery-ui.js"></script>
+
+    <script src="js/jquery-fullscreen.js"></script>
+
+    <script src="js/jquery.textareafullscreen.js"></script>
+<link rel="stylesheet" href="css/textareafullscreen.css">
+
   </head>
 
   <body>
@@ -78,27 +108,6 @@
         </div>
       </div>
     </div>
-
-  
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/bootstrap-switch.js"></script>
-    <script src="js/handlebars.js"></script>
-    <script src="js/bootstrap-typeahead.js"></script>
-    <!-- <script src="template/project.template" type="text/x-handlebars-template"></script> -->
-    <script src="js/index.js"></script>
-
-    <link rel="stylesheet" href="css/jquery-ui.css">
-    <script src="js/jquery-ui.js"></script>
-
-    <script src="js/jquery-fullscreen.js"></script>
-
-    <script src="js/jquery.textareafullscreen.js"></script>
-<link rel="stylesheet" href="css/textareafullscreen.css">
 
     
 <script id="template-search-menu" type="text/x-handlebars-template">
@@ -1380,18 +1389,17 @@ function update(url, data, callBack)
 <script id="template-resource-content" type="text/x-handlebars-template">
 <div class="row">
   <div class="col-md-12">
-    <textarea class="form-control" rows="10" id="resource-content"></textarea>
+    <div id="model_container" class="span9"></div>
+    <a href="javascript:suo()">show</a>
   </div>
 </div>
+<script type="text/javascript" src="js/editor.js"></script>
 <script lang="javascript">
 
-$('#resource-content').textareafullscreen({
-    overlay: true, // Overlay
-    maxWidth: '98%', // Max width
-    maxHeight: '98%' // Max height
-});
+function suo(){
+  change_size_svg('400','400');
+}
 
-$("#resource-content").css("height","650px");
 </script>
 </script>
 
@@ -1540,6 +1548,9 @@ function showLeftMenu(show)
     $("#left-menu").css('display', 'none')
                    .css('visibility','hidden');
     $("#resource-page").attr("class","col-md-12");
+
+    if( $("#page-show").val() == "resource")
+      change_size_svg('1000','1100');
   }
   else if ($("#link-show-left-menu").attr("rel") == "true")
   {
@@ -1554,7 +1565,9 @@ function showLeftMenu(show)
     if (($("#page-show").val() == "search" || $("#page-show").val() == "project" || $("#page-show").val() == "user") && $("#search-showing").val() == "true")
     {
       showResultSearch(false);
-    }
+    } 
+    else if( $("#page-show").val() == "resource")
+      change_size_svg('1000','1100');
   }
   else
   {
@@ -1570,6 +1583,8 @@ function showLeftMenu(show)
     {
       showResultSearch(true);
     }
+    else if( $("#page-show").val() == "resource")
+      change_size_svg('1000','750');
   }
 }
 
@@ -1850,6 +1865,8 @@ function showBase(url)
 
   $("#resource-page").html("");
   $("#left-menu").html("");
+
+  $("#page-show").val("resource");
 
   loadTemplate("template-resource-menu", "left-menu", false, {});
 
