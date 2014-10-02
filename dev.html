@@ -91,6 +91,9 @@
             
             var model,
                 line_number = 0;
+            function is_connected (b) {
+              console.log ("is connected: " + b);
+            }
 
             // Server configuration:
             //L.execute ("meta [''] = { username = , password =  }");
@@ -128,6 +131,10 @@
         <script>
             Lua.executeScript("lua/js.lua");
             Lua.executeScript("lua/cosy.lua");
+            configure_server("https://rest.cosyverif.io/", {
+              username: "alban",
+              password: "toto"
+            });
         </script>
     </body> 
 </html>
