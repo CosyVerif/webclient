@@ -1,4 +1,4 @@
-local Tag = require "cosy.tag"
+local Data = require "cosy.data"
 local model = cosy ["my_model"]
 
 model.place_type = {}
@@ -16,10 +16,14 @@ model.p1 = model.place_type * {
   [Tag.POSITION   ] = "100:45",
   [Tag.SELECTED   ] = false,
   [Tag.HIGHLIGHTED] = false,
-  [Tag.INTANCE    ] = true,
+  [Tag.INSTANCE   ] = true,
 }
 
 model.a1 = model.arc_type * {
   source = model.p1,
   target = model.p1,
+  [Tag.INSTANCE] = true,
 }
+
+Data.clear (model.a1)
+Data.clear (model.p1)
