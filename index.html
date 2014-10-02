@@ -1222,7 +1222,7 @@ function successResource(data)
   $("#resource-project").text(data.project_type + " : " + data.project_name);
   $("#resource-project").attr("rel",data.project_type);
   $("#resource-project").attr("onclick","showResource(this,'"+data.project_url+"')");
-  $("#resource-path").text("Path : " + getCurrentURL());
+  $("#resource-path").text("Path : " + getServerURL()+getCurrentURL());
 
   var json = {"attribut_id": "resource-title", "attribut_value" : data.name, "is_edit" : data.is_edit};
   loadTemplate("template-attribut-show", "resource-title", false, json);
