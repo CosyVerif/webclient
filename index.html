@@ -112,16 +112,6 @@
     
 <script id="template-search-menu" type="text/x-handlebars-template">
 <div style="height:600px;">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="input-group">
-        <input type="text" class="form-control" id="search-zone-input">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button" id="search-zone-button" onclick="searchResources(null)"><i class="fa fa-search"></i></button>
-        </span>
-      </div>
-    </div>
-  </div>
   {{#if is_home_project}}
   <div class="row" style="margin-top:30px;">
     <div class="col-md-8">
@@ -143,7 +133,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-12" id="menu-project-part" style="max-height:200px;overflow:auto;">
+    <div class="col-md-12" id="menu-project-part" style="max-height:500px;overflow:auto;">
         {{{list_projects}}}
     </div>
   </div>
@@ -151,50 +141,6 @@
   <div class="row">
     <div class="col-md-12" id="menu-project-part">
       <a href="#" onclick="newProject(true)" style="float:right; margin-right:15px;margin-top:5px;"><i class="fa fa-plus"></i></a>
-    </div>
-  </div>
-  <div class="row" style="margin-top:30px;">
-    <div class="col-md-8">
-      <div class="navbar-brand">
-        <a href="#">Types</a>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="navbar-brand" style="float:right;">
-        <a href="#" rel="select-type-ok"  onclick="searchResources(this)"><i class="fa fa-check-square"></i></a>
-        <a href="#"  rel="select-type-no" onclick="searchResources(this)"><i class="fa fa-square"></i></a>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="navbar-brand" id="menu-type-part" style="height:90px;">
-      <div class="btn-group btn-group-justified">
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" name="users" onclick="searchResources(this)">Users</button>
-        </div>
-      </div>
-      <div class="btn-group btn-group-justified">
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" name="projects" onclick="searchResources(this)">Projects</button>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" name="formalisms" onclick="searchResources(this)">Formalisms</button>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" name="models" onclick="searchResources(this)">Models</button>
-        </div>
-      </div>
-      <div class="btn-group btn-group-justified">
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" name="services" onclick="searchResources(this)">Services</button>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" name="executions" onclick="searchResources(this)">Executions</button>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" name="scenarios" onclick="searchResources(this)">Scenarios</button>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -207,7 +153,8 @@ function showHomeOrAll(element)
   }
   else if ($(element).attr("id") == "search-button-all" && !$(element).hasClass("btn-primary"))
   {
-    showSearch(false);
+    $("#menu-project-part").html("");
+    loadTemplate("template-search-content", "resource-page", false, {"is_user" : true, "is_search" : true});
     $("#search-button-home").removeClass("btn-primary");
     $("#search-button-home").addClass("btn-default");
     $("#search-button-all").removeClass("btn-default");
@@ -218,6 +165,133 @@ function showHomeOrAll(element)
 $("[class='class-double-buttons']").bootstrapSwitch();
 </script>
 </script>
+
+<script id="template-search-content" type="text/x-handlebars-template">
+<div class="row">
+  <div class="col-md-7">
+    <div class="input-group">
+      <input type="text" class="form-control" id="search-zone-input">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" id="search-zone-button" onclick="searchResources(null)"><i class="fa fa-search"></i></button>
+      </span>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <input type="checkbox" class="class-double-buttons" data-on-text="ByDate" data-off-text="ByName" checked>
+  </div>
+  <div class="col-md-1">
+    <div style="height:10px;"><a href="#" onclick="fsort(true)"><i class="fa fa-sort-asc fa-2x color-noir" id="search-button-asc" data-toggle="tooltip" title="Sort asc"></i></a></div>
+    <div style="height:10px;"><a href="#" onclick="fsort(false)"><i class="fa fa-sort-desc fa-2x color-gris" id="search-button-desc" data-toggle="tooltip" title="Sort desc"></i></a></div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12" style="margin-top:15px;">
+    <ul class="nav nav-tabs" role="tablist" id="resource-nav-tabs">
+     {{#if is_search}}
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="user" onclick="showNavTab(this,'User');searchResources(null);" id="resource-nav-tabs-user">Users</a>
+      </li>
+     {{/if}}
+     {{#if is_user}}
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="project" onclick="showNavTab(this,'Project');searchResources(null);" id="resource-nav-tabs-project">Projects</a>
+      </li>
+     {{/if}}
+      <li class="active"  id="resource-nav-tabs-default">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="model" onclick="showNavTab(this,'Model');searchResources(null);">Models</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="formalism" onclick="showNavTab(this,'Formalism');searchResources(null);">Formalisms</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="execution" onclick="showNavTab(this, 'Execution');searchResources(null);">Executions</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="service" onclick="showNavTab(this, 'Service');searchResources(null);">Services</a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="scenario" onclick="showNavTab(this,'Scenario');searchResources(null);">Scenarios</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div id="resource-list" class="col-md-12">
+
+  </div>
+</div>
+<script lang="javascript">
+function showNavTab(element, varType)
+{ 
+  $("#resource-nav-tabs").children(".active").attr("class","dropdown");
+  var varColor = "";
+  var types = "";
+  if (element == null && varType == null)
+  {
+    $("#resource-nav-tabs-default").attr("class","active");
+    varColor = "color-"+$("#resource-nav-tabs-default").children("a").attr("rel");
+    types = $("#resource-nav-tabs-default").children("a").attr("rel") + "s";
+    varType = "Model";
+  }
+  else if (element != null)
+  {
+    $(element).parent().attr("class","active");
+    types = $(element).attr("rel") + "s";
+    varColor = "color-"+$(element).attr("rel");
+  }
+  else if (varType == "User")
+  {
+    $("#resource-nav-tabs").children("li").children("a[rel='user']").parent().attr("class", "active");
+    varColor = "color-user";
+    types = "users";
+  }
+  else if (varType == "Project")
+  {
+    $("#resource-nav-tabs").children("li").children("a[rel='project']").parent().attr("class", "active");
+    varColor = "color-project";
+    types = "projects";
+  }
+  else if (varType == "Formalism")
+  {
+    $("#resource-nav-tabs").children("li").children("a[rel='formalism']").parent().attr("class", "active");
+    varColor = "color-formalism";
+    types = "formalisms";
+  }
+  else if (varType == "Model")
+  {
+    $("#resource-nav-tabs").children("li").children("a[rel='model']").parent().attr("class", "active");
+    varColor = "color-model";
+    types = "models";
+  }
+  else if (varType == "Service")
+  {
+    $("#resource-nav-tabs").children("li").children("a[rel='service']").parent().attr("class", "active");
+    varColor = "color-service";
+    types = "services";
+  }
+  else if (varType == "Execution")
+  {
+    $("#resource-nav-tabs").children("li").children("a[rel='execution']").parent().attr("class", "active");
+    varColor = "color-execution";
+    types = "executions";
+  }
+  else if (varType == "Scenario")
+  {
+    $("#resource-nav-tabs").children("li").children("a[rel='scenario']").parent().attr("class", "active");
+    varColor = "color-scenario";
+    types = "scenarios";
+  }
+
+  varSearchResults = {"color_resource" : varColor, "type" : varType, "resource_list" : {}, "is_edit" : false};
+}
+
+showNavTab(null, null);
+
+$("[class='class-double-buttons']").bootstrapSwitch();
+</script>
+</script>
+
+
 
 <script id="template-attribut-show" type="text/x-handlebars-template">
 <div class="col-md-10">
@@ -1032,172 +1106,6 @@ $("[class='class-double-buttons']").bootstrapSwitch();
 </script>
 </script>
 
-<script id="template-user-project-content" type="text/x-handlebars-template">
-<div class="row">
-  <div class="col-md-7">
-    <div class="input-group">
-      <input type="text" class="form-control" id="user-project-search-input">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" onclick="searchUserResources()"><i class="fa fa-search"></i></button>
-      </span>
-    </div>
-  </div>
-  <div class="col-md-2">
-    <input type="checkbox" class="class-double-buttons" data-on-text="ByDate" data-off-text="ByName" checked>
-  </div>
-  <div class="col-md-1">
-    <div style="height:10px;"><a href="#" onclick="fsort(true)"><i class="fa fa-sort-asc fa-2x color-noir" id="search-button-asc" data-toggle="tooltip" title="Sort asc"></i></a></div>
-    <div style="height:10px;"><a href="#" onclick="fsort(false)"><i class="fa fa-sort-desc fa-2x color-gris" id="search-button-desc" data-toggle="tooltip" title="Sort desc"></i></a></div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12" style="margin-top:15px;">
-    <ul class="nav nav-tabs" role="tablist" id="resource-nav-tabs">
-     {{#if is_user}}
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="project" onclick="showNavTab(this,'Project');" id="resource-nav-tabs-project">Projects</a>
-      </li>
-     {{/if}}
-      <li class="dropdown"  id="resource-nav-tabs-default">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="model" onclick="showNavTab(this,'Model');">Models</a>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="formalism" onclick="showNavTab(this,'Formalism');">Formalisms</a>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="execution" onclick="showNavTab(this, 'Execution');">Executions</a>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="service" onclick="showNavTab(this, 'Service');">Services</a>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" rel="scenario" onclick="showNavTab(this,'Scenario');">Scenarios</a>
-      </li>
-    </ul>
-  </div>
-</div>
-<div class="row">
-  <div id="resource-list" class="col-md-12">
-
-  </div>
-</div>
-<script lang="javascript">
-function showNavTab(element, varType)
-{
-  var json = defineNavTabType(element, varType);
-  showNavTabResources(json.resource_type, json.resource_color, json.resource_types);
-}
-
-function defineNavTabType(element, varType)
-{
-  $("#resource-nav-tabs").children(".active").attr("class","dropdown");
-  var varColor = "";
-  var types = "";
-  if (element == null && varType == null)
-  {
-    $("#resource-nav-tabs-default").attr("class","active");
-    varColor = "color-"+$("#resource-nav-tabs-default").children("a").attr("rel");
-    types = $("#resource-nav-tabs-default").children("a").attr("rel") + "s";
-    varType = "Model";
-  }
-  else if (element != null)
-  {
-    $(element).parent().attr("class","active");
-    types = $(element).attr("rel") + "s";
-    varColor = "color-"+$(element).attr("rel");
-  }
-  else if (varType == "Project")
-  {
-    varColor = "color-project";
-    types = "projects";
-  }
-  else if (varType == "Formalism")
-  {
-    varColor = "color-formalism";
-    types = "formalisms";
-  }
-  else if (varType == "Model")
-  {
-    varColor = "color-model";
-    types = "models";
-  }
-  else if (varType == "Service")
-  {
-    varColor = "color-service";
-    types = "services";
-  }
-  else if (varType == "Execution")
-  {
-    varColor = "color-execution";
-    types = "executions";
-  }
-  else if (varType == "Scenario")
-  {
-    varColor = "color-scenario";
-    types = "scenarios";
-  }
-  return {"resource_color" : varColor, "resource_types" : types, "resource_type" : varType};
-}
-
-function showNavTabResources(varType, varColor, types)
-{
-  function success(data)
-  { 
-    varSearchResults = {"color_resource" : varColor, "type" : varType, "resource_list" : data.resource_list, "is_edit" : data.is_edit};
-    showResultSearch(($("#left-menu").css('display') != "none"));
-  }
-  function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
-  get(getCurrentURL() + "/"+ types, success, error);
-}
-
-function searchUserResources()
-{
-  var varType = "";
-  var varColor = "";
-  var types = $("#resource-nav-tabs").children(".active").children("a").attr("rel") + "s";
-  if (types == "projects")
-  {
-    varColor = "color-project";
-    varType = "Project";
-  }
-  else if (types == "formalisms")
-  {
-    varColor = "color-formalism";
-    varType = "Formalism";
-  }
-  else if (types == "models")
-  {
-    varColor = "color-model";
-    varType = "Model";
-  }
-  else if (types == "services")
-  {
-    varColor = "color-service";
-    varType = "Service";
-  }
-  else if (types == "executions")
-  {
-    varColor = "color-execution";
-    varType = "Execution";
-  }
-  else if (types == "scenarios")
-  {
-    varColor = "color-scenario";
-    varType = "Scenario";
-  }
-  function success(data)
-  { 
-    varSearchResults = {"color_resource" : varColor, "type" : varType, "resource_list" : data, "is_edit" : false};
-    showResultSearch(($("#left-menu").css('display') != "none"));
-  }
-  function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
-  get("/search?urls=" + getCurrentURL() + "&types=" + types + "&value=" + $("#user-project-search-input").val(), success, error);
-}
-
-$("[class='class-double-buttons']").bootstrapSwitch();
-</script>
-</script>
-
 <script id="template-user-new" type="text/x-handlebars-template">
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
@@ -1236,7 +1144,7 @@ $("[class='class-double-buttons']").bootstrapSwitch();
     <div class="form-group"> 
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-        <input class="form-control" type="password" id="user-password" placeholder="Confirmation">
+        <input class="form-control" type="password" id="user-confirmation" placeholder="Confirmation">
       </div>
     </div>
   </div>
@@ -1262,9 +1170,16 @@ $("#user-username").val($("#usernamePlaceHolder").val());
 $("#user-password").val($("#passwordPlaceHolder").val());
 
 $("#user-button-save").click(function(){
-  if ($("#user-username").val() == "" || $("#user-password").val() == "" || $("#user-email").val() == "" || $("#user-firstname").val() == "" || $("#user-lastname").val() == "")
+  if ($("#user-username").val() == "" || $("#user-password").val() == "" || $("#user-email").val() == "" || $("#user-firstname").val() == "" || $("#user-lastname").val() == "" || $("#user-confirmation").val() == "")
   {
     alertNotification("danger", "empty fields !");
+    return;
+  }
+  else if ($("#user-password").val() != $("#user-confirmation").val())
+  {
+    alertNotification("danger", "Password not correct !");
+    $("#user-password").val("");
+    $("#user-confirmation").val("");
     return;
   }
   function success(data)
@@ -1296,6 +1211,7 @@ $("#user-button-save").click(function(){
   </div>
   <div class="row" style="margin-top:10px;" id="resource-title"></div>
   <div class="row" style="margin-top:10px;" id="resource-description"></div>
+  <div class="row" style="margin-top:10px;padding-left:15px;" id="resource-path" style="text-align:right;"></div>
   <div class="row" style="margin-top:30px;" id="resource-suite"></div>
 </div>
 
@@ -1306,6 +1222,7 @@ function successResource(data)
   $("#resource-project").text(data.project_type + " : " + data.project_name);
   $("#resource-project").attr("rel",data.project_type);
   $("#resource-project").attr("onclick","showResource(this,'"+data.project_url+"')");
+  $("#resource-path").text("Path : " + getCurrentURL());
 
   var json = {"attribut_id": "resource-title", "attribut_value" : data.name, "is_edit" : data.is_edit};
   loadTemplate("template-attribut-show", "resource-title", false, json);
@@ -1451,7 +1368,11 @@ function saveResource(type)
   function success(data)
   {
     if (type == "Project")
-      showProject("/projects/"+$("#resource-name").val());
+    {
+      loadTemplate("template-search-content", "resource-page", false, {"is_user" : ($("#page-show").val() == "user" || $("#page-show").val() == "search"), "is_search" : ($("#page-show").val() == "search")});
+      showNavTab(null, "Project");
+      searchResources(null);
+    }
     else
       showBase(url);
   }
@@ -1470,9 +1391,15 @@ function saveResource(type)
 <script id="template-search-result" type="text/x-handlebars-template">
 <div class="{{color}}" style="margin:5px;height:150px;padding:5px 5px 0px 5px;color: inherit; border-radius: 6px;">
   <div style="float:right;">
+    {{#if is_copy}}
     <a href="#" style="display:inline;" onclick="javascript:copyResource('{{href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-files-o"></i></a>
+    {{/if}}
+    {{#if is_move}}
     <a href="#" style="display:inline;" onclick="javascript:moveResource('{{href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-scissors"></i></a>
-    <a href="javascript:deleteResource('{{href}}')" style="display:inline;" onclick="javascript:return confirm('voulez-vous supprimer cette ressource ?');"><i class="fa fa-trash-o"></i></a>
+    {{/if}}
+    {{#if is_delete}}
+    <a href="javascript:deleteResource('{{href}}','{{type}}')" style="display:inline;" onclick="javascript:return confirm('voulez-vous supprimer cette ressource ?');"><i class="fa fa-trash-o"></i></a>
+    {{/if}}
   </div>
   <a href="#" rel="{{type}}" onclick="showResource(this,'{{href}}')">
     <div style="width:100%;height:100%;">
@@ -1593,14 +1520,11 @@ function showSearch(isHome)
   if (!isNullUser())
       setCurrentURL('/users/'+getUserLogin());
   else
-    (!isNullUser())
-      setCurrentURL('/users/'+getUserLogin());
+      setCurrentURL("");
 
-
+  $("#resource-page").html("");
   $("#page-show").val("search");
 
-  $("#resource-page").html('<div class="row"><div class="col-md-2 col-md-offset-9" style="padding-top:7px;"><input type="checkbox" class="class-double-buttons" data-on-text="ByDate" data-off-text="ByName" checked></div><div class="col-md-1" style="text-align:right;padding-bottom:15px;"><div style="height:10px;"><a href="#" onclick="fsort(true)"><i class="fa fa-sort-asc fa-2x color-noir" id="search-button-asc" data-toggle="tooltip" title="Sort asc"></i></a></div><div style="height:10px;"><a href="#" onclick="fsort(false)"><i class="fa fa-sort-desc fa-2x color-gris" id="search-button-desc" data-toggle="tooltip" title="Sort desc"></i></a></div></div></div>');
-  
   function success(data)
   { 
 
@@ -1621,6 +1545,8 @@ function showSearch(isHome)
     $("#link-show-left-menu").attr("rel","false");
     showLeftMenu(true);
 
+    loadTemplate("template-search-content", "resource-page", false, {"is_user" : true, "is_search" : true});
+
     searchResources(null);
   }
   function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
@@ -1628,20 +1554,25 @@ function showSearch(isHome)
   if (!isNullUser() && isHome)
     get(getCurrentURL() + "/projects", success, error);
   else
-  {
-    if (isNullUser())
-      loadTemplate("template-search-menu", "left-menu", false, {"is_home_project": false, "list_projects":{}});
-    else
-      loadTemplate("template-search-menu", "left-menu", false, {"is_home_project": true, "list_projects":{}});
-
+  { 
     $("#link-show-left-menu").attr("rel","false");
-    showLeftMenu(true);
+    if (isNullUser())
+    {
+      showLeftMenu(false);
+      loadTemplate("template-search-menu", "left-menu", false, {"is_home_project": false, "list_projects":{}});
+    }
+    else
+    {
+      showLeftMenu(true);
+      loadTemplate("template-search-menu", "left-menu", false, {"is_home_project": true, "list_projects":{}});
+    }
+
+    loadTemplate("template-search-content", "resource-page", false, {"is_user" : true, "is_search" : true});
 
     searchResources(null);
   }
+    
 }
-
-showSearch(true);
 
 function searchResources(element)
 { 
@@ -1667,18 +1598,6 @@ function searchResources(element)
     $("#menu-project-part").children().find("button").addClass("btn-default");
 
   }
-  else if ($(element).attr("rel") == "select-type-ok")
-  {
-    $("#menu-type-part").children().find("button").removeClass("btn-default");
-    $("#menu-type-part").children().find("button").addClass("btn-primary");
-  }
-  else if ($(element).attr("rel") == "select-type-no")
-  {
-    $("#menu-type-part").children().find("button").removeClass("btn-primary");
-    $("#menu-type-part").children().find("button").addClass("btn-default");
-  }
-
-  $("#resource-page").append('<div class="row"><div id="resource-list" class="col-md-12"></div></div>');
 
   var projects = "";
   $("#menu-project-part").children().find(".btn-primary").each(function(index){
@@ -1687,37 +1606,45 @@ function searchResources(element)
     projects += $(this).attr("name");
   });
 
-  var types = "";
-  $("#menu-type-part").children().find(".btn-primary").each(function(index){
-    if (index != 0)
-      types += ",";
-    types += $(this).attr("name");
-  });
-
-  if (projects == "" && (isNullUser() || $("#search-button-all").hasClass("btn-primary")))
+  if (projects == "" && $("#page-show").val() == "search" && (isNullUser() || $("#search-button-all").hasClass("btn-primary")))
   {
     projects = "/";
-    if (types == "")
-      types = "formalisms,models,services,executions,scenarios,users,projects";
   }
-  else if (projects == "" && $("#search-button-home").hasClass("btn-primary"))
+  else if (projects == "" && $("#page-show").val() == "search" && $("#search-button-home").hasClass("btn-primary"))
   {
     projects = "/users/" + getUserLogin();
-    if (types == "")
-      types = "formalisms,models,services,executions,scenarios,projects";
   }
-  if (projects != "" && types == "")
-    types = "formalisms,models,services,executions,scenarios";
-
+  else if (projects == "" && $("#page-show").val() != "search")
+  {
+    projects = getCurrentURL();
+  }
 
   function success(data)
   { 
-    varSearchResults = {"color_resource" : "", "type" : "", "resource_list" : data, "is_edit" : false};
-    showResultSearch(true);
+    varSearchResults["resource_list"] = data;
+    function successIsEdit(data)
+    { 
+      varSearchResults["is_edit"] = data.is_edit;
+      showResultSearch(($("#left-menu").css('display') != "none"));
+    }
+    function errorIsEdit(jqXHR, textStatus, errorThrown) { varSearchResults["is_edit"] = false; showResultSearch(($("#left-menu").css('display') != "none"));}
+    if (!isNullUser() && $("#resource-nav-tabs").children(".active").children("a").attr("rel") != "user"){
+      get(getCurrentURL() + "/"+$("#resource-nav-tabs").children(".active").children("a").attr("rel")+"s", successIsEdit, errorIsEdit);
+    }
+    else{
+      varSearchResults["is_edit"] = false; 
+      showResultSearch(($("#left-menu").css('display') != "none"));
+    }
   }
   function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
- 
-  get("/search?urls="+projects+"&types="+types+"&value="+$("#search-zone-input").val(), success, error);
+  if ($("#resource-nav-tabs").children(".active").children("a").attr("rel") != "user")
+  {
+    get("/search?urls="+projects+"&types="+$("#resource-nav-tabs").children(".active").children("a").attr("rel")+"s&value="+$("#search-zone-input").val(), success, error);
+  }
+  else
+  {
+    get("/search?urls=/&types=users&value="+$("#search-zone-input").val(), success, error);
+  }
 }
 
 function showResultSearch(isMenuShow)
@@ -1726,7 +1653,7 @@ function showResultSearch(isMenuShow)
 
   var htmlCode = "";
 
-  if ($("#page-show").val() != "search" && varSearchResults.is_edit)
+  if (!isNullUser() && varSearchResults.is_edit)
   {
     htmlCode += '<div class="row"><div class="col-md-'+((isMenuShow)? 3 : 2)+'" style="padding:2px;"><a href="#" onclick="newResource(\''+varSearchResults.type+'\')" style=""><div class="'+varSearchResults.color_resource+'" style="margin:5px;height:150px;padding-top:24%; padding-left:30%;color: inherit; border-radius: 6px;"><i class="fa fa-plus-circle fa-5x"></i></div></a></div>';
     var j = 2;
@@ -1737,7 +1664,7 @@ function showResultSearch(isMenuShow)
   {
     if (j == 1)
       htmlCode += '<div class="row">';
-
+    
     htmlCode +='<div class="col-md-'+((isMenuShow)? 3 : 2)+'" style="padding:2px;">';
     var source = $("#template-search-result").html();
     template = Handlebars.compile(source);
@@ -1803,33 +1730,16 @@ function showProject(url)
 
   loadTemplate("template-project-menu", "left-menu", false, {});
 
-  loadTemplate("template-user-project-content", "resource-page", false, {"is_user" : false});
-
-  showNavTab(null, null);
+  loadTemplate("template-search-content", "resource-page", false, {"is_user" : false, "is_search" : false});
+  searchResources(null);
 
   $("#link-show-left-menu").attr("rel","false");
   showLeftMenu(true);
 }
 
 function newProject(isUserShow)
-{
-  if (isUserShow == true)
-  {
-    setCurrentURL("/users/"+getUserLogin());
-
-    $("#resource-page").html("");
-    $("#left-menu").html("");
-
-    $("#page-show").val("user");
-    loadTemplate("template-user-menu", "left-menu", false, {});
-    loadTemplate("template-user-project-content", "resource-page", false, {"is_user" : true});
-  }
-  defineNavTabType(null, "Project");
-  $("#resource-nav-tabs").children(".active").attr("class","dropdown");
-  $("#resource-nav-tabs-project").parent().attr("class","active");
-
-  $("#link-show-left-menu").attr("rel","false");
-  showLeftMenu(true);
+{ 
+  showNavTab(null, "Project");
 
   newResource("Project");
 }
@@ -1845,9 +1755,8 @@ function showUser(url)
 
   loadTemplate("template-user-menu", "left-menu", false, {});
 
-  loadTemplate("template-user-project-content", "resource-page", false, {"is_user" : true});
-
-  showNavTab(null, null);
+  loadTemplate("template-search-content", "resource-page", false, {"is_user" : true, "is_search" : false});
+  searchResources(null);
 
   $("#link-show-left-menu").attr("rel","false");
   showLeftMenu(true);
@@ -1963,11 +1872,13 @@ function moveResource(href)
   $("#modal-copy-move-div").html(template(params)); 
 }
 
-function deleteResource(href)
+function deleteResource(href, type)
 {
   function success(data)
   { 
-    showUser("/users/"+getUserLogin());
+    loadTemplate("template-search-content", "resource-page", false, {"is_user" : ($("#page-show").val() == "user" || $("#page-show").val() == "search"), "is_search" : ($("#page-show").val() == "search")});
+    showNavTab(null, type);
+    searchResources(null);
   }
   function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
  
