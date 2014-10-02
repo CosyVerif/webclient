@@ -349,6 +349,7 @@ $("[class='class-double-buttons']").bootstrapSwitch();
 <div style="height:600px;">
   <div class="row">
     <div class="col-md-12">
+      <i id="resource-delete-link" class="fa fa-trash-o"></i>
       <span id="project-rename-link" style="margin-top:3px;"><a href="#" data-toggle="tooltip" title="Rename" onclick="renameResource()"><i class="fa fa-wrench"></i></a><span id="project-rename-text"></span></span>
       <span style="float:right;"><input type="checkbox" class="class-double-buttons" data-size="small" data-on-text="PRIVATE" data-off-text="PUBLIC" id="project-is-public"></span>
     </div>
@@ -391,6 +392,8 @@ function successProject(data)
   {
     $("#project-is-public").bootstrapSwitch('readonly', true);
   }
+  if (data.is_delete)
+    $("#resource-delete-link").wrap('<a href="javascript:deleteResource(\''+getCurrentURL()+'\',\'\',false)" onclick="javascript:return confirm(\'voulez-vous supprimer cette ressource ?\');">');
 
   var json = {"attribut_id": "project-title", "attribut_value" : data.name, "is_edit" : data.is_edit};
   loadTemplate("template-attribut-show", "project-title", false, json);
@@ -759,6 +762,7 @@ function viewRequest(url, timestamp)
 <script id="template-user-menu-profile" type="text/x-handlebars-template">
 <div class="row" style="margin-top:10px;margin-bottom:20px;">
   <div class="col-md-12">
+    <i id="resource-delete-link" class="fa fa-trash-o"></i>
     <span id="user-rename-link" style="margin-top:3px;"><a href="#" data-toggle="tooltip" title="Rename" onclick="renameResource()"><i class="fa fa-wrench"></i></a><span id="user-rename-text"></span></span>
     <span style="float:right;"><input type="checkbox" class="class-double-buttons" data-size="small" data-on-text="PRIVATE" data-off-text="PUBLIC" id="user-is-public"></span>
   </div>
@@ -784,6 +788,8 @@ function success(data)
   {
     $("#user-is-public").bootstrapSwitch('readonly', true, true);
   }
+  if (data.is_delete)
+    $("#resource-delete-link").wrap('<a href="javascript:deleteResource(\''+getCurrentURL()+'\',\'\',false)" onclick="javascript:return confirm(\'voulez-vous supprimer cette ressource ?\');">');
   var json = {"attribut_id": "user-firstname", "attribut_value" : data.first_name, "is_edit" : data.is_edit};
   loadTemplate("template-attribut-show", "user-firstname", false, json);
 
@@ -1205,6 +1211,7 @@ $("#user-button-save").click(function(){
 <div style="height:600px;">
   <div class="row" style="margin-top:10px;">
     <div class="col-md-12">
+      <i id="resource-delete-link" class="fa fa-trash-o"></i>
       <span id="resource-rename-link" style="margin-top:3px;"><a href="#" data-toggle="tooltip" title="Rename" onclick="renameResource()"><i class="fa fa-wrench"></i></a><span id="resource-rename-text"></span></span>
       <span id="resource-type" style="float:left;"></span><a id="resource-project" href="#" style="float:right;"></a>
     </div>
@@ -1223,6 +1230,9 @@ function successResource(data)
   $("#resource-project").attr("rel",data.project_type);
   $("#resource-project").attr("onclick","showResource(this,'"+data.project_url+"')");
   $("#resource-path").text("Path : " + getServerURL()+getCurrentURL());
+
+  if (data.is_delete)
+    $("#resource-delete-link").wrap('<a href="javascript:deleteResource(\''+getCurrentURL()+'\',\'\',false)" onclick="javascript:return confirm(\'voulez-vous supprimer cette ressource ?\');">');
 
   var json = {"attribut_id": "resource-title", "attribut_value" : data.name, "is_edit" : data.is_edit};
   loadTemplate("template-attribut-show", "resource-title", false, json);
@@ -1398,7 +1408,7 @@ function saveResource(type)
     <a href="#" style="display:inline;" onclick="javascript:moveResource('{{href}}');" data-toggle="modal" data-target="#modal-copy-move"><i class="fa fa-scissors"></i></a>
     {{/if}}
     {{#if is_delete}}
-    <a href="javascript:deleteResource('{{href}}','{{type}}')" style="display:inline;" onclick="javascript:return confirm('voulez-vous supprimer cette ressource ?');"><i class="fa fa-trash-o"></i></a>
+    <a href="javascript:deleteResource('{{href}}','{{type}}', true)" style="display:inline;" onclick="javascript:return confirm('voulez-vous supprimer cette ressource ?');"><i class="fa fa-trash-o"></i></a>
     {{/if}}
   </div>
   <a href="#" rel="{{type}}" onclick="showResource(this,'{{href}}')">
@@ -1872,13 +1882,27 @@ function moveResource(href)
   $("#modal-copy-move-div").html(template(params)); 
 }
 
-function deleteResource(href, type)
+function deleteResource(href, type, is_search)
 {
   function success(data)
   { 
-    loadTemplate("template-search-content", "resource-page", false, {"is_user" : ($("#page-show").val() == "user" || $("#page-show").val() == "search"), "is_search" : ($("#page-show").val() == "search")});
-    showNavTab(null, type);
-    searchResources(null);
+    if ($("#page-show").val() == "search" && $("#resource-nav-tabs").children(".active").children("a").attr("rel") == "user")
+    {
+      logoutClick();
+    }
+    else if (!is_search)
+    {
+      if ($("#page-show").val() == "user")
+        logoutClick();
+      else
+        showSearch(true);
+    }
+    else
+    {
+      loadTemplate("template-search-content", "resource-page", false, {"is_user" : ($("#page-show").val() == "user" || $("#page-show").val() == "search"), "is_search" : ($("#page-show").val() == "search")});
+      showNavTab(null, type);
+      searchResources(null);
+    }
   }
   function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
  
