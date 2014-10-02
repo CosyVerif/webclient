@@ -131,11 +131,21 @@
         <script>
             Lua.executeScript("lua/js.lua");
             Lua.executeScript("lua/cosy.lua");
-            configure_editor("ws://edit.cosyverif.io")
-            configure_server("https://rest.cosyverif.io/", {
+            Cosy.configure_editor("ws://edit.cosyverif.io")
+            Cosy.configure_server("https://rest.cosyverif.io/", {
               username: "alban",
               password: "toto"
             });
+            var model = Cosy.model("https://rest.cosyverif.io/users/alban/models/model");
+            var types = Cosy.types(model);
+            var p1 = Cosy.instantiate(model, types.place_type, {
+              name: "p1",
+              token: false
+            });
+            var p2 = Cosy.create (model, p1, types.arc_type, types.place_type, {
+              name: "t1"
+            });
+            //Cosy.remove (p1);
         </script>
     </body> 
 </html>
