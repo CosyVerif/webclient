@@ -436,10 +436,12 @@ function constructRequestList()
       var json = {"list_requests": data};
       loadTemplate("template-requests", "project-requests", false, json);
     }
+    else
+      $("#project-requests").html("");
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "construct requests of invitations !");
   }
   get(getCurrentURL() +'/invitations?received=true&ack=true&denied=true&canceled=true', success, error);  
 }
@@ -515,22 +517,9 @@ function update(url, data, callBack)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "update resource !");
   }
   put(url, data, success, error);
-}
-
-function deleteUser(url)
-{
-  function success(data)
-  {
-    constructUserList();
-  }
-  function error(jqXHR, textStatus, errorThrown) 
-  { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
-  }
-  del(getCurrentURL()+url, success, error);
 }
 
 function successInvite(data)
@@ -552,7 +541,7 @@ function successInvite(data)
 }
 function errorInvite(jqXHR, textStatus, errorThrown) 
 { 
-  alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+  showError(jqXHR.status, textStatus, "send request invitation !");
 }
 get("/users", successInvite, errorInvite);
 
@@ -575,7 +564,7 @@ function sendRequestToUser(username)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "send request inviation !");
   }
   var data = JSON.stringify({"comment":(($("#invite-comment").val() != "")? $("#invite-comment").val() : "Accept this invitation, please !")});
   post(getCurrentURL()+"/invitations/"+username, data, success, error);
@@ -640,7 +629,7 @@ function update(url, data, callBack)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "update permissions !");
   }
   put(url, data, success, error);
 }
@@ -649,11 +638,11 @@ function deleteUser(url)
 {
   function success(data)
   {
-    constructUserList();
+    showSearch(true);
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "delete user !");
   }
   del(getCurrentURL()+url, success, error);
 }
@@ -680,10 +669,10 @@ $(".permission-edit").bootstrapSwitch();
               </div>
             </td>
             <td style="width:80px;">
-              {{#if list_requests.is_edit}}<a href="#" id="project-description-button-save" style="display:inline;float:right;margin-left:2px;" rel="project-title" onclick="viewRequest('{{this.href}}','{{this.timestamp}}')"><i class="fa fa-eye"></i></a>{{/if}}
-              {{#if list_requests.is_edit}}<a href="#" id="project-description-button-update" style="display:inline;float:right;margin-left:2px;" rel="project-title" onclick="editComment('{{this.href}}','{{this.timestamp}}',this)"><i class="fa fa-comment"></i></a>{{/if}}
-              {{#if list_requests.is_edit}}<a href="#" id="project-description-button-cancel" style="display:inline;float:right;margin-left:2px;" rel="project-title" onclick="downRequest('{{this.href}}','{{this.timestamp}}')"><i class="fa fa-thumbs-down"></i></a>{{/if}}
-              {{#if list_requests.is_edit}}<a href="#" id="project-description-button-save" style="display:inline;float:right;margin-left:2px;" rel="project-title" onclick="acceptRequest('{{this.href}}','{{this.timestamp}}')"><i class="fa fa-thumbs-up"></i></a>{{/if}}
+              {{#if this.is_eye}}<a href="#" id="project-description-button-save" style="display:inline;float:right;margin-left:2px;" rel="project-title" onclick="viewRequest('{{this.href}}','{{this.timestamp}}')"><i class="fa fa-eye"></i></a>{{/if}}
+              {{#if this.is_comment}}<a href="#" id="project-description-button-update" style="display:inline;float:right;margin-left:2px;" rel="project-title" onclick="editComment('{{this.href}}','{{this.timestamp}}',this)"><i class="fa fa-comment"></i></a>{{/if}}
+              {{#if this.is_cancel}}<a href="#" id="project-description-button-cancel" style="display:inline;float:right;margin-left:2px;" rel="project-title" onclick="downRequest('{{this.href}}','{{this.timestamp}}')"><i class="fa fa-thumbs-down"></i></a>{{/if}}
+              {{#if this.is_ack}}<a href="#" id="project-description-button-save" style="display:inline;float:right;margin-left:2px;" rel="project-title" onclick="acceptRequest('{{this.href}}','{{this.timestamp}}')"><i class="fa fa-thumbs-up"></i></a>{{/if}}
             </td>
           </tr>
         {{/each}}
@@ -697,12 +686,21 @@ function acceptRequest(url, timestamp)
 {
   function success(data)
   { 
-    constructProjectList();
-    constructRequestList();
+    if ($("#page-show").val() == "user")
+    {
+      constructProjectList();
+      constructRequestList();
+    }
+    else if ($("#page-show").val() == "project")
+    {
+      constructUserList();
+      constructRequestList();
+    }
+    
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "accept request !");
   }
   var data = JSON.stringify({"comment":"Accepted !", "timestamp" : timestamp, "status" : "ack"});
   put(url, data, success, error);
@@ -716,7 +714,7 @@ function downRequest(url, timestamp)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "down request !");
   }
   var data = JSON.stringify({"comment":"Denied !", "timestamp" : timestamp, "status" : "denied"});
   put(url, data, success, error);
@@ -736,7 +734,7 @@ function commentRequest(url, timestamp, element)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "comment request !");
   }
   var data = JSON.stringify({"comment":$(element).parent().prev().val(), "timestamp" : timestamp, "status" : "comment"});
   put(url, data, success, error);
@@ -750,7 +748,7 @@ function viewRequest(url, timestamp)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "view request !");
   }
   var data = JSON.stringify({"comment":"Accepted !", "timestamp" : timestamp, "status" : "view"});
   put(url, data, success, error);
@@ -806,7 +804,7 @@ function success(data)
 }
 function error(jqXHR, textStatus, errorThrown) 
 { 
-  alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+  showError(jqXHR.status, textStatus, "update resource !");
 }
 get(getCurrentURL(), success, error);
 </script>
@@ -843,7 +841,7 @@ function constructProjectList()
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "construct project list !");
   }
   get(getCurrentURL() +'/projects', success, error);  
 }
@@ -862,10 +860,12 @@ function constructRequestList()
       var json = {"list_requests": data};
       loadTemplate("template-requests", "user-requests", false, json);
     }
+    else
+      $("#user-requests").html("");
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "construct requests of invitations !");
   }
   get(getCurrentURL() +'/invitations?received=true&ack=true&denied=true&canceled=true', success, error);  
 }
@@ -943,7 +943,7 @@ function update(url, data, callBack)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "update resource !");
   }
   put(url, data, success, error);
 }
@@ -956,7 +956,7 @@ function deleteProject(url)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "delete resource !");
   }
   del(getCurrentURL()+url, success, error);
 }
@@ -980,7 +980,7 @@ function successJoin(data)
 }
 function errorJoin(jqXHR, textStatus, errorThrown) 
 { 
-  alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+  showError(jqXHR.status, textStatus, "request invitation !");
 }
 get("/projects", successJoin, errorJoin);
 
@@ -1003,7 +1003,7 @@ function sendRequestToProject(project_name)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "request invitation !");
   }
   var data = JSON.stringify({"comment":(($("#join-comment").val() != "")? $("#join-comment").val() : "Add me this project, please !")});
   post("/users/"+getUserLogin()+"/invitations/"+project_name, data, success, error);
@@ -1080,7 +1080,7 @@ function success(data)
 }
 function error(jqXHR, textStatus, errorThrown) 
 { 
-  alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+  showError(jqXHR.status, textStatus, "get user list !");
 }
 get("/users", success, error);
 
@@ -1103,7 +1103,7 @@ function sendRequestToUser(element, username)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "request invitation !");
   }
   var data = JSON.stringify({"comment":"Accept this invitation, please !"});
   post($(element).parent().prev().val()+"/invitations/"+username, data, success, error);
@@ -1193,7 +1193,7 @@ $("#user-button-save").click(function(){
     alertNotification("success", "Your account is created, please check your email to activate");
     showSearch(true);
   }
-  function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, textStatus, "get user !");}
   var jsonData = JSON.stringify({"request_type" : "create",
                                  "first_name" : $("#user-firstname").val(),
                                  "last_name" : $("#user-lastname").val(),
@@ -1244,7 +1244,7 @@ function successResource(data)
 }
 function errorResource(jqXHR, textStatus, errorThrown) 
 { 
-  alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+  showError(jqXHR.status, textStatus, "get resource !");
 }
 get(getCurrentURL(), successResource, errorResource);
 
@@ -1905,8 +1905,11 @@ function deleteResource(href, type, is_search)
     }
   }
   function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
- 
-  del(href, success, error);
+  
+  if (type != "Project")
+    del(href, success, error);
+  else
+    del("/users/"+getUserLogin()+href, success, error);
 }
 
 function fullScreen()
