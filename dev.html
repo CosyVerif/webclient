@@ -131,8 +131,8 @@
         <script>
             Lua.executeScript("lua/js.lua");
             Lua.executeScript("lua/cosy.lua");
-            Cosy.configure_editor("ws://edit.cosyverif.io:6969")
-            Cosy.configure_server("http://rest.cosyverif.io/", {
+            Cosy.configure_editor("ws://edit.cosyverif.io")
+            Cosy.configure_server("http://rest.cosyverif.io:8080/", {
               username: "alban",
               password: "toto"
             });
