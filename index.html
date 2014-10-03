@@ -405,7 +405,7 @@ function successProject(data)
 }
 function errorProject(jqXHR, textStatus, errorThrown) 
 { 
-  showError(jqXHR.status, textStatus, "get resource !");
+  showError(jqXHR.status, jqXHR.statusText, "get resource !");
 }
 get(getCurrentURL(), successProject, errorProject);
 
@@ -422,7 +422,7 @@ function constructUserList()
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "get users !");
+    showError(jqXHR.status, jqXHR.statusText, "get users !");
   }
   get(getCurrentURL() +'/users', success, error);  
 }
@@ -441,7 +441,7 @@ function constructRequestList()
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "construct requests list of invitations !");
+    showError(jqXHR.status, jqXHR.statusText, "construct requests list of invitations !");
   }
   get(getCurrentURL() +'/invitations?received=true&ack=true&denied=true&canceled=true', success, error);  
 }
@@ -517,7 +517,7 @@ function update(url, data, callBack)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "update resource !");
+    showError(jqXHR.status, jqXHR.statusText, "update resource !");
   }
   put(url, data, success, error);
 }
@@ -541,7 +541,7 @@ function successInvite(data)
 }
 function errorInvite(jqXHR, textStatus, errorThrown) 
 { 
-  showError(jqXHR.status, textStatus, "send request invitation !");
+  showError(jqXHR.status, jqXHR.statusText, "send request invitation !");
 }
 get("/users", successInvite, errorInvite);
 
@@ -565,7 +565,7 @@ function sendRequestToUser(username)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "send request inviation !");
+    showError(jqXHR.status, jqXHR.statusText, "send request inviation !");
   }
   var data = JSON.stringify({"comment":(($("#invite-comment").val() != "")? $("#invite-comment").val() : "Accept this invitation, please !")});
   post(getCurrentURL()+"/invitations/"+username, data, success, error);
@@ -630,7 +630,7 @@ function update(url, data, callBack)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "update permissions !");
+    showError(jqXHR.status, jqXHR.statusText, "update permissions !");
   }
   put(url, data, success, error);
 }
@@ -643,7 +643,7 @@ function deleteUser(url)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "delete user !");
+    showError(jqXHR.status, jqXHR.statusText, "delete user !");
   }
   del(getCurrentURL()+url, success, error);
 }
@@ -701,7 +701,7 @@ function acceptRequest(url, timestamp)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "accept request !");
+    showError(jqXHR.status, jqXHR.statusText, "accept request !");
   }
   var data = JSON.stringify({"comment":"Accepted !", "timestamp" : timestamp, "status" : "ack"});
   put(url, data, success, error);
@@ -715,7 +715,7 @@ function downRequest(url, timestamp)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "down request !");
+    showError(jqXHR.status, jqXHR.statusText, "down request !");
   }
   var data = JSON.stringify({"comment":"Denied !", "timestamp" : timestamp, "status" : "denied"});
   put(url, data, success, error);
@@ -735,7 +735,7 @@ function commentRequest(url, timestamp, element)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "comment request !");
+    showError(jqXHR.status, jqXHR.statusText, "comment request !");
   }
   var data = JSON.stringify({"comment":$(element).parent().prev().val(), "timestamp" : timestamp, "status" : "comment"});
   put(url, data, success, error);
@@ -749,7 +749,7 @@ function viewRequest(url, timestamp)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "view request !");
+    showError(jqXHR.status, jqXHR.statusText, "view request !");
   }
   var data = JSON.stringify({"comment":"Accepted !", "timestamp" : timestamp, "status" : "view"});
   put(url, data, success, error);
@@ -805,7 +805,7 @@ function success(data)
 }
 function error(jqXHR, textStatus, errorThrown) 
 { 
-  showError(jqXHR.status, textStatus, "update resource !");
+  showError(jqXHR.status, jqXHR.statusText, "update resource !");
 }
 get(getCurrentURL(), success, error);
 </script>
@@ -842,7 +842,7 @@ function constructProjectList()
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "construct project list !");
+    showError(jqXHR.status, jqXHR.statusText, "construct project list !");
   }
   get(getCurrentURL() +'/projects', success, error);  
 }
@@ -866,7 +866,7 @@ function constructRequestList()
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "construct requests of invitations !");
+      showError(jqXHR.status, jqXHR.statusText, "construct requests list of invitations !");
   }
   get(getCurrentURL() +'/invitations?received=true&ack=true&denied=true&canceled=true', success, error);  
 }
@@ -944,7 +944,7 @@ function update(url, data, callBack)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "update resource !");
+    showError(jqXHR.status, jqXHR.statusText, "update resource !");
   }
   put(url, data, success, error);
 }
@@ -957,7 +957,7 @@ function deleteProject(url)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "delete resource !");
+    showError(jqXHR.status, jqXHR.statusText, "delete resource !");
   }
   del(getCurrentURL()+url, success, error);
 }
@@ -981,7 +981,7 @@ function successJoin(data)
 }
 function errorJoin(jqXHR, textStatus, errorThrown) 
 { 
-  showError(jqXHR.status, textStatus, "request invitation !");
+  showError(jqXHR.status, jqXHR.statusText, "request invitation !");
 }
 get("/projects", successJoin, errorJoin);
 
@@ -1005,7 +1005,7 @@ function sendRequestToProject(project_name)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "request invitation !");
+    showError(jqXHR.status, jqXHR.statusText, "request invitation !");
   }
   var data = JSON.stringify({"comment":(($("#join-comment").val() != "")? $("#join-comment").val() : "Add me this project, please !")});
   post("/users/"+getUserLogin()+"/invitations/"+project_name, data, success, error);
@@ -1082,7 +1082,7 @@ function success(data)
 }
 function error(jqXHR, textStatus, errorThrown) 
 { 
-  showError(jqXHR.status, textStatus, "get user list !");
+  showError(jqXHR.status, jqXHR.statusText, "get user list !");
 }
 get("/users", success, error);
 
@@ -1106,7 +1106,7 @@ function sendRequestToUser(element, username)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "request invitation !");
+    showError(jqXHR.status, jqXHR.statusText, "request invitation !");
   }
   var data = JSON.stringify({"comment":"Accept this invitation, please !"});
   post($(element).parent().prev().val()+"/invitations/"+username, data, success, error);
@@ -1196,7 +1196,7 @@ $("#user-button-save").click(function(){
     alertNotification("success", "Your account is created, please check your email to activate");
     showSearch(true);
   }
-  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, textStatus, "get user !");}
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, jqXHR.statusText, "get user !");}
   var jsonData = JSON.stringify({"request_type" : "create",
                                  "first_name" : $("#user-firstname").val(),
                                  "last_name" : $("#user-lastname").val(),
@@ -1247,7 +1247,7 @@ function successResource(data)
 }
 function errorResource(jqXHR, textStatus, errorThrown) 
 { 
-  showError(jqXHR.status, textStatus, "get resource !");
+  showError(jqXHR.status, jqXHR.statusText, "get resource !");
 }
 get(getCurrentURL(), successResource, errorResource);
 
@@ -1309,7 +1309,7 @@ function update(url, data, callBack)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "update resource !");
+    showError(jqXHR.status, jqXHR.statusText, "update resource !");
   }
   put(url, data, success, error);
 }
@@ -1395,7 +1395,7 @@ function saveResource(type)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "create resource !");
+    showError(jqXHR.status, jqXHR.statusText, "create resource !");
   }
   var data = JSON.stringify({"name" : $("#resource-title").val(),
                              "description" : $("#resource-description").val()
@@ -1566,7 +1566,7 @@ function showSearch(isHome)
 
     searchResources(null);
   }
-  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, textStatus, "get project list !");}
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, jqXHR.statusText, "get project list !");}
   
   if (!isNullUser() && isHome)
     get(getCurrentURL() + "/projects", success, error);
@@ -1653,7 +1653,7 @@ function searchResources(element)
       showResultSearch(($("#left-menu").css('display') != "none"));
     }
   }
-  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, textStatus, "search resources !");}
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, jqXHR.statusText, "search resources !");}
   if ($("#resource-nav-tabs").children(".active").children("a").attr("rel") != "user")
   {
     get("/search?urls="+projects+"&types="+$("#resource-nav-tabs").children(".active").children("a").attr("rel")+"s&value="+$("#search-zone-input").val(), success, error);
@@ -1740,18 +1740,23 @@ function showProject(url)
 {
   setCurrentURL(url);
 
-  $("#resource-page").html("");
-  $("#left-menu").html("");
+  function success(data)
+  { 
+    $("#resource-page").html("");
+    $("#left-menu").html("");
 
-  $("#page-show").val("project");
+    $("#page-show").val("project");
 
-  loadTemplate("template-project-menu", "left-menu", false, {});
+    loadTemplate("template-project-menu", "left-menu", false, {});
 
-  loadTemplate("template-search-content", "resource-page", false, {"is_user" : false, "is_search" : false});
-  searchResources(null);
+    loadTemplate("template-search-content", "resource-page", false, {"is_user" : false, "is_search" : false});
+    searchResources(null);
 
-  $("#link-show-left-menu").attr("rel","false");
-  showLeftMenu(true);
+    $("#link-show-left-menu").attr("rel","false");
+    showLeftMenu(true);
+  }
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, jqXHR.statusText, "Unauthorized access !");}
+  get(getCurrentURL(), success, error);
 }
 
 function newProject(isUserShow)
@@ -1765,18 +1770,24 @@ function showUser(url)
 { 
   setCurrentURL(url);
 
-  $("#resource-page").html("");
-  $("#left-menu").html("");
+  function success(data)
+  { 
 
-  $("#page-show").val("user");
+    $("#resource-page").html("");
+    $("#left-menu").html("");
 
-  loadTemplate("template-user-menu", "left-menu", false, {});
+    $("#page-show").val("user");
 
-  loadTemplate("template-search-content", "resource-page", false, {"is_user" : true, "is_search" : false});
-  searchResources(null);
+    loadTemplate("template-user-menu", "left-menu", false, {});
 
-  $("#link-show-left-menu").attr("rel","false");
-  showLeftMenu(true);
+    loadTemplate("template-search-content", "resource-page", false, {"is_user" : true, "is_search" : false});
+    searchResources(null);
+
+    $("#link-show-left-menu").attr("rel","false");
+    showLeftMenu(true);
+  }
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, jqXHR.statusText, "Unauthorized access !");}
+  get(getCurrentURL(), success, error);
 }
 
 function newUser()
@@ -1911,7 +1922,7 @@ function deleteResource(href, type, is_search)
       searchResources(null);
     }
   }
-  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, textStatus, "delete resource !");}
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, jqXHR.statusText, "delete resource !");}
   
   if (type != "Project")
     del(href, success, error);
