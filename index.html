@@ -405,7 +405,7 @@ function successProject(data)
 }
 function errorProject(jqXHR, textStatus, errorThrown) 
 { 
-  alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+  showError(jqXHR.status, textStatus, "get resource !");
 }
 get(getCurrentURL(), successProject, errorProject);
 
@@ -422,7 +422,7 @@ function constructUserList()
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "get users !");
   }
   get(getCurrentURL() +'/users', success, error);  
 }
@@ -441,7 +441,7 @@ function constructRequestList()
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    showError(jqXHR.status, textStatus, "construct requests of invitations !");
+    showError(jqXHR.status, textStatus, "construct requests list of invitations !");
   }
   get(getCurrentURL() +'/invitations?received=true&ack=true&denied=true&canceled=true', success, error);  
 }
@@ -549,6 +549,7 @@ function sendRequestToUser(username)
 { 
   if (username == "" && $("#invite-user").val() == "")
   {
+    alertNotification("danger", "Fields is empty");
     return false;
   }
   if (username == "")
@@ -988,6 +989,7 @@ function sendRequestToProject(project_name)
 { 
   if (project_name == "" && $("#join-project").val() == "")
   {
+    alertNotification("danger", "Fields is empty");
     return false;
   }
   if (project_name == "")
@@ -1088,6 +1090,7 @@ function sendRequestToUser(element, username)
 { 
   if (username == "" && $(element).parent().prev().prev().val() == "")
   {
+    alertNotification("danger", "Fields is empty");
     return false;
   }
   if (username == "")
@@ -1306,7 +1309,7 @@ function update(url, data, callBack)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "update resource !");
   }
   put(url, data, success, error);
 }
@@ -1360,7 +1363,10 @@ function suo(){
 function saveResource(type)
 {
   if ($("#resource-title").val() == "" || $("#resource-description").val() == "" || $("#resource-name").val() == "")
+  {
+    alertNotification("danger", "Fields is empty !");
     return;
+  }
   var types = "";
   if (type == "Formalism")
     types = "formalisms";
@@ -1379,6 +1385,7 @@ function saveResource(type)
   {
     if (type == "Project")
     {
+      constructProjectList();
       loadTemplate("template-search-content", "resource-page", false, {"is_user" : ($("#page-show").val() == "user" || $("#page-show").val() == "search"), "is_search" : ($("#page-show").val() == "search")});
       showNavTab(null, "Project");
       searchResources(null);
@@ -1388,7 +1395,7 @@ function saveResource(type)
   }
   function error(jqXHR, textStatus, errorThrown) 
   { 
-    alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);
+    showError(jqXHR.status, textStatus, "create resource !");
   }
   var data = JSON.stringify({"name" : $("#resource-title").val(),
                              "description" : $("#resource-description").val()
@@ -1559,7 +1566,7 @@ function showSearch(isHome)
 
     searchResources(null);
   }
-  function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, textStatus, "get project list !");}
   
   if (!isNullUser() && isHome)
     get(getCurrentURL() + "/projects", success, error);
@@ -1646,7 +1653,7 @@ function searchResources(element)
       showResultSearch(($("#left-menu").css('display') != "none"));
     }
   }
-  function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, textStatus, "search resources !");}
   if ($("#resource-nav-tabs").children(".active").children("a").attr("rel") != "user")
   {
     get("/search?urls="+projects+"&types="+$("#resource-nav-tabs").children(".active").children("a").attr("rel")+"s&value="+$("#search-zone-input").val(), success, error);
@@ -1904,7 +1911,7 @@ function deleteResource(href, type, is_search)
       searchResources(null);
     }
   }
-  function error(jqXHR, textStatus, errorThrown) { alertNotification("danger", jqXHR.status + " " + jqXHR.statusText);}
+  function error(jqXHR, textStatus, errorThrown) { showError(jqXHR.status, textStatus, "delete resource !");}
   
   if (type != "Project")
     del(href, success, error);
