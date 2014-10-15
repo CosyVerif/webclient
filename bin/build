@@ -66,15 +66,14 @@ curl --silent --location \
   -o ${current}/js/d3.js
 
 # Lua:
-curl --silent --location \
-  https://raw.githubusercontent.com/CosyVerif/lua.vm.js/master/dist/lua.vm.js \
-  -o ${current}/js/lua.vm.js
-curl --silent --location \
-  https://raw.githubusercontent.com/CosyVerif/lua.vm.js/master/dist/js/codemirror.js \
-  -o ${current}/js/codemirror.js
-curl --silent --location \
-  https://raw.githubusercontent.com/CosyVerif/lua.vm.js/master/dist/css/codemirror.css \
-  -o ${current}/css/codemirror.css
+git clone https://github.com/daurnimator/lua.vm.js.git
+cd lua.vm.js/lua
+make emscripten
+cd ../dist
+cp lua.vm.js          ${current}/js/lua.vm.js
+cp js/codemirror.js   ${current}/js/codemirror.js
+cp css/codemirror.css ${current}/css/codemirror.css
+cd ../..
 
 # Cosy:
 rm -rf ${current}/lua/cosy
