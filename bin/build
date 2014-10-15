@@ -7,89 +7,36 @@ else
   suffix=""
 fi
 
-current=$(pwd)
-dir=$(mktemp -d -t cosy.XXXXXX)
-echo "Working in ${dir}"
-cd ${dir}
+root=$(pwd)
+mkdir -p ${root}/css
+mkdir -p ${root}/fonts
+mkdir -p ${root}/js
+mkdir -p ${root}/lua
+mkdir -p ${root}/deps
 
-mkdir -p ${current}/css
-mkdir -p ${current}/fonts
-mkdir -p ${current}/js
-mkdir -p ${current}/lua
+export root
+export suffix
 
-# jQuery:
-curl --silent --location \
-  http://code.jquery.com/jquery-2.1.1${suffix}.js \
-  -o ${current}/js/jquery.js
+cd deps
+for script in *.sh
+do
+  echo "Installing ${script}..."
+  . ./${script}
+done
+cd ..
 
-# Bootstrap:
-curl --silent --location \
-  https://github.com/twbs/bootstrap/releases/download/v3.2.0/bootstrap-3.2.0-dist.zip \
-  -o bootstrap.zip
-unzip -q bootstrap.zip
-mv bootstrap*/css/bootstrap${suffix}.css \
-   ${current}/css/bootstrap.css
-mv bootstrap*/css/bootstrap-theme${suffix}.css \
-   ${current}/css/bootstrap-theme.css
-mv bootstrap*/fonts/* \
-   ${current}/fonts
-mv bootstrap*/js/bootstrap${suffix}.js \
-  ${current}/js/bootstrap.js
-rm -rf bootstrap*
-
-# Bootstrap-Switch:
-curl --silent --location \
-  https://github.com/nostalgiaz/bootstrap-switch/archive/master.zip \
-  -o bootstrap-switch.zip
-unzip -q bootstrap-switch.zip
-mv bootstrap-switch-master/dist/css/bootstrap3/bootstrap-switch${suffix}.css \
-   ${current}/css/bootstrap-switch.css
-mv bootstrap-switch-master/dist/js/bootstrap-switch${suffix}.js \
-   ${current}/js/bootstrap-switch.js
-rm -rf bootstrap-switch-master
-
-# Handlebars:
-curl --silent --location \
-  http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v1.3.0.js \
-  -o ${current}/js/handlebars.js
-
-# Font Awesome:
-git clone https://github.com/FortAwesome/Font-Awesome.git
-mv Font-Awesome/css/font-awesome${suffix}.css \
-   ${current}/css/font-awesome.css
-mv Font-Awesome/fonts/* \
-  ${current}/fonts
-
-# D3:
-curl --silent --location \
-  https://raw.githubusercontent.com/mbostock/d3/master/d3${suffix}.js \
-  -o ${current}/js/d3.js
-
-# Lua:
-git clone https://github.com/daurnimator/lua.vm.js.git
-cd lua.vm.js/lua
-make emscripten
-cd ../dist
-cp lua.vm.js          ${current}/js/lua.vm.js
-cp js/codemirror.js   ${current}/js/codemirror.js
-cp css/codemirror.css ${current}/css/codemirror.css
-cd ../..
-
-# Cosy:
-rm -rf ${current}/lua/cosy
-git clone https://github.com/CosyVerif/library.git
-mv library/src/cosy* ${current}/lua/
-
-# Lua dependencies:
-curl --silent --location \
-  https://raw.githubusercontent.com/LuaDist/dkjson/master/dkjson.lua \
-  -o ${current}/lua/dkjson.lua
-sed -i -e \
-  's/always_try_using_lpeg = true/always_try_using_lpeg = false/' \
-  ${current}/lua/dkjson.lua
-curl --silent --location \
-  https://raw.githubusercontent.com/kikito/sha1.lua/master/sha1.lua \
-  -o ${current}/lua/sha1.lua
-
-cd ${current}
-rm -rf ${dir}
+# Add files to .gitignore:
+echo "*.swp"       > .gitignore
+echo "*~"         >> .gitignore
+echo ""           >> .gitignore
+echo "fonts/"     >> .gitignore
+find css -type l  >> .gitignore
+find js  -type l  >> .gitignore
+find lua -type l  >> .gitignore
+for dir in deps/*
+do
+  if [ -d ${dir} ]
+  then
+    echo ${dir}   >> .gitignore
+  fi
+done
