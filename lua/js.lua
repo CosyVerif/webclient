@@ -73,3 +73,18 @@ do
   end
   _PROXY_MT.__pairs = js.pairs
 end
+
+js.global:eval [[
+Lua.executeScript = function(src) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", src, false);
+  xhr.send(null);
+  if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+    console.log("Downloaded Lua script: " + src);
+    L.execute(xhr.responseText);
+    console.log("Executed Lua script: " + src);
+  } else {
+    console.log("Unable to fetch Lua script: " + src);
+  }
+};
+]]
