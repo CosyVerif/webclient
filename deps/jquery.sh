@@ -11,8 +11,7 @@ fi
 cd jquery
 git pull
 npm install
-grunt build
-grunt uglify
+grunt custom
 ln --force --symbolic \
   ${root}/deps/jquery/dist/jquery${suffix}.js \
   ${root}/js/jquery.js
