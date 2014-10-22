@@ -28,7 +28,6 @@ cd ..
 # Add files to .gitignore:
 echo "*.swp"       > .gitignore
 echo "*~"         >> .gitignore
-echo ""           >> .gitignore
 echo "fonts/"     >> .gitignore
 find css -type l  >> .gitignore
 find js  -type l  >> .gitignore
@@ -40,3 +39,4 @@ do
     echo ${dir}   >> .gitignore
   fi
 done
+sort --unique --output=.gitignore .gitignore
