@@ -23,8 +23,8 @@
 
     <!-- We include all the js we need-->
     <script src="js/codemirror.js"></script>
+    <script type="text/javascript" src="js/lua.vm.js"></script>
     <script type="text/javascript" src="js/d3.js"></script>
-    <script type="text/javascript" src="js/editor.js"></script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -42,7 +42,7 @@
 
     <script src="js/jquery-fullscreen.js"></script>
 
-    <script src="js/jquery.textareafullscreen.js"></script>
+    <script src="js/jquery-textareafullscreen.js"></script>
 <link rel="stylesheet" href="css/textareafullscreen.css">
 
   </head>
@@ -1338,14 +1338,21 @@ Lua.executeScript = function(src) {
     console.log("Unable to fetch Lua script: " + src);
   }
 };
+function remove () {}
+function is_connected (x) {
+  console.log ("is connected: " + x);
+}
 Lua.executeScript("lua/js.lua");
 Lua.executeScript("lua/cosy.lua");
-Cosy.configure_editor("ws://edit.cosyverif.io")
-Cosy.configure_server("http://rest.cosyverif.io:8080/", {
-  username: "alban",
-  password: "toto"
+var rest_url = window.sessionStorage.getItem("rest-url");
+var edit_url = window.sessionStorage.getItem("edit-url");
+var username = window.sessionStorage.getItem("userLogin");
+var password = window.sessionStorage.getItem("userPassword");
+Cosy.configure_editor(edit_url)
+Cosy.configure_server(rest_url, {
+  username: username,
+  password: password
 });
-
 function suo(){
   change_size_svg('400','400');
 }
