@@ -14,4 +14,10 @@ git pull
 ln --force --symbolic \
   ${root}/deps/lua/dist/lua.vm.js \
   ${root}/js/lua.vm.js
+ln --force --symbolic \
+  ${root}/deps/lua/dist/js/codemirror.js \
+  ${root}/js/codemirror.js
+ln --force --symbolic \
+  ${root}/deps/lua/dist/css/codemirror.css \
+  ${root}/css/codemirror.css
 cd ..
