@@ -29,6 +29,9 @@ git pull
 ln --force --symbolic \
   ${root}/deps/dkjson/dkjson.lua \
   ${root}/lua/dkjson.lua
+  sed -i -e \
+    's/always_try_using_lpeg = true/always_try_using_lpeg = false/' \
+    ${root}/deps/dkjson/dkjson.lua
 cd ..
 
 if [ ! -d sha1 ]
