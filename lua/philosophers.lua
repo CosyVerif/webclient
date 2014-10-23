@@ -1,54 +1,5 @@
 local Cosy = require "cosy.helper"
 
-local function think_position (x)
-  local i = x.i ()
-  local n = (x / 2).number ()
-  local angle = 360 / (n+1)
-  Cosy.set_position (x, "40:${angle}" % { angle = angle * i })
-end
-
-local function wait_position (x)
-  local i = x.i ()
-  local n = (x / 2).number ()
-  local angle = 360 / (n+1)
-  Cosy.set_position (x, "20:${angle}" % { angle = angle * i })
-end
-
-local function eat_position (x)
-  local i = x.i ()
-  local n = (x / 2).number ()
-  local angle = 360 / (n+1)
-  Cosy.set_position (x, "10:${angle}" % { angle = angle * i })
-end
-
-local function fork_position (x)
-  local i = x.i ()
-  local n = (x / 2).number ()
-  local angle = 360 / (n+1)
-  Cosy.set_position (x, "30:${angle}" % { angle = angle * i + angle / 2 })
-end
-
-local function left_position (x)
-  local i = x.i ()
-  local n = (x / 2).number ()
-  local angle = 360 / (n+1)
-  Cosy.set_position (x, "35:${angle}" % { angle = angle * i })
-end
-
-local function right_position (x)
-  local i = x.i ()
-  local n = (x / 2).number ()
-  local angle = 360 / (n+1)
-  Cosy.set_position (x, "15:${angle}" % { angle = angle * i })
-end
-
-local function release_position (x)
-  local i = x.i ()
-  local n = (x / 2).number ()
-  local angle = 360 / (n+1)
-  Cosy.set_position (x, "05:${angle}" % { angle = angle * i })
-end
-
 local function add (model)
   model.number = model.number () + 1
   local number = model.number ()
@@ -95,31 +46,26 @@ local function add (model)
     marking = true,
     i       = number,
   })
-  think_position (think)
   local wait = Cosy.instantiate (model, model.wait_type, {
     name    = name .. " is waiting",
     marking = false,
     i       = number,
   })
-  wait_position (wait)
   local eat = Cosy.instantiate (model, model.eat_type, {
     name    = name .. " is eating",
     marking = false,
     i       = number,
   })
-  eat_position (eat)
   local fork = Cosy.instantiate (model, model.fork_type, {
     name    = name .. "'s fork",
     marking = true,
     i       = number,
   })
-  fork_position (fork)
   -- Transitions:
   local left = Cosy.instantiate (model, model.left_type, {
     name = name .. " takes his fork",
     i    = number,
   })
-  left_position (left)
   Cosy.instantiate (model, model.arc_type, {
     source = think,
     target = left,
@@ -136,7 +82,6 @@ local function add (model)
     name = name .. " takes " .. next_name .. "'s fork",
     i    = number,
   })
-  right_position (right)
   Cosy.instantiate (model, model.arc_type, {
     source = wait,
     target = right,
@@ -153,7 +98,6 @@ local function add (model)
     name = name .. " releases forks",
     i    = number,
   })
-  release_position (release)
   Cosy.instantiate (model, model.arc_type, {
     source = eat,
     target = release,
@@ -198,12 +142,68 @@ model.transition_type = {}
 model.arc_type = {}
 
 model.think_type   = model.place_type * {}
+Cosy.set_position (model.think_type, function (x)
+  local n = model.number ()
+  local i = x.i ()
+  return i and "${angle}:${distance}" % {
+    angle    = 360 / n * i,
+    distance = 300,
+  }
+end)
 model.wait_type    = model.place_type * {}
+Cosy.set_position (model.wait_type, function (x)
+  local n = model.number ()
+  local i = x.i ()
+  return i and "${angle}:${distance}" % {
+    angle    = 360 / n * i,
+    distance = 200,
+  }
+end)
 model.eat_type     = model.place_type * {}
+Cosy.set_position (model.eat_type, function (x)
+  local n = model.number ()
+  local i = x.i ()
+  return i and "${angle}:${distance}" % {
+    angle    = 360 / n * i,
+    distance = 100,
+  }
+end)
 model.fork_type    = model.place_type * {}
+Cosy.set_position (model.fork_type, function (x)
+  local n = model.number ()
+  local i = x.i ()
+  return i and "${angle}:${distance}" % {
+    angle    = 360 / n * i * 1.5,
+    distance = 250,
+  }
+end)
 model.left_type    = model.transition_type * {}
+Cosy.set_position (model.left_type, function (x)
+  local n = model.number ()
+  local i = x.i ()
+  return i and "${angle}:${distance}" % {
+    angle    = 360 / n * i,
+    distance = 250,
+  }
+end)
 model.right_type   = model.transition_type * {}
+Cosy.set_position (model.right_type, function (x)
+  local n = model.number ()
+  local i = x.i ()
+  return i and "${angle}:${distance}" % {
+    angle    = 360 / n * i,
+    distance = 150,
+  }
+end)
 model.release_type = model.transition_type * {}
+Cosy.set_position (model.release_type, function (x)
+  local n = model.number ()
+  local i = x.i ()
+  return i and "${angle}:${distance}" % {
+    angle    = 360 / n * i,
+    distance =  50,
+  }
+end)
 
 -- Add two philosophers:
 add (model)
