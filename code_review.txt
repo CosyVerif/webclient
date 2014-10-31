@@ -1,0 +1,23 @@
+Editor.js definitions:
+
+    - var shapes: This object holds the definition of every shape in the model. The 'd' element is the definition of the shape in the 'path' element 
+
+    - var nodeDrag: Functions that defines the behavior of the drag motion for nodes. It also fires the 'pressTimer*' timer to capture a posible long click(left or right)
+    
+    - function updateModelNode: Function that handles responses from the server, and updates the GUI in accordance. Any change made to 'nodes types'(place, transition, etc) must be also modified in this method.
+    
+    - function remove: Handles response from the server to a node been remove in the server's model.
+    
+    - functions addNodeToModel & removeNodeFromModel: Functions that should make the call to the Cosy object to add/remove nodes. The callback from the server is in updateModelNode/remove.
+    
+    - function editAttribute: jquery method that changes from label into input method for any node's name. It also should handle the event of user pressing 'enter' to modify the nodes name attribute.
+    
+    - function updateForceLayout: One of main functions for the force layout. Creates the graphical representation(HTML elements) of the nodes, arcs, transitions and labels. Any change on how the user views the elements should be done here.
+    
+    - function rescale: Rescales for zoom and panning(moving around) efects. 'translate' is for panning, 'scale' is for zooming.
+    
+    - functions mouseUp, mouseDown, mouseMove: Handles all the mouse events to detect clicks on the svg element. Its also responsible for drawing the line when the user wants to add a new arc.
+    
+    - functions left_longClick & right_longClick: Creates the options menu(edit/remove) for nodes and also for selecting the type of node to create on a right click event. The animations are defined for each class in 'editor.css' instead of being in plain javascript. Each icon in the options menu is defined in font-awesome.
+    
+    - function tick: Another main function for the force layout of d3. The layout calls this function over a very small period of time to adjust the position of every element defined on it(places, transitions, labels, arcs, etc). It also calculates the minimal distance between 2 connected nodes if no anchor is defined. 
