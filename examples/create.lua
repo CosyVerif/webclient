@@ -15,7 +15,7 @@ model.p1 = model.place_type * {
   token = 1,
   [Tag.POSITION   ] = "0,0",
   [Tag.SELECTED   ] = false,
-  [Tag.HIGHLIGHTED] = true,
+  [Tag.HIGHLIGHTED] = false,
   [Tag.INSTANCE   ] = true,
 }
 
