@@ -1,0 +1,45 @@
+#! /usr/bin/env bash
+
+prefix="/data"
+red='\033[0;31m'
+green='\033[0;32m'
+nc='\033[0m'
+
+web_dependencies=(
+  bootbox
+  bootstrap3
+  d3
+  font-awesome
+  jquery
+  jquery-locationpicker
+  sjcl
+)
+rm -rf node_modules
+echo "Installing web dependencies... "
+npm init -y
+for dependency in ${web_dependencies[*]}; do
+  echo -n "  Installing ${dependency}... "
+  npm install "${dependency}" \
+    && echo -e "${green}success${nc}" \
+    || echo -e "${red}failure${nc}"
+done
+mkdir -p "${prefix}/www/js"
+mkdir -p "${prefix}/www/css"
+mkdir -p "${prefix}/www/fonts"
+for module in node_modules/*; do
+  name=$(basename "${module}")
+  cp "${module}/dist/"*.js    "${prefix}/www/js/"    2> /dev/null || true
+  cp "${module}/dist/"*.map   "${prefix}/www/js/"    2> /dev/null || true
+  cp "${module}/dist/js/"*    "${prefix}/www/js/"    2> /dev/null || true
+  cp "${module}/dist/css/"*   "${prefix}/www/css/"   2> /dev/null || true
+  cp "${module}/dist/fonts/"* "${prefix}/www/fonts/" 2> /dev/null || true
+  cp "${module}/js/"*         "${prefix}/www/js/"    2> /dev/null || true
+  cp "${module}/css/"*        "${prefix}/www/css/"   2> /dev/null || true
+  cp "${module}/fonts/"*      "${prefix}/www/fonts/" 2> /dev/null || true
+  cp "${module}/${name}"*.js  "${prefix}/www/js/"    2> /dev/null || true
+  cp "${module}/${name}"*.map "${prefix}/www/js/"    2> /dev/null || true
+  cp "${module}/${name}"*.css "${prefix}/www/css/"   2> /dev/null || true
+done
+rm -rf node_modules
+curl "https://raw.githubusercontent.com/daurnimator/lua.vm.js/master/dist/lua.vm.js" \
+     -o "${prefix}/www/js/lua.vm.js"
