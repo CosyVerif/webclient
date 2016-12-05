@@ -12,7 +12,8 @@ RUN     apk add --no-cache --virtual .build-deps \
             openssl-dev \
             nodejs \
     &&  cd /src/cosy/webclient/ \
-    &&  luarocks make rockspec/cosy-webclient-master-1.rockspec \
+    &&  luarocks install rockspec/lulpeg-develop-0.rockspec \
+    &&  luarocks make    rockspec/cosy-webclient-master-1.rockspec \
     &&  mkdir -p /data/logs \
     &&  cp -r src/www /data/www \
     &&  ./bin/dependencies \

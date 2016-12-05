@@ -28,28 +28,34 @@
 
     <script type="text/lua"
             lang="Lua">
-      local origin      = _G.js.global.location.origin
-      local loaded, err = pcall (require, origin .. "/lua/cosy-full")
-      if not loaded then
-        print ("Cosy bundle cannot be loaded:", err)
+      -- Taken from lua.vm.js:
+      local function load_lua_over_http (url)
+      	local xhr = _G.js.new (_G.window.XMLHttpRequest)
+      	xhr:open ("GET", url, false)
+      	local ok, err = pcall (xhr.send, xhr)
+      	if not ok then
+      		return nil, tostring (err)
+      	elseif xhr.status ~= 200 then
+      		return nil, "HTTP GET " .. xhr.statusText .. ": " .. url
+      	end
+      	return load (xhr.responseText, url)
       end
-      local coromake    = loaded
-                      and require "coroutine.make"
-                       or require (origin .. "/lua/coroutine.make")
-      _G.coroutine      = coromake ()
+      package.searchers [#package.searchers] = nil
+      package.searchers [#package.searchers] = nil
+      table.insert (package.searchers, function (mod_name)
+      	if not mod_name:match("/") then
+      		local full_url = "/lua/" .. mod_name
+      		local func, err = load_lua_over_http (full_url)
+      		if func ~= nil then return func end
+      		return "\n    " .. err
+      	end
+      end)
       local co = coroutine.create (function ()
         xpcall (function ()
-          local Loader    = loaded
-                        and require "cosy.loader.js"
-                         or require (origin .. "/lua/cosy.loader.js")
-          local loader    = Loader {}
-          local Webclient = loader.load "cosy.webclient"
-          loader.scheduler.addthread (function ()
-            Webclient.init ()
-            loader.load "cosy.webclient.headbar"   ()
-            loader.load "cosy.webclient.dashboard" ()
-          end)
-          loader.scheduler.loop ()
+          local adapter = require "cosy.webclient.adapter"
+          local Copas   = require "copas"
+          local Test    = require "cosy.webclient.test"
+          Copas.loop ()
         end, function (err)
           print ("error:", err)
           print (debug.traceback ())
@@ -58,6 +64,12 @@
       coroutine.resume (co)
     </script>
 
+    <script src="/js/promise.min.js"
+            type="text/javascript"
+    </script>
+    <script src="/js/fetch.js"
+            type="text/javascript"
+    </script>
     <script src="/js/jquery.min.js"
             type="text/javascript">
     </script>

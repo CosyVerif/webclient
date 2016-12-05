@@ -13,6 +13,8 @@ web_dependencies=(
   jquery
   jquery-locationpicker
   sjcl
+  whatwg-fetch
+  promise-polyfill
 )
 rm -rf node_modules
 echo "Installing web dependencies... "
@@ -40,6 +42,8 @@ for module in node_modules/*; do
   cp "${module}/${name}"*.map "${prefix}/www/js/"    2> /dev/null || true
   cp "${module}/${name}"*.css "${prefix}/www/css/"   2> /dev/null || true
 done
+cp "node_modules/promise-polyfill/promise.js"     "${prefix}/www/js"
+cp "node_modules/promise-polyfill/promise.min.js" "${prefix}/www/js"
 rm -rf node_modules
 curl "https://raw.githubusercontent.com/daurnimator/lua.vm.js/master/dist/lua.vm.js" \
      -o "${prefix}/www/js/lua.vm.js"

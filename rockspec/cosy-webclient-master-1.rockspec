@@ -17,10 +17,14 @@ description = {
 
 dependencies = {
   "lua >= 5.1",
-  -- "cosy-client"
+  "cosy-client",
+  "dkjson",
 }
 
 build = {
   type    = "builtin",
-  modules = {},
+  modules = {
+    ["cosy.webclient.adapter"] = "src/cosy/webclient/adapter.lua",
+    ["cosy.webclient.test"   ] = "src/cosy/webclient/test.lua",
+  },
 }
