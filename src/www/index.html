@@ -16,6 +16,21 @@
     <link href="/css/font-awesome.min.css"
           rel="stylesheet"
           type="text/css" />
+    <script src="/js/promise.min.js"
+            type="text/javascript"
+            async defer>
+    </script>
+    <script src="/js/fetch.js"
+            type="text/javascript"
+            async defer>
+    </script>
+    <script src="/js/jquery.min.js"
+            type="text/javascript">
+    </script>
+    <script src="/js/bootstrap.min.js"
+            type="text/javascript"
+            async defer>
+    </script>
     <title>CosyVerif</title>
   </head>
   <body>
@@ -50,33 +65,30 @@
       		return "\n    " .. err
       	end
       end)
-      local co = coroutine.create (function ()
-        xpcall (function ()
-          local adapter = require "cosy.webclient.adapter"
+      xpcall (function ()
+        local Coromake = require "coroutine.make"
+        local co = coroutine.create (function ()
+          local Adapter = require "cosy.webclient.adapter"
           local Copas   = require "copas"
+          local Http    = require "cosy.webclient.http"
+          local Client  = require "cosy.client"
+          local info    = Http.json {
+            url = "/info",
+          }
+          Adapter.client = Client.new {
+            url   = info.api_url,
+            token = nil,
+          }
           local Test    = require "cosy.webclient.test"
           Copas.loop ()
-        end, function (err)
-          print ("error:", err)
-          print (debug.traceback ())
         end)
+        assert (coroutine.resume (co))
+      end, function (err)
+        print ("error:", err)
+        print (debug.traceback ())
       end)
-      coroutine.resume (co)
     </script>
 
-    <script src="/js/promise.min.js"
-            type="text/javascript"
-    </script>
-    <script src="/js/fetch.js"
-            type="text/javascript"
-    </script>
-    <script src="/js/jquery.min.js"
-            type="text/javascript">
-    </script>
-    <script src="/js/bootstrap.min.js"
-            type="text/javascript"
-            async defer>
-    </script>
     <script src="/js/locationpicker.jquery.min.js"
             type="text/javascript"
             async defer>

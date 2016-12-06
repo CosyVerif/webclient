@@ -1,4 +1,9 @@
-package.loaded ["jit"] = false
+local Mt       = {}
+local Adapter  = setmetatable ({}, Mt)
+
+function _G.print (...)
+  Adapter.window.console:log (...)
+end
 
 package.preload ["lpeg"] = function ()
   return require "lulpeg"
@@ -10,9 +15,6 @@ end
 local Json = require "cjson"
 
 local Coromake = require "coroutine.make"
-_G.coroutine   = Coromake ()
-local Mt       = {}
-local Adapter  = setmetatable ({}, Mt)
 
 package.preload ["copas"] = function ()
   local copas    = {
@@ -24,7 +26,7 @@ package.preload ["copas"] = function ()
     coroutine = Coromake (),
   }
   function copas.addthread (f, ...)
-    local co = coroutine.create (f)
+    local co = copas.coroutine.create (f)
     copas.ready [co] = {
       parameters = { ... },
     }
@@ -37,8 +39,8 @@ package.preload ["copas"] = function ()
     time = time or -math.huge
     local co = copas.running
     if time > 0 then
-      copas.timeout [co] = Adapter.global:setTimeout (function ()
-        Adapter.global:clearTimeout (copas.timeout [co])
+      copas.timeout [co] = Adapter.window:setTimeout (function ()
+        Adapter.window:clearTimeout (copas.timeout [co])
         copas.wakeup (co)
       end, time * 1000)
     end
@@ -49,11 +51,11 @@ package.preload ["copas"] = function ()
     end
   end
   function copas.wakeup (co)
-    Adapter.global:clearTimeout (copas.timeout [co])
+    Adapter.window:clearTimeout (copas.timeout [co])
     copas.timeout [co] = nil
     copas.waiting [co] = nil
     copas.ready   [co] = true
-    if coroutine.status (copas.co) == "suspended" then
+    if copas.co and coroutine.status (copas.co) == "suspended" then
       coroutine.resume (copas.co)
     end
   end
@@ -66,7 +68,7 @@ package.preload ["copas"] = function ()
           local ok, err = copas.coroutine.resume (to_run, type (t) == "table" and table.unpack (t.parameters))
           copas.running = nil
           if not ok then
-            Adapter.global.console:log (err)
+            Adapter.window.console:log (err)
           end
         end
       end
@@ -94,31 +96,44 @@ end
 
 package.preload ["cosy.webclient.http"] = function ()
   local Http  = {}
-  function Http.text (options)
+  function Http.json (options)
     assert (type (options) == "table")
     local running = {
       copas = Copas.running,
       co    = coroutine.running (),
     }
-    local response, err
+    local response, json, err
     options.body    = options.body and Json.encode (options.body)
     options.headers = options.headers or {}
-    options.headers ["Content-length"] = options.body and #options.body or 0
-    options.headers ["Content-type"  ] = options.body and "application/json"
-    options.headers ["Accept"        ] = "text/plain"
-    local result = Adapter.window:fetch (options.url, Adapter.tojs {
+    options.headers ["Content-type"] = options.body and "application/json"
+    options.headers ["Accept"      ] = "application/json"
+    local r1 = Adapter.window:fetch (options.url, Adapter.tojs {
       method  = options.method or "GET",
       headers = options.headers,
     })
-    result ["then"] (result, function (x)
-      response = x
+    local r2 = r1 ["then"] (r1, function (_, r)
+      assert (r.status >= 200 and r.status < 400)
+      response = r
+      return response:text ()
+    end)
+    local r3 = r2 ["then"] (r2, function (_, text)
+      json = Json.decode (text)
       if running.copas then
         Copas.wakeup (running.copas)
       else
         coroutine.resume (running.co)
       end
-    end, function (x)
-      err = x
+    end)
+    r2:catch (function (_, e)
+      err = e
+      if running.copas then
+        Copas.wakeup (running.copas)
+      else
+        coroutine.resume (running.co)
+      end
+    end)
+    r3:catch (function (_, e)
+      err = e
       if running.copas then
         Copas.wakeup (running.copas)
       else
@@ -130,55 +145,17 @@ package.preload ["cosy.webclient.http"] = function ()
     else
       coroutine.yield ()
     end
-    if response then
-      return response.text (), response.status, response.headers
-    else
-      return nil, err
-    end
-  end
-  function Http.json (options)
-    assert (type (options) == "table")
-    local running = Copas.running
-    local response, err
-    options.body    = options.body and Json.encode (options.body)
-    options.headers = options.headers or {}
-    options.headers ["Content-length"] = options.body and #options.body or 0
-    options.headers ["Content-type"  ] = options.body and "application/json"
-    options.headers ["Accept"        ] = "application/json"
-    local result = Adapter.window:fetch (options.url, Adapter.tojs {
-      method  = options.method or "GET",
-      headers = options.headers,
-    })
-    result ["then"] (result, function (x)
-      response = x
-      if running.copas then
-        Copas.wakeup (running.copas)
-      else
-        coroutine.resume (running.co)
-      end
-    end, function (x)
-      err = x
-      if running.copas then
-        Copas.wakeup (running.copas)
-      else
-        coroutine.resume (running.co)
-      end
-    end)
-    if running.copas then
-      Copas.sleep (-math.huge)
-    else
-      coroutine.yield ()
-    end
-    if response then
-      local ok, json = pcall (Json.decode, response.text ())
-      return ok and json, response.status, response.headers
+    if json then
+      return json, response.status, response.headers
     else
       return nil, err
     end
   end
   return Http
 end
-local Http = require "cosy.webclient.http"
+package.preload ["cosy.client.http"] = function ()
+  return require "cosy.webclient.http"
+end
 
 Adapter.js        = _G.js
 Adapter.window    = _G.js.global
@@ -204,29 +181,6 @@ function Adapter.tojs (t)
     end
     return result
   end
-end
-
-package.searchers [#package.searchers] = function (name)
-  local text, status = Http.text {
-    url = "/lua/" .. name,
-  }
-  if status == 200 then
-    return load (text, "/lua/" .. name)
-  else
-    return "\n    " .. tostring (status)
-  end
-end
-
-function Mt.__call (_, f, ...)
-  local args = { ... }
-  Copas.addthread (function ()
-    xpcall (function ()
-      return f (table.unpack (args))
-    end, function (err)
-      print ("error:", err)
-      print (debug.traceback ())
-    end)
-  end)
 end
 
 return Adapter
